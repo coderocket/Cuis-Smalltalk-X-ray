@@ -1,4 +1,4 @@
-'From Cuis 5.0 [latest update: #4360] on 24 November 2020 at 8:04:38 pm'!
+'From Cuis 5.0 [latest update: #4360] on 24 November 2020 at 8:28:01 pm'!
 'Description '!
 !provides: 'X-ray' 1 859!
 !requires: 'Erudite' 1 144 nil!
@@ -9122,12 +9122,12 @@ Here, even though v is not an attribute of A, it is indirectly synthesized by co
 To see an example that demonstrates the power of indircet inheritance and synthesis take a look at the [[[ Language browse: ''Turingol'' ]]] doItWithButton:''Turingol language''..
  ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/24/2020 20:26:08'!
 initialize
     super initialize.
     title _ 'X-ray Manual'.
         self addSection: self Introduction.
-        self addSection: self TheX-rayLanguage.
+        self addSection: self TheXrayLanguage.
         self addSection: self LexicalAnalysis.
         self addSection: self WritingSemanticActions.
         self addSection: self DebuggingConflicts.
