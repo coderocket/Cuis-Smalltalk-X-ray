@@ -1,4 +1,4 @@
-'From Cuis 5.0 [latest update: #4360] on 24 November 2020 at 7:58:32 pm'!
+'From Cuis 5.0 [latest update: #4360] on 24 November 2020 at 8:04:38 pm'!
 'Description '!
 !provides: 'X-ray' 1 859!
 !requires: 'Erudite' 1 144 nil!
@@ -667,14 +667,14 @@ Object subclass: #XrayParserTestModel
 XrayParserTestModel class
 	instanceVariableNames: ''!
 
-!classDefinition: #'X-rayManual' category: #'X-ray-Browser'!
-EruditeBook subclass: #'X-rayManual'
+!classDefinition: #XrayManual category: #'X-ray-Browser'!
+EruditeBook subclass: #XrayManual
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray-Browser'!
-!classDefinition: 'X-rayManual class' category: #'X-ray-Browser'!
-X-rayManual class
+!classDefinition: 'XrayManual class' category: #'X-ray-Browser'!
+XrayManual class
 	instanceVariableNames: ''!
 
 
@@ -8668,7 +8668,7 @@ stack
 	^stack collect:[:each | each name ]
 	! !
 
-!X-rayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/15/2020 15:02:37'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/15/2020 15:02:37'!
 Aspects
 ^(EruditeBookSection basicNew title: 'Aspects'; document: ((EruditeDocument contents: '
 !!!!Aspects
@@ -8681,7 +8681,7 @@ For example, when developing a compiler for a statically typed programming langu
 
 ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
-!X-rayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
 DebuggingConflicts
 ^(EruditeBookSection basicNew title: 'Debugging Conflicts'; document: ((EruditeDocument contents: '
 !!!!Debugging Conflicts
@@ -8710,7 +8710,7 @@ In case of a shift-reduce conflict the left side is an example of shifting the c
 
 ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
-!X-rayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
 Introduction
 ^(EruditeBookSection basicNew title: 'Introduction'; document: ((EruditeDocument contents: '
 !!!!X-ray Manual
@@ -8736,7 +8736,7 @@ X-ray has the following major features:
 
  ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
-!X-rayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
 LexicalAnalysis
 ^(EruditeBookSection basicNew title: 'Lexical Analysis'; document: ((EruditeDocument contents: '
 !!!!Lexical Analysis
@@ -8810,7 +8810,7 @@ It is possible to direct the X-ray system to use a different scanner than the de
 
 ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
-!X-rayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
 ManagingLargeGrammars
 ^(EruditeBookSection basicNew title: 'Managing Large Grammars'; document: ((EruditeDocument contents: '!!!! Managing Large Grammars
 
@@ -8864,7 +8864,7 @@ The browser updates the text area to show just the selected topics and aspects. 
 
 ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
-!X-rayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
 TestingTheParser
 ^(EruditeBookSection basicNew title: 'Testing the Parser'; document: ((EruditeDocument contents: '
 !!!!Testing the Parser
@@ -8887,7 +8887,7 @@ When you select a symbol in the AST the test explorer will highlight in yellow t
 
 ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
-!X-rayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
 TheXrayLanguage
 ^(EruditeBookSection basicNew title: 'The X-ray Language'; document: ((EruditeDocument contents: '
 !!!! The X-ray Language
@@ -8970,7 +8970,7 @@ Parameters : Parameter ( , Parameter ) *
 
 ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
-!X-rayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/15/2020 15:02:37'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/15/2020 15:02:37'!
 Topics
 ^(EruditeBookSection basicNew title: 'Topics'; document: ((EruditeDocument contents: '
 !!!!Topics
@@ -8983,7 +8983,7 @@ For example, grammar for a language such as C consists of rules that define the 
 
 ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
-!X-rayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
 UsingTheParser
 ^(EruditeBookSection basicNew title: 'Using the Parser '; document: ((EruditeDocument contents: '!!!! Using the Parser
 
@@ -9027,7 +9027,7 @@ It is often useful to pass initial inherited attributes to the AST root. This is
 
 ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
-!X-rayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
 WritingSemanticActions
 ^(EruditeBookSection basicNew title: 'Writing Semantic Actions'; document: ((EruditeDocument contents: '
 !!!!Writing Semantic Actions
@@ -9122,7 +9122,7 @@ Here, even though v is not an attribute of A, it is indirectly synthesized by co
 To see an example that demonstrates the power of indircet inheritance and synthesis take a look at the [[[ Language browse: ''Turingol'' ]]] doItWithButton:''Turingol language''..
  ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
-!X-rayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
 initialize
     super initialize.
     title _ 'X-ray Manual'.
