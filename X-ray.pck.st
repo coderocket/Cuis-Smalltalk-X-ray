@@ -1,6 +1,7 @@
-'From Cuis 5.0 [latest update: #4360] on 23 November 2020 at 10:05:56 am'!
+'From Cuis 5.0 [latest update: #4360] on 24 November 2020 at 7:58:32 pm'!
 'Description '!
-!provides: 'X-ray' 1 858!
+!provides: 'X-ray' 1 859!
+!requires: 'Erudite' 1 144 nil!
 !requires: 'Regex-Core' 1 9 nil!
 SystemOrganization addCategory: #'X-ray'!
 SystemOrganization addCategory: #'X-ray-Browser'!
@@ -184,16 +185,6 @@ SystemWindow subclass: #ConflictExplorerWindow
 	category: 'X-ray'!
 !classDefinition: 'ConflictExplorerWindow class' category: #'X-ray'!
 ConflictExplorerWindow class
-	instanceVariableNames: ''!
-
-!classDefinition: #StudyListWindow category: #'X-ray-Browser'!
-SystemWindow subclass: #StudyListWindow
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray-Browser'!
-!classDefinition: 'StudyListWindow class' category: #'X-ray-Browser'!
-StudyListWindow class
 	instanceVariableNames: ''!
 
 !classDefinition: #XrayLanguageExplorerWindow category: #'X-ray-Browser'!
@@ -624,16 +615,6 @@ Object subclass: #SequenceGenerator
 	category: 'X-ray-Browser'!
 !classDefinition: 'SequenceGenerator class' category: #'X-ray-Browser'!
 SequenceGenerator class
-	instanceVariableNames: ''!
-
-!classDefinition: #StudyListModel category: #'X-ray-Browser'!
-Object subclass: #StudyListModel
-	instanceVariableNames: 'list selectedIndex selectedIndices'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray-Browser'!
-!classDefinition: 'StudyListModel class' category: #'X-ray-Browser'!
-StudyListModel class
 	instanceVariableNames: ''!
 
 !classDefinition: #TuringMachine category: #'X-ray-Browser'!
@@ -1439,64 +1420,6 @@ initialExtent
 !ConflictExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 10:09:52'!
 windowColor
 	^ Color r: 0.700 g: 0.280 b: 0.280! !
-
-!StudyListWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 13:38:38'!
-buildMorphicWindow
-
-	| listMorph contentMorph row |
-	
-	listMorph _ PluggableListMorphOfMany
-			model: model 
-			listGetter: #list
-			primarySelectionGetter: #primarySelection
-			primarySelectionSetter: #primarySelection:
-			listSelectionGetter: #listSelectionAt:
-			listSelectionSetter: #listSelectionAt:put:
-			mainView: self 
-			menuGetter: #listMenu
-			keystrokeAction: nil.
-	
-	contentMorph _ TextModelMorph 
-					textProvider: model
-					textGetter: #acceptedContents 
-					textSetter: #acceptContents:
-					selectionGetter: #textSelection.
-
-	row _ LayoutMorph newRow.
-	
-	row
-		addMorph: listMorph proportionalWidth: 1.0.
-
-	self layoutMorph
-		addMorph: row ;
-		addAdjusterAndMorph: contentMorph proportionalWidth: 1.0.
-		
-	self setLabel: 'Study PluggableListMorph'! !
-
-!StudyListWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/30/2020 16:23:48'!
-initialExtent
-
-	^`600@325` * Preferences standardCodeFont lineSpacing // 14! !
-
-!StudyListWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 13:40:43'!
-listMenu
-
-	| aMenu |
-	
-	aMenu _ MenuMorph new defaultTarget: self.
-	aMenu addTitle: 'List operations'.
-	"aMenu addStayUpIcons."
-	aMenu
-		addItemsFromDictionaries: `{
-			{
-				#label 			-> 		'first action'.
-				#object 			-> 		#model.
-				#selector 		-> 		#firstAction.
-				#balloonText 	-> 		'perform the first action'.
-			} asDictionary. }`.
-
-
-	^aMenu! !
 
 !XrayLanguageExplorerWindow methodsFor: 'menu' stamp: 'DF 11/17/2020 14:05:50'!
 languagesMenu
@@ -7344,17 +7267,17 @@ fileOut
 		
 ! !
 
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 15:15:09'!
+!Language class methodsFor: 'langauge catalog access' stamp: 'DF 11/17/2020 15:15:09'!
 add: aLanguage
 
 	LanguageCatalog at: aLanguage name put: aLanguage! !
 
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 15:15:33'!
+!Language class methodsFor: 'langauge catalog access' stamp: 'DF 11/17/2020 15:15:33'!
 at: aString
 
 	^LanguageCatalog at: aString! !
 
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/15/2020 17:45:44'!
+!Language class methodsFor: 'langauge catalog access' stamp: 'DF 11/15/2020 17:45:44'!
 browse: aString
 
 	| anXrayLanguageExplorerModel |
@@ -7366,7 +7289,46 @@ browse: aString
 	XrayLanguageExplorerWindow open: anXrayLanguageExplorerModel. 
 ! !
 
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 15:43:09'!
+!Language class methodsFor: 'langauge catalog access' stamp: 'DF 11/17/2020 15:18:21'!
+includes: aString
+
+	^LanguageCatalog includesKey: aString
+	! !
+
+!Language class methodsFor: 'langauge catalog access' stamp: 'DF 11/17/2020 15:29:34'!
+names
+	^LanguageCatalog keys sort! !
+
+!Language class methodsFor: 'langauge catalog access' stamp: 'DF 11/17/2020 15:29:57'!
+parserFor: aLanguageName
+
+	| aLanguage |
+	
+	aLanguage := LanguageCatalog at:aLanguageName.
+	
+	^aLanguage parser
+	! !
+
+!Language class methodsFor: 'langauge catalog access' stamp: 'DF 11/17/2020 15:30:32'!
+remove: aLanguage
+
+	LanguageCatalog removeKey: aLanguage name
+	! !
+
+!Language class methodsFor: 'langauge catalog access' stamp: 'DF 11/20/2020 13:42:32'!
+rename: aString to: anotherString
+
+	| aLanguage |
+	
+	aLanguage := LanguageCatalog at: aString.
+	
+	LanguageCatalog removeKey: aString.
+	
+	aLanguage name: anotherString.
+	
+	LanguageCatalog at: anotherString put: aLanguage.! !
+
+!Language class methodsFor: 'fileIn/Out' stamp: 'DF 11/17/2020 15:43:09'!
 fileIn: aFileEntry
 
 	| aLanguage aString outcome |
@@ -7391,7 +7353,7 @@ fileIn: aFileEntry
 	^aLanguage
 ! !
 
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 14:47:30'!
+!Language class methodsFor: 'fileIn/Out' stamp: 'DF 11/17/2020 14:47:30'!
 fileReaderServicesForFileEntry: filename suffix: suffix
 
 	"FileList buttons that file in a language and add it to the language catalog."
@@ -7401,24 +7363,42 @@ fileReaderServicesForFileEntry: filename suffix: suffix
 	
 	^#()! !
 
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 15:18:21'!
-includes: aString
+!Language class methodsFor: 'fileIn/Out' stamp: 'DF 11/17/2020 14:48:34'!
+serviceFileInLanguage
 
-	^LanguageCatalog includesKey: aString
-	! !
+	"Answer the service of filing-in a language"
 
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 15:31:35'!
+	^ (SimpleServiceEntry
+		provider: self 
+		label: 'file in X-ray language'
+		selector: #fileIn:
+		description: 'add this language to the X-ray language catalog'
+		buttonLabel: 'code'
+		icon: #editFindReplaceIcon)
+			sortOrder: 10! !
+
+!Language class methodsFor: 'instance creation' stamp: 'DF 11/17/2020 14:18:29'!
+new: aString
+
+	^LanguageParser parse: aString at:#source put: aString asString.
+! !
+
+!Language class methodsFor: 'initialization' stamp: 'DF 11/24/2020 11:35:06'!
 initialize
 
 	"self initialize"
 	
-	LanguageCatalog ifNil:[ LanguageCatalog := Dictionary new].
-	
 	LanguageParser := XrayParserGenerator new parserFor: self languageGrammar.
 
-	(LanguageParser isKindOf: XrayParser) ifFalse:[ LanguageParser inspect ].! !
+	(LanguageParser isKindOf: XrayParser) ifFalse:[ LanguageParser inspect ].
+	
+	LanguageCatalog ifNil:[ 
+		LanguageCatalog := Dictionary new.
+		self loadPackageLanguages ].
+	
+! !
 
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 14:50:34'!
+!Language class methodsFor: 'initialization' stamp: 'DF 11/21/2020 14:50:34'!
 languageGrammar
 ^
 ' 
@@ -7709,58 +7689,22 @@ Part : token | "|" | "''" | ";" | "*" | "+" | "{" Part * "}" | "(" Part * ")"  ;
 
 '! !
 
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 15:29:34'!
-names
-	^LanguageCatalog keys sort! !
+!Language class methodsFor: 'initialization' stamp: 'DF 11/24/2020 17:12:30'!
+loadPackageLanguages
 
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 14:18:29'!
-new: aString
-
-	^LanguageParser parse: aString at:#source put: aString asString.
-! !
-
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 15:29:57'!
-parserFor: aLanguageName
-
-	| aLanguage |
+	"try to load any languages in the package directory lang, but don't
+	fail if the directory does not exist"
 	
-	aLanguage := LanguageCatalog at:aLanguageName.
+	| aDirectoryEntry aPackage files |
 	
-	^aLanguage parser
+	aPackage := CodePackage packageOfClass: self ifNone:[^self].
+	
+	aDirectoryEntry := aPackage fullFileName asFileEntry parent.
+	
+	files := aDirectoryEntry filesMatches:[:each | '*.xray' match: each name].
+	
+	files do:[:each | Language fileIn: each].
 	! !
-
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 15:30:32'!
-remove: aLanguage
-
-	LanguageCatalog removeKey: aLanguage name
-	! !
-
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/20/2020 13:42:32'!
-rename: aString to: anotherString
-
-	| aLanguage |
-	
-	aLanguage := LanguageCatalog at: aString.
-	
-	LanguageCatalog removeKey: aString.
-	
-	aLanguage name: anotherString.
-	
-	LanguageCatalog at: anotherString put: aLanguage.! !
-
-!Language class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 14:48:34'!
-serviceFileInLanguage
-
-	"Answer the service of filing-in a language"
-
-	^ (SimpleServiceEntry
-		provider: self 
-		label: 'file in X-ray language'
-		selector: #fileIn:
-		description: 'add this language to the X-ray language catalog'
-		buttonLabel: 'code'
-		icon: #editFindReplaceIcon)
-			sortOrder: 10! !
 
 !RuleBranch methodsFor: 'removing' stamp: 'DF 11/8/2020 15:52:22'!
 removeAspects: visibleAspects
@@ -8080,58 +8024,6 @@ next
 	next := next + 1.
 	
 	^ next - 1! !
-
-!StudyListModel methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 09:17:51'!
-acceptedContents
-
-	^'Hello, world'.
-	
-	! !
-
-!StudyListModel methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 13:41:55'!
-firstAction
-
-	self inspect! !
-
-!StudyListModel methodsFor: 'as yet unclassified' stamp: 'DF 10/30/2020 17:15:58'!
-initialize
-
-	list := (1 to: 30) collect:[:each | each ].
-	
-	selectedIndex := 3.
-	
-	selectedIndices := Set with: selectedIndex! !
-
-!StudyListModel methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 09:23:13'!
-textSelection
-	^ 1 to:3! !
-
-!StudyListModel methodsFor: 'accessing' stamp: 'DF 10/30/2020 16:58:40'!
-list
-	^list! !
-
-!StudyListModel methodsFor: 'accessing' stamp: 'DF 10/30/2020 17:11:27'!
-listSelectionAt: index
-
-	^selectedIndices includes: index! !
-
-!StudyListModel methodsFor: 'accessing' stamp: 'DF 10/30/2020 17:16:51'!
-listSelectionAt: index put: aBoolean
-
-	aBoolean 
-		ifTrue:[	selectedIndices add: index	]
-		ifFalse:[selectedIndices remove:index ifAbsent:[]]
-
-	! !
-
-!StudyListModel methodsFor: 'accessing' stamp: 'DF 10/30/2020 16:59:00'!
-primarySelection
-	^selectedIndex! !
-
-!StudyListModel methodsFor: 'accessing' stamp: 'DF 10/30/2020 16:59:18'!
-primarySelection: aSmallInteger 
-	
-	selectedIndex := aSmallInteger! !
 
 !TuringMachine methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 17:54:02'!
 alphabet: aSet
