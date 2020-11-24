@@ -1,0 +1,13 @@
+tokens
+
+0 1 +
+
+patterns
+
+rules
+
+%topic unclassified
+
+E : E "+" E ;
+
+E : 0 | 1 ;

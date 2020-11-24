@@ -1,0 +1,27 @@
+tokens
+
++ - * / ^ n
+
+patterns
+
+:isLineSeparator:					newLine
+"( |\t)+"					{ nextTerminal }
+"[[:digit:]]+(\.[[:digit:]]+)?"					number
+ 
+rules
+
+%topic unclassified
+
+S : Line * ;
+
+Line : newLine | Expr newLine ;
+
+Expr 'e' : number 'n' 				 		{ v@e = n value asNumber }
+	| Expr 'x' Expr 'y' "+" 			  		{ v@e = (v@x) + (v@y) }
+	| Expr 'x' Expr 'y' "-" 				 	{ v@e = (v@x) - (v@y) }
+	| Expr 'x' Expr 'y' "*" 				 	{ v@e = (v@x) * (v@y) }
+	| Expr 'x' Expr 'y' "/" 				 	{ v@e = (v@x) / (v@y) }
+	| Expr 'x' Expr 'y' "^" 				 	{ v@e = (v@x) raisedTo: (v@y) }
+	| Expr 'x' n 		 			{ v@e = 0 - (v@x) }
+
+	;

@@ -1,0 +1,159 @@
+tokens
+
+ : { } ; , . \" tape alphabet is print go to if symbol then move left right one square 
+
+patterns
+
+[[:space:]]+					{ nextTerminal } 
+[a-z]+					identifier
+
+rules
+
+%topic unclassified
+
+Program 'program' : Definition 'def' ";" List 'list' . 
+
+	%aspect labels
+
+	{ labels@program = (label@list) asDictionary } 
+
+	%aspect transitions
+
+	{ transitions@program = transitions@list }	
+
+	%aspect definitions
+
+	{ alphabet@program = definitions@def }  
+
+	%aspect states
+
+	{ generator@program = SequenceGenerator new } 
+
+	{ q0@program = (generator@program) next } 
+
+	{ start@list = q0@program } 
+
+	{ qe@program = follow@list }
+
+	;
+
+Statement 's1' : Identifier 'identifier' ":" Statement 's2' 
+
+	%aspect labels
+
+	{ label@s1 = { (text@identifier) -> (start@s1) } , (label@s2) }
+
+	%aspect states
+
+	{ start@s2 = start@s1 } 
+
+	{ follow@s1 = follow@s2 } 
+
+	;
+
+Statement 's1' : if tape symbol is \" Identifier 'identifier' \" then Statement 's2' 
+
+	%aspect transitions
+
+	{ transitions@s1 = ((alphabet@s1) reject:[:each | each = (text@identifier) ] thenCollect:[:each | { start@s1 . each } -> { each . 0 .  (follow@s2) } ]) , { { start@s1 . (text@identifier) } -> { (text@identifier) . 0 . (start@s2) } } , (transitions@s2) }
+
+	%aspect states
+
+	{ start@s2 = (generator@s1) next } 
+
+	{ follow@s1 = follow@s2 } 
+
+;
+
+Statement 'statement' : go to Identifier 'identifier' 
+
+	%aspect transitions
+
+	{ transitions@statement = (alphabet@statement) collect:[:each | { (start@statement) . each } -> { each . 0 . ( (labels@statement) at: (text@identifier) ) } ] } 
+
+	%aspect states 
+
+	{ follow@statement = (generator@statement) next }
+
+	;
+
+Statement 'statement' : move Direction 'direction' one square 
+
+	%aspect transitions
+
+	{ transitions@statement = (alphabet@statement) collect:[:each | { (start@statement) . each } -> { each . (d@direction) . (follow@statement) }  ] } 
+
+	%aspect states 
+
+	{ follow@statement = (generator@statement) next }
+
+	;
+
+Statement 'statement' : print \" Identifier 'identifier' \" 
+
+	%aspect transitions
+
+	{ transitions@statement = (alphabet@statement) collect:[:each | { (start@statement) . each } -> { (text@identifier) . 0 . (follow@statement) } ] } 
+
+	%aspect states 
+
+	{ follow@statement = (generator@statement) next } 
+;
+
+Direction 'direction' : left { d@direction = -1 } | right { d@direction = 1 } ;
+
+Definition 'definition' : tape alphabet is Identifier 'identifier'
+
+	%aspect definitions 
+
+	{ definitions@definition = { text@identifier }  }
+
+	;
+
+Definition 'definition' : Definition 'tail' , Identifier 'identifier'
+
+	%aspect definitions 
+
+	{ definitions@definition = definitions@tail , { text@identifier } } ;
+
+Identifier 'symbol' : identifier 'token' %aspect definitions { text@symbol = token value asString } ;
+
+Identifier 'symbol': one 'token'  %aspect definitions { text@symbol = token name } ;
+
+Statement 'statement' : "{" List 'list' "}" 
+
+	%aspect states
+
+	{ start@list = start@statement } 
+
+	{ follow@statement = follow@list } ;
+
+Statement 'statement' :
+
+	%aspect states 
+
+	{ follow@statement = start@startement } ;  
+
+List 'list' : List 'tail' ";" Statement 'statement'
+
+	%aspect states
+
+	{ start@tail = start@list } 
+
+	{ start@statement = follow@tail } 
+
+	{ follow@tail = (generator@list) next } 
+
+	{ start@statement = follow@tail } 
+
+	{ follow@list = follow@statement } ;
+
+List 'list' : Statement 'statement'
+
+	%aspect states
+
+	{ start@statement = start@list } 
+
+	{ follow@list = follow@statement } 
+
+	;

@@ -1,0 +1,133 @@
+
+%scanner PascalScanner
+
+tokens
+ 
+TRUE FALSE NIL DOWNTO IF THEN ARRAY ELSE IN PACKED TO BEGIN END LABEL 
+PROCEDURE TYPE CASE FILE MOD PROGRAM UNTIL CONST FOR RECORD VAR 
+FUNCTION NOT REPEAT WHILE DO GOTO OF SET WITH USES
+
+( ) , [ ] := ; . = : ..
+
+patterns 
+
+[[:space:]]+									{ nextTerminal } 
+"\(\*"									{ consumeComment }
+"{[^}]*}"									{ nextTerminal }
+"'[^']*'"									string					{ strip: }
+[+-]?[[:digit:]]+\.[[:digit:]]+									real
+[+-]?[[:digit:]]+\.[[:digit:]]+E[+-]?[[:digit:]]+									real
+[+-]?[[:digit:]]+E[+-]?[[:digit:]]+									real
+[+-]?[[:digit:]]+									integer
+<>									relop
+<=|>=									relop
+<|>|IN									relop
+\+|-|OR									addop
+\*|/|DIV|MOD|AND									mulop
+[[:alpha:]][[:alnum:]]*									identifier
+
+rules
+
+%topic Definitions
+
+Program : PROGRAM identifier ( "(" Identifiers ")" ) ? ";" Block . ;
+
+Block : Definition * CompoundStatement ;
+
+Definition : CONST ConstantDefinition + ;
+
+Definition : TYPE TypeDefinition + ;
+
+Definition : VAR VariableDeclaration + ;
+
+Definition : USES Identifiers ";" ;
+
+Definition : PROCEDURE identifier ( "(" Parameters ")" ) ? ";" Block ";" ;
+
+Definition : FUNCTION identifier ( "(" Parameters ")" ) ? ":" identifier ";" Block ";" ;
+
+Parameters : Parameter ( ";" Parameter ) * ;
+
+Parameter : SimpleParameter ;
+
+Parameter : VAR SimpleParameter ;
+
+SimpleParameter : Identifiers ":" identifier ;
+
+ConstantDefinition : identifier = Constant ";" ;
+
+TypeDefinition : identifier = Type ";" ;
+
+VariableDeclaration : Identifiers ":" Type ";" ;
+
+Identifiers : identifier ( , identifier ) * ;
+
+%topic Types
+
+Type : SimpleType ;
+
+SimpleType : identifier ;
+
+Type : Constant .. Constant ;
+
+Type : identifier [ integer ] ;
+
+Type : identifier [ identifier ] ;
+
+Type : ARRAY [ SimpleType ( , SimpleType ) * ] OF Type ;
+
+%topic Statements
+
+Statement : IfTerminated ;
+
+Statement : SimpleStatement ;
+
+SimpleStatement : Variable := Expression ;
+
+SimpleStatement : ;
+
+SimpleStatement : CompoundStatement ;
+
+SimpleStatement : WHILE Expression DO SimpleStatement ;
+
+SimpleStatement : REPEAT Statement ( ";" Statement ) * UNTIL Expression ;
+
+SimpleStatement : FOR identifier := Range DO SimpleStatement ;
+
+SimpleStatement : identifier ( "(" Arguments ")" ) ? ;
+
+IfTerminated : IF Expression THEN SimpleStatement ELSE Statement ;
+
+IfTerminated : IF Expression THEN Statement ;
+
+IfTerminated : WHILE Expression DO IfTerminated ;
+
+IfTerminated : FOR identifier := Range DO IfTerminated ;
+
+Arguments : Argument ( , Argument ) * ;
+
+Argument : Expression ( ":" Expression ) * ;
+
+Range : Expression TO Expression ;
+
+Range : Expression DOWNTO Expression ;
+
+CompoundStatement : BEGIN Statement ( ";" Statement ) * END ;
+
+%topic Expressions
+
+Expression : SimpleExpression ;
+
+Expression : SimpleExpression relop SimpleExpression ;
+
+Expression : SimpleExpression = SimpleExpression ;
+
+SimpleExpression : Term | SimpleExpression addop Term ;
+
+Term : Factor | Term mulop Factor ;
+
+Factor : Constant | Variable | "(" Expression ")" | NOT Factor | identifier "(" Arguments ")" ;
+
+Constant : real | integer | string | TRUE | FALSE | NIL ;
+
+Variable : identifier | Variable "["  Expression ( , Expression ) * "]" ;

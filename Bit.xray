@@ -1,0 +1,63 @@
+tokens
+
+0 1 .
+
+patterns
+
+rules
+
+%topic unclassified
+
+N 'number' : L 'left' . L 'right'
+
+	%aspect value
+
+	{ v@number = (v@left) + (v@right) } 
+
+	%aspect scale
+
+	{ s@left = 0 } 
+	{ s@right = 0 - ( l@right ) } ;
+
+N 'number' : L 'list'
+
+	%aspect value
+
+	{ v@number = v@list } 
+
+	%aspect scale 
+
+	{ s@list = 0 };
+
+L 'list' : L 'tail' B 'head'
+
+	%aspect value
+
+	{ v@list = (v@tail) + (v@head) } 
+
+	%aspect scale
+
+	{ s@head = s@list  } 
+	{ s@tail = s@list + 1 } 
+
+	%aspect length
+
+	{ l@list = l@tail + 1 } ;
+
+L 'list' : B 'bit' 
+
+	%aspect value
+
+	{ v@list = v@bit } 
+
+	%aspect scale
+
+	{ s@bit = s@list } 
+
+	%aspect length
+
+	{ l@list = 1 } ;
+
+B 'bit'
+	: 0 %aspect value { v@bit = 0 } 
+	| 1 %aspect value { v@bit = 2 raisedTo: s@bit } ;
