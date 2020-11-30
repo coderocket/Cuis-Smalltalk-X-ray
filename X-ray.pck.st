@@ -1,680 +1,660 @@
-'From Cuis 5.0 [latest update: #4360] on 24 November 2020 at 8:28:01 pm'!
+'From Cuis 5.0 [latest update: #4426] on 30 November 2020 at 7:45:17 pm'!
 'Description '!
-!provides: 'X-ray' 1 859!
+!provides: 'X-ray' 1 861!
 !requires: 'Erudite' 1 144 nil!
 !requires: 'Regex-Core' 1 9 nil!
-SystemOrganization addCategory: #'X-ray'!
-SystemOrganization addCategory: #'X-ray-Browser'!
+SystemOrganization addCategory: 'X-ray'!
+SystemOrganization addCategory: 'X-ray-Browser'!
 
 
-!classDefinition: #ASTExplorer category: #'X-ray'!
+!classDefinition: #ASTExplorer category: 'X-ray'!
 AbstractHierarchicalList subclass: #ASTExplorer
 	instanceVariableNames: 'root attrsListSelection selectionAttrs'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'ASTExplorer class' category: #'X-ray'!
+!classDefinition: 'ASTExplorer class' category: 'X-ray'!
 ASTExplorer class
 	instanceVariableNames: ''!
 
-!classDefinition: #BinaryFunction category: #'X-ray'!
+!classDefinition: #BinaryFunction category: 'X-ray'!
 Dictionary subclass: #BinaryFunction
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'BinaryFunction class' category: #'X-ray'!
+!classDefinition: 'BinaryFunction class' category: 'X-ray'!
 BinaryFunction class
 	instanceVariableNames: ''!
 
-!classDefinition: #BinaryRelation category: #'X-ray'!
+!classDefinition: #BinaryRelation category: 'X-ray'!
 Set subclass: #BinaryRelation
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'BinaryRelation class' category: #'X-ray'!
+!classDefinition: 'BinaryRelation class' category: 'X-ray'!
 BinaryRelation class
 	instanceVariableNames: ''!
 
-!classDefinition: #ConflictException category: #'X-ray'!
+!classDefinition: #ConflictException category: 'X-ray'!
 Exception subclass: #ConflictException
 	instanceVariableNames: 'state items symbol'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'ConflictException class' category: #'X-ray'!
+!classDefinition: 'ConflictException class' category: 'X-ray'!
 ConflictException class
 	instanceVariableNames: ''!
 
-!classDefinition: #ReduceReduceConflict category: #'X-ray'!
+!classDefinition: #ReduceReduceConflict category: 'X-ray'!
 ConflictException subclass: #ReduceReduceConflict
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'ReduceReduceConflict class' category: #'X-ray'!
+!classDefinition: 'ReduceReduceConflict class' category: 'X-ray'!
 ReduceReduceConflict class
 	instanceVariableNames: ''!
 
-!classDefinition: #ShiftReduceConflict category: #'X-ray'!
+!classDefinition: #ShiftReduceConflict category: 'X-ray'!
 ConflictException subclass: #ShiftReduceConflict
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'ShiftReduceConflict class' category: #'X-ray'!
+!classDefinition: 'ShiftReduceConflict class' category: 'X-ray'!
 ShiftReduceConflict class
 	instanceVariableNames: ''!
 
-!classDefinition: #ConflictExplorer category: #'X-ray'!
+!classDefinition: #ConflictExplorer category: 'X-ray'!
 Exception subclass: #ConflictExplorer
 	instanceVariableNames: 'left right state label'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'ConflictExplorer class' category: #'X-ray'!
+!classDefinition: 'ConflictExplorer class' category: 'X-ray'!
 ConflictExplorer class
 	instanceVariableNames: ''!
 
-!classDefinition: #MissingAttribute category: #'X-ray'!
+!classDefinition: #MissingAttribute category: 'X-ray'!
 Exception subclass: #MissingAttribute
 	instanceVariableNames: 'attribute'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'MissingAttribute class' category: #'X-ray'!
+!classDefinition: 'MissingAttribute class' category: 'X-ray'!
 MissingAttribute class
 	instanceVariableNames: ''!
 
-!classDefinition: #MissingAttributeReference category: #'X-ray'!
+!classDefinition: #MissingAttributeReference category: 'X-ray'!
 Exception subclass: #MissingAttributeReference
 	instanceVariableNames: 'nonTerminal attributeName'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'MissingAttributeReference class' category: #'X-ray'!
+!classDefinition: 'MissingAttributeReference class' category: 'X-ray'!
 MissingAttributeReference class
 	instanceVariableNames: ''!
 
-!classDefinition: #UndefinedSymbols category: #'X-ray'!
+!classDefinition: #UndefinedSymbols category: 'X-ray'!
 Exception subclass: #UndefinedSymbols
 	instanceVariableNames: 'symbols'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'UndefinedSymbols class' category: #'X-ray'!
+!classDefinition: 'UndefinedSymbols class' category: 'X-ray'!
 UndefinedSymbols class
 	instanceVariableNames: ''!
 
-!classDefinition: #XraySyntaxError category: #'X-ray'!
+!classDefinition: #XraySyntaxError category: 'X-ray'!
 Exception subclass: #XraySyntaxError
 	instanceVariableNames: 'errorMessage position'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'XraySyntaxError class' category: #'X-ray'!
+!classDefinition: 'XraySyntaxError class' category: 'X-ray'!
 XraySyntaxError class
 	instanceVariableNames: ''!
 
-!classDefinition: #XrayParseError category: #'X-ray'!
+!classDefinition: #XrayParseError category: 'X-ray'!
 XraySyntaxError subclass: #XrayParseError
 	instanceVariableNames: 'expectedSymbols'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'XrayParseError class' category: #'X-ray'!
+!classDefinition: 'XrayParseError class' category: 'X-ray'!
 XrayParseError class
 	instanceVariableNames: ''!
 
-!classDefinition: #DuplicateRulesError category: #'X-ray-Browser'!
+!classDefinition: #DuplicateRulesError category: 'X-ray-Browser'!
 Exception subclass: #DuplicateRulesError
 	instanceVariableNames: 'rules position'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray-Browser'!
-!classDefinition: 'DuplicateRulesError class' category: #'X-ray-Browser'!
+!classDefinition: 'DuplicateRulesError class' category: 'X-ray-Browser'!
 DuplicateRulesError class
 	instanceVariableNames: ''!
 
-!classDefinition: #AttributeLocator category: #'X-ray'!
+!classDefinition: #AttributeLocator category: 'X-ray'!
 ParseNodeVisitor subclass: #AttributeLocator
 	instanceVariableNames: 'frame vars'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'AttributeLocator class' category: #'X-ray'!
+!classDefinition: 'AttributeLocator class' category: 'X-ray'!
 AttributeLocator class
 	instanceVariableNames: ''!
 
-!classDefinition: #AttributeLocatorNew category: #'X-ray'!
+!classDefinition: #AttributeLocatorNew category: 'X-ray'!
 ParseNodeVisitor subclass: #AttributeLocatorNew
 	instanceVariableNames: 'frame vars'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'AttributeLocatorNew class' category: #'X-ray'!
+!classDefinition: 'AttributeLocatorNew class' category: 'X-ray'!
 AttributeLocatorNew class
 	instanceVariableNames: ''!
 
-!classDefinition: #XrayEditor category: #'X-ray-Browser'!
+!classDefinition: #XrayEditor category: 'X-ray-Browser'!
 TextEditor subclass: #XrayEditor
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray-Browser'!
-!classDefinition: 'XrayEditor class' category: #'X-ray-Browser'!
+!classDefinition: 'XrayEditor class' category: 'X-ray-Browser'!
 XrayEditor class
 	instanceVariableNames: ''!
 
-!classDefinition: #ASTExplorerWindow category: #'X-ray'!
+!classDefinition: #ASTExplorerWindow category: 'X-ray'!
 SystemWindow subclass: #ASTExplorerWindow
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'ASTExplorerWindow class' category: #'X-ray'!
+!classDefinition: 'ASTExplorerWindow class' category: 'X-ray'!
 ASTExplorerWindow class
 	instanceVariableNames: ''!
 
-!classDefinition: #ConflictExplorerWindow category: #'X-ray'!
+!classDefinition: #ConflictExplorerWindow category: 'X-ray'!
 SystemWindow subclass: #ConflictExplorerWindow
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'ConflictExplorerWindow class' category: #'X-ray'!
+!classDefinition: 'ConflictExplorerWindow class' category: 'X-ray'!
 ConflictExplorerWindow class
 	instanceVariableNames: ''!
 
-!classDefinition: #XrayLanguageExplorerWindow category: #'X-ray-Browser'!
+!classDefinition: #XrayLanguageExplorerWindow category: 'X-ray-Browser'!
 SystemWindow subclass: #XrayLanguageExplorerWindow
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray-Browser'!
-!classDefinition: 'XrayLanguageExplorerWindow class' category: #'X-ray-Browser'!
+!classDefinition: 'XrayLanguageExplorerWindow class' category: 'X-ray-Browser'!
 XrayLanguageExplorerWindow class
 	instanceVariableNames: ''!
 
-!classDefinition: #XrayParserTestWindow category: #'X-ray-Browser'!
+!classDefinition: #XrayParserTestWindow category: 'X-ray-Browser'!
 SystemWindow subclass: #XrayParserTestWindow
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray-Browser'!
-!classDefinition: 'XrayParserTestWindow class' category: #'X-ray-Browser'!
+!classDefinition: 'XrayParserTestWindow class' category: 'X-ray-Browser'!
 XrayParserTestWindow class
 	instanceVariableNames: ''!
 
-!classDefinition: #ASTExplorerWrapper category: #'X-ray'!
+!classDefinition: #ASTExplorerWrapper category: 'X-ray'!
 ListItemWrapper subclass: #ASTExplorerWrapper
 	instanceVariableNames: 'root'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
-!classDefinition: 'ASTExplorerWrapper class' category: #'X-ray'!
+!classDefinition: 'ASTExplorerWrapper class' category: 'X-ray'!
 ASTExplorerWrapper class
 	instanceVariableNames: ''!
 
-!classDefinition: #Action category: #'X-ray'!
-Object subclass: #Action
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'Action class' category: #'X-ray'!
-Action class
-	instanceVariableNames: ''!
-
-!classDefinition: #ReduceAction category: #'X-ray'!
-Action subclass: #ReduceAction
-	instanceVariableNames: 'rule'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'ReduceAction class' category: #'X-ray'!
-ReduceAction class
-	instanceVariableNames: ''!
-
-!classDefinition: #ShiftAction category: #'X-ray'!
-Action subclass: #ShiftAction
-	instanceVariableNames: 'state'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'ShiftAction class' category: #'X-ray'!
-ShiftAction class
-	instanceVariableNames: ''!
-
-!classDefinition: #Attribute category: #'X-ray'!
-Object subclass: #Attribute
-	instanceVariableNames: 'value owner name'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'Attribute class' category: #'X-ray'!
-Attribute class
-	instanceVariableNames: ''!
-
-!classDefinition: #InheritedAttribute category: #'X-ray'!
-Attribute subclass: #InheritedAttribute
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'InheritedAttribute class' category: #'X-ray'!
-InheritedAttribute class
-	instanceVariableNames: ''!
-
-!classDefinition: #SynthesizedAttribute category: #'X-ray'!
-Attribute subclass: #SynthesizedAttribute
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'SynthesizedAttribute class' category: #'X-ray'!
-SynthesizedAttribute class
-	instanceVariableNames: ''!
-
-!classDefinition: #AttributeVariable category: #'X-ray'!
-Object subclass: #AttributeVariable
-	instanceVariableNames: 'index name'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'AttributeVariable class' category: #'X-ray'!
-AttributeVariable class
-	instanceVariableNames: ''!
-
-!classDefinition: #DFA category: #'X-ray'!
-Object subclass: #DFA
-	instanceVariableNames: 'states transitions start alphabet include read'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'DFA class' category: #'X-ray'!
-DFA class
-	instanceVariableNames: ''!
-
-!classDefinition: #DotPrintable category: #'X-ray'!
-Object subclass: #DotPrintable
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'DotPrintable class' category: #'X-ray'!
-DotPrintable class
-	instanceVariableNames: ''!
-
-!classDefinition: #RuleItem category: #'X-ray'!
-DotPrintable subclass: #RuleItem
-	instanceVariableNames: 'rule marker'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'RuleItem class' category: #'X-ray'!
-RuleItem class
-	instanceVariableNames: ''!
-
-!classDefinition: #LookAheadRuleItem category: #'X-ray'!
-RuleItem subclass: #LookAheadRuleItem
-	instanceVariableNames: 'lookAhead'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'LookAheadRuleItem class' category: #'X-ray'!
-LookAheadRuleItem class
-	instanceVariableNames: ''!
-
-!classDefinition: #State category: #'X-ray'!
-DotPrintable subclass: #State
-	instanceVariableNames: 'items cloneId'
-	classVariableNames: 'ErrorState'
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'State class' category: #'X-ray'!
-State class
-	instanceVariableNames: ''!
-
-!classDefinition: #Transition category: #'X-ray'!
-DotPrintable subclass: #Transition
-	instanceVariableNames: 'from to symbol'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'Transition class' category: #'X-ray'!
-Transition class
-	instanceVariableNames: ''!
-
-!classDefinition: #CanonicTransition category: #'X-ray'!
-Transition subclass: #CanonicTransition
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'CanonicTransition class' category: #'X-ray'!
-CanonicTransition class
-	instanceVariableNames: ''!
-
-!classDefinition: #TransitionFunction category: #'X-ray'!
-DotPrintable subclass: #TransitionFunction
-	instanceVariableNames: 'tuples transitionClass'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'TransitionFunction class' category: #'X-ray'!
-TransitionFunction class
-	instanceVariableNames: ''!
-
-!classDefinition: #TransitionRelation category: #'X-ray'!
-DotPrintable subclass: #TransitionRelation
-	instanceVariableNames: 'tuples index'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'TransitionRelation class' category: #'X-ray'!
-TransitionRelation class
-	instanceVariableNames: ''!
-
-!classDefinition: #XraySymbol category: #'X-ray'!
-DotPrintable subclass: #XraySymbol
-	instanceVariableNames: 'name parent'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'XraySymbol class' category: #'X-ray'!
-XraySymbol class
-	instanceVariableNames: ''!
-
-!classDefinition: #NonTerminal category: #'X-ray'!
-XraySymbol subclass: #NonTerminal
-	instanceVariableNames: 'children attributes mark rule'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'NonTerminal class' category: #'X-ray'!
-NonTerminal class
-	instanceVariableNames: ''!
-
-!classDefinition: #Goal category: #'X-ray'!
-NonTerminal subclass: #Goal
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'Goal class' category: #'X-ray'!
-Goal class
-	instanceVariableNames: ''!
-
-!classDefinition: #Terminal category: #'X-ray'!
-XraySymbol subclass: #Terminal
-	instanceVariableNames: 'value start end'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'Terminal class' category: #'X-ray'!
-Terminal class
-	instanceVariableNames: ''!
-
-!classDefinition: #EOF category: #'X-ray'!
-Terminal subclass: #EOF
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'EOF class' category: #'X-ray'!
-EOF class
-	instanceVariableNames: ''!
-
-!classDefinition: #Epsilon category: #'X-ray'!
-Terminal subclass: #Epsilon
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'Epsilon class' category: #'X-ray'!
-Epsilon class
-	instanceVariableNames: ''!
-
-!classDefinition: #ErrorAction category: #'X-ray'!
-Object subclass: #ErrorAction
-	instanceVariableNames: 'symbol'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'ErrorAction class' category: #'X-ray'!
-ErrorAction class
-	instanceVariableNames: ''!
-
-!classDefinition: #Grammar category: #'X-ray'!
-Object subclass: #Grammar
-	instanceVariableNames: 'terminals nonTerminals rules start'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'Grammar class' category: #'X-ray'!
-Grammar class
-	instanceVariableNames: ''!
-
-!classDefinition: #NFA category: #'X-ray'!
-Object subclass: #NFA
-	instanceVariableNames: 'alphabet start states transitions'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'NFA class' category: #'X-ray'!
-NFA class
-	instanceVariableNames: ''!
-
-!classDefinition: #PriorityBlock category: #'X-ray'!
-Object subclass: #PriorityBlock
-	instanceVariableNames: 'block priority'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'PriorityBlock class' category: #'X-ray'!
-PriorityBlock class
-	instanceVariableNames: ''!
-
-!classDefinition: #Rule category: #'X-ray'!
-Object subclass: #Rule
-	instanceVariableNames: 'left right semantics aliases'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'Rule class' category: #'X-ray'!
-Rule class
-	instanceVariableNames: ''!
-
-!classDefinition: #SemanticRule category: #'X-ray'!
-Object subclass: #SemanticRule
-	instanceVariableNames: 'left right effect'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'SemanticRule class' category: #'X-ray'!
-SemanticRule class
-	instanceVariableNames: ''!
-
-!classDefinition: #Trace category: #'X-ray'!
-Object subclass: #Trace
-	instanceVariableNames: 'pre post'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'Trace class' category: #'X-ray'!
-Trace class
-	instanceVariableNames: ''!
-
-!classDefinition: #TreeNode category: #'X-ray'!
-Object subclass: #TreeNode
-	instanceVariableNames: 'state parent symbol'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'TreeNode class' category: #'X-ray'!
-TreeNode class
-	instanceVariableNames: ''!
-
-!classDefinition: #XrayParser category: #'X-ray'!
-Object subclass: #XrayParser
-	instanceVariableNames: 'input stack start actions goto syntaxError nextMark scanner'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'XrayParser class' category: #'X-ray'!
-XrayParser class
-	instanceVariableNames: ''!
-
-!classDefinition: #XrayParserGenerator category: #'X-ray'!
-Object subclass: #XrayParserGenerator
-	instanceVariableNames: ''
-	classVariableNames: 'XrayLanguageParser'
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'XrayParserGenerator class' category: #'X-ray'!
-XrayParserGenerator class
-	instanceVariableNames: ''!
-
-!classDefinition: #XrayScanner category: #'X-ray'!
-Object subclass: #XrayScanner
-	instanceVariableNames: 'actions stream'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'XrayScanner class' category: #'X-ray'!
-XrayScanner class
-	instanceVariableNames: ''!
-
-!classDefinition: #PascalScanner category: #'X-ray'!
-XrayScanner subclass: #PascalScanner
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'PascalScanner class' category: #'X-ray'!
-PascalScanner class
-	instanceVariableNames: ''!
-
-!classDefinition: #Language category: #'X-ray-Browser'!
-Object subclass: #Language
-	instanceVariableNames: 'name directives tokens patterns topics'
-	classVariableNames: 'LanguageCatalog LanguageParser'
-	poolDictionaries: ''
-	category: 'X-ray-Browser'!
-!classDefinition: 'Language class' category: #'X-ray-Browser'!
-Language class
-	instanceVariableNames: ''!
-
-!classDefinition: #RuleBranch category: #'X-ray-Browser'!
-Object subclass: #RuleBranch
-	instanceVariableNames: 'key source aspects'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray-Browser'!
-!classDefinition: 'RuleBranch class' category: #'X-ray-Browser'!
-RuleBranch class
-	instanceVariableNames: ''!
-
-!classDefinition: #RuleSource category: #'X-ray-Browser'!
-Object subclass: #RuleSource
-	instanceVariableNames: 'source branches key semi'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray-Browser'!
-!classDefinition: 'RuleSource class' category: #'X-ray-Browser'!
-RuleSource class
-	instanceVariableNames: ''!
-
-!classDefinition: #RuleTopic category: #'X-ray-Browser'!
-Object subclass: #RuleTopic
-	instanceVariableNames: 'topic rules source'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray-Browser'!
-!classDefinition: 'RuleTopic class' category: #'X-ray-Browser'!
-RuleTopic class
-	instanceVariableNames: ''!
-
-!classDefinition: #SemanticSource category: #'X-ray-Browser'!
-Object subclass: #SemanticSource
-	instanceVariableNames: 'source location'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray-Browser'!
-!classDefinition: 'SemanticSource class' category: #'X-ray-Browser'!
-SemanticSource class
-	instanceVariableNames: ''!
-
-!classDefinition: #SequenceGenerator category: #'X-ray-Browser'!
-Object subclass: #SequenceGenerator
-	instanceVariableNames: 'next'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray-Browser'!
-!classDefinition: 'SequenceGenerator class' category: #'X-ray-Browser'!
-SequenceGenerator class
-	instanceVariableNames: ''!
-
-!classDefinition: #TuringMachine category: #'X-ray-Browser'!
-Object subclass: #TuringMachine
-	instanceVariableNames: 'tape alphabet state head blank start halt program'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray-Browser'!
-!classDefinition: 'TuringMachine class' category: #'X-ray-Browser'!
-TuringMachine class
-	instanceVariableNames: ''!
-
-!classDefinition: #UnclassifiedAspect category: #'X-ray-Browser'!
-Object subclass: #UnclassifiedAspect
-	instanceVariableNames: 'actions'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray-Browser'!
-!classDefinition: 'UnclassifiedAspect class' category: #'X-ray-Browser'!
-UnclassifiedAspect class
-	instanceVariableNames: ''!
-
-!classDefinition: #SemanticAspect category: #'X-ray-Browser'!
-UnclassifiedAspect subclass: #SemanticAspect
-	instanceVariableNames: 'aspect source'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray-Browser'!
-!classDefinition: 'SemanticAspect class' category: #'X-ray-Browser'!
-SemanticAspect class
-	instanceVariableNames: ''!
-
-!classDefinition: #XrayLanguageExplorerModel category: #'X-ray-Browser'!
-Object subclass: #XrayLanguageExplorerModel
-	instanceVariableNames: 'categories selectedLanguageIndex selectedCategories selectedTopics selectedAspects contents selectedTextInterval errorPresentor selectedLanguageName'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray-Browser'!
-!classDefinition: 'XrayLanguageExplorerModel class' category: #'X-ray-Browser'!
-XrayLanguageExplorerModel class
-	instanceVariableNames: ''!
-
-!classDefinition: #XrayParserTestModel category: #'X-ray-Browser'!
-Object subclass: #XrayParserTestModel
-	instanceVariableNames: 'text selectedTextInterval stack selectedStackSymbol selectedASTSymbol parser'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray-Browser'!
-!classDefinition: 'XrayParserTestModel class' category: #'X-ray-Browser'!
-XrayParserTestModel class
-	instanceVariableNames: ''!
-
-!classDefinition: #XrayManual category: #'X-ray-Browser'!
+!classDefinition: #XrayManual category: 'X-ray-Browser'!
 EruditeBook subclass: #XrayManual
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray-Browser'!
-!classDefinition: 'XrayManual class' category: #'X-ray-Browser'!
+!classDefinition: 'XrayManual class' category: 'X-ray-Browser'!
 XrayManual class
+	instanceVariableNames: ''!
+
+!classDefinition: #Action category: 'X-ray'!
+Object subclass: #Action
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'Action class' category: 'X-ray'!
+Action class
+	instanceVariableNames: ''!
+
+!classDefinition: #ReduceAction category: 'X-ray'!
+Action subclass: #ReduceAction
+	instanceVariableNames: 'rule'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'ReduceAction class' category: 'X-ray'!
+ReduceAction class
+	instanceVariableNames: ''!
+
+!classDefinition: #ShiftAction category: 'X-ray'!
+Action subclass: #ShiftAction
+	instanceVariableNames: 'state'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'ShiftAction class' category: 'X-ray'!
+ShiftAction class
+	instanceVariableNames: ''!
+
+!classDefinition: #Attribute category: 'X-ray'!
+Object subclass: #Attribute
+	instanceVariableNames: 'value owner name'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'Attribute class' category: 'X-ray'!
+Attribute class
+	instanceVariableNames: ''!
+
+!classDefinition: #InheritedAttribute category: 'X-ray'!
+Attribute subclass: #InheritedAttribute
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'InheritedAttribute class' category: 'X-ray'!
+InheritedAttribute class
+	instanceVariableNames: ''!
+
+!classDefinition: #SynthesizedAttribute category: 'X-ray'!
+Attribute subclass: #SynthesizedAttribute
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'SynthesizedAttribute class' category: 'X-ray'!
+SynthesizedAttribute class
+	instanceVariableNames: ''!
+
+!classDefinition: #AttributeVariable category: 'X-ray'!
+Object subclass: #AttributeVariable
+	instanceVariableNames: 'index name'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'AttributeVariable class' category: 'X-ray'!
+AttributeVariable class
+	instanceVariableNames: ''!
+
+!classDefinition: #DFA category: 'X-ray'!
+Object subclass: #DFA
+	instanceVariableNames: 'states transitions start alphabet include read'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'DFA class' category: 'X-ray'!
+DFA class
+	instanceVariableNames: ''!
+
+!classDefinition: #DotPrintable category: 'X-ray'!
+Object subclass: #DotPrintable
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'DotPrintable class' category: 'X-ray'!
+DotPrintable class
+	instanceVariableNames: ''!
+
+!classDefinition: #RuleItem category: 'X-ray'!
+DotPrintable subclass: #RuleItem
+	instanceVariableNames: 'rule marker'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'RuleItem class' category: 'X-ray'!
+RuleItem class
+	instanceVariableNames: ''!
+
+!classDefinition: #LookAheadRuleItem category: 'X-ray'!
+RuleItem subclass: #LookAheadRuleItem
+	instanceVariableNames: 'lookAhead'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'LookAheadRuleItem class' category: 'X-ray'!
+LookAheadRuleItem class
+	instanceVariableNames: ''!
+
+!classDefinition: #State category: 'X-ray'!
+DotPrintable subclass: #State
+	instanceVariableNames: 'items cloneId identifier'
+	classVariableNames: 'ErrorState'
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'State class' category: 'X-ray'!
+State class
+	instanceVariableNames: ''!
+
+!classDefinition: #Transition category: 'X-ray'!
+DotPrintable subclass: #Transition
+	instanceVariableNames: 'from to symbol'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'Transition class' category: 'X-ray'!
+Transition class
+	instanceVariableNames: ''!
+
+!classDefinition: #CanonicTransition category: 'X-ray'!
+Transition subclass: #CanonicTransition
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'CanonicTransition class' category: 'X-ray'!
+CanonicTransition class
+	instanceVariableNames: ''!
+
+!classDefinition: #TransitionFunction category: 'X-ray'!
+DotPrintable subclass: #TransitionFunction
+	instanceVariableNames: 'tuples transitionClass'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'TransitionFunction class' category: 'X-ray'!
+TransitionFunction class
+	instanceVariableNames: ''!
+
+!classDefinition: #TransitionRelation category: 'X-ray'!
+DotPrintable subclass: #TransitionRelation
+	instanceVariableNames: 'tuples index'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'TransitionRelation class' category: 'X-ray'!
+TransitionRelation class
+	instanceVariableNames: ''!
+
+!classDefinition: #XraySymbol category: 'X-ray'!
+DotPrintable subclass: #XraySymbol
+	instanceVariableNames: 'name parent'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'XraySymbol class' category: 'X-ray'!
+XraySymbol class
+	instanceVariableNames: ''!
+
+!classDefinition: #NonTerminal category: 'X-ray'!
+XraySymbol subclass: #NonTerminal
+	instanceVariableNames: 'children attributes mark rule'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'NonTerminal class' category: 'X-ray'!
+NonTerminal class
+	instanceVariableNames: ''!
+
+!classDefinition: #Goal category: 'X-ray'!
+NonTerminal subclass: #Goal
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'Goal class' category: 'X-ray'!
+Goal class
+	instanceVariableNames: ''!
+
+!classDefinition: #Terminal category: 'X-ray'!
+XraySymbol subclass: #Terminal
+	instanceVariableNames: 'value start end'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'Terminal class' category: 'X-ray'!
+Terminal class
+	instanceVariableNames: ''!
+
+!classDefinition: #EOF category: 'X-ray'!
+Terminal subclass: #EOF
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'EOF class' category: 'X-ray'!
+EOF class
+	instanceVariableNames: ''!
+
+!classDefinition: #Epsilon category: 'X-ray'!
+Terminal subclass: #Epsilon
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'Epsilon class' category: 'X-ray'!
+Epsilon class
+	instanceVariableNames: ''!
+
+!classDefinition: #ErrorAction category: 'X-ray'!
+Object subclass: #ErrorAction
+	instanceVariableNames: 'symbol'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'ErrorAction class' category: 'X-ray'!
+ErrorAction class
+	instanceVariableNames: ''!
+
+!classDefinition: #Grammar category: 'X-ray'!
+Object subclass: #Grammar
+	instanceVariableNames: 'terminals nonTerminals rules start'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'Grammar class' category: 'X-ray'!
+Grammar class
+	instanceVariableNames: ''!
+
+!classDefinition: #NFA category: 'X-ray'!
+Object subclass: #NFA
+	instanceVariableNames: 'alphabet start states transitions'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'NFA class' category: 'X-ray'!
+NFA class
+	instanceVariableNames: ''!
+
+!classDefinition: #PriorityBlock category: 'X-ray'!
+Object subclass: #PriorityBlock
+	instanceVariableNames: 'block priority'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'PriorityBlock class' category: 'X-ray'!
+PriorityBlock class
+	instanceVariableNames: ''!
+
+!classDefinition: #Rule category: 'X-ray'!
+Object subclass: #Rule
+	instanceVariableNames: 'left right semantics aliases'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'Rule class' category: 'X-ray'!
+Rule class
+	instanceVariableNames: ''!
+
+!classDefinition: #SemanticRule category: 'X-ray'!
+Object subclass: #SemanticRule
+	instanceVariableNames: 'left right effect'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'SemanticRule class' category: 'X-ray'!
+SemanticRule class
+	instanceVariableNames: ''!
+
+!classDefinition: #Trace category: 'X-ray'!
+Object subclass: #Trace
+	instanceVariableNames: 'pre post'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'Trace class' category: 'X-ray'!
+Trace class
+	instanceVariableNames: ''!
+
+!classDefinition: #TreeNode category: 'X-ray'!
+Object subclass: #TreeNode
+	instanceVariableNames: 'state parent symbol'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'TreeNode class' category: 'X-ray'!
+TreeNode class
+	instanceVariableNames: ''!
+
+!classDefinition: #XrayParser category: 'X-ray'!
+Object subclass: #XrayParser
+	instanceVariableNames: 'input stack start actions goto syntaxError nextMark scanner'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'XrayParser class' category: 'X-ray'!
+XrayParser class
+	instanceVariableNames: ''!
+
+!classDefinition: #XrayParserGenerator category: 'X-ray'!
+Object subclass: #XrayParserGenerator
+	instanceVariableNames: ''
+	classVariableNames: 'XrayLanguageParser'
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'XrayParserGenerator class' category: 'X-ray'!
+XrayParserGenerator class
+	instanceVariableNames: ''!
+
+!classDefinition: #XrayScanner category: 'X-ray'!
+Object subclass: #XrayScanner
+	instanceVariableNames: 'actions stream'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'XrayScanner class' category: 'X-ray'!
+XrayScanner class
+	instanceVariableNames: ''!
+
+!classDefinition: #PascalScanner category: 'X-ray'!
+XrayScanner subclass: #PascalScanner
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'PascalScanner class' category: 'X-ray'!
+PascalScanner class
+	instanceVariableNames: ''!
+
+!classDefinition: #Language category: 'X-ray-Browser'!
+Object subclass: #Language
+	instanceVariableNames: 'name directives tokens patterns topics'
+	classVariableNames: 'LanguageCatalog LanguageParser'
+	poolDictionaries: ''
+	category: 'X-ray-Browser'!
+!classDefinition: 'Language class' category: 'X-ray-Browser'!
+Language class
+	instanceVariableNames: ''!
+
+!classDefinition: #RuleBranch category: 'X-ray-Browser'!
+Object subclass: #RuleBranch
+	instanceVariableNames: 'key source aspects'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray-Browser'!
+!classDefinition: 'RuleBranch class' category: 'X-ray-Browser'!
+RuleBranch class
+	instanceVariableNames: ''!
+
+!classDefinition: #RuleSource category: 'X-ray-Browser'!
+Object subclass: #RuleSource
+	instanceVariableNames: 'source branches key semi'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray-Browser'!
+!classDefinition: 'RuleSource class' category: 'X-ray-Browser'!
+RuleSource class
+	instanceVariableNames: ''!
+
+!classDefinition: #RuleTopic category: 'X-ray-Browser'!
+Object subclass: #RuleTopic
+	instanceVariableNames: 'topic rules source'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray-Browser'!
+!classDefinition: 'RuleTopic class' category: 'X-ray-Browser'!
+RuleTopic class
+	instanceVariableNames: ''!
+
+!classDefinition: #SemanticSource category: 'X-ray-Browser'!
+Object subclass: #SemanticSource
+	instanceVariableNames: 'source location'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray-Browser'!
+!classDefinition: 'SemanticSource class' category: 'X-ray-Browser'!
+SemanticSource class
+	instanceVariableNames: ''!
+
+!classDefinition: #UnclassifiedAspect category: 'X-ray-Browser'!
+Object subclass: #UnclassifiedAspect
+	instanceVariableNames: 'actions'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray-Browser'!
+!classDefinition: 'UnclassifiedAspect class' category: 'X-ray-Browser'!
+UnclassifiedAspect class
+	instanceVariableNames: ''!
+
+!classDefinition: #SemanticAspect category: 'X-ray-Browser'!
+UnclassifiedAspect subclass: #SemanticAspect
+	instanceVariableNames: 'aspect source'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray-Browser'!
+!classDefinition: 'SemanticAspect class' category: 'X-ray-Browser'!
+SemanticAspect class
+	instanceVariableNames: ''!
+
+!classDefinition: #XrayLanguageExplorerModel category: 'X-ray-Browser'!
+Object subclass: #XrayLanguageExplorerModel
+	instanceVariableNames: 'categories selectedLanguageIndex selectedCategories selectedTopics selectedAspects contents selectedTextInterval errorPresentor selectedLanguageName'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray-Browser'!
+!classDefinition: 'XrayLanguageExplorerModel class' category: 'X-ray-Browser'!
+XrayLanguageExplorerModel class
+	instanceVariableNames: ''!
+
+!classDefinition: #XrayParserTestModel category: 'X-ray-Browser'!
+Object subclass: #XrayParserTestModel
+	instanceVariableNames: 'text selectedTextInterval stack selectedStackSymbol selectedASTSymbol parser'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray-Browser'!
+!classDefinition: 'XrayParserTestModel class' category: 'X-ray-Browser'!
+XrayParserTestModel class
 	instanceVariableNames: ''!
 
 
@@ -1649,6 +1629,474 @@ contents
 hasContents
 	^item children notEmpty! !
 
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/15/2020 15:02:37'!
+Aspects
+^(EruditeBookSection basicNew title: 'Aspects'; document: ((EruditeDocument contents: '
+!!!!Aspects
+
+An aspect is a collection of semantic rules that compute a cohesive set of semantic values. 
+
+For example, when developing a compiler for a statically typed programming language we need a collection of rules to compute the expression''s type. Another collection of rules could generate the intermediate code. We may define each collection as a separate aspect to make it easier to develop each one separately from the others.
+
+
+
+') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+DebuggingConflicts
+^(EruditeBookSection basicNew title: 'Debugging Conflicts'; document: ((EruditeDocument contents: '
+!!!!Debugging Conflicts
+
+In some cases a grammar may be ambigous (or just not LR). In such cases the parser generator will report the problem as either a shift-reduce or a reduce-reduce conflict. 
+
+Here is a typical example:
+
+E : E "+" E ;
+
+E : integer ;
+
+This grammar is ambigous because it can generate two distinct parse trees for the string E + E + E: 
+
+	(E + E) + E 			  or 		E + (E + E)
+
+The conflicting symbol is the second ''+'' because the parser may either shift it to create the first version, or reduce the expression preceding it to create the second version.
+
+When such a problem occurs X-ray displays 
+[[[ [Language parserFor:''ShiftReduceConflict''] on: ConflictExplorer do:[: aConflictExplorer | aConflictExplorer open] ]]] doItWithButton:''a conflict explorer window''..
+
+The window shows the rules involving the conflict at the bottom, and two examples of ambigous parsing at the top. 
+
+In case of a shift-reduce conflict the left side is an example of shifting the conflicting symbol, and the right side is an example of reducing right before the conflicting symbol. 
+
+
+') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+Introduction
+^(EruditeBookSection basicNew title: 'Introduction'; document: ((EruditeDocument contents: '
+!!!!X-ray Manual
+
+by **David Faitelson** (//davidf@afeka.ac.il//)
+
+This is the manual for the X-ray parser generator system.
+
+X-ray is an LR(1) parser generator and a collection of tools for writing, editing, testing and debugging grammars. 
+
+X-ray has the following major features:
+
+1. It is an LR(1) parser, thus avoiding the mysterious Reduce-Reduce conflicts that plague LALR parsers.
+
+2. It uses examples to report conflicts. 
+
+3. It provides a powerful attribute grammar that is free of the limitations of L-attributed grammars.
+
+4. Its development environment makes it easier to develop large large grammars by breaking them into //topics// and //aspects//. 
+
+
+
+
+ ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+LexicalAnalysis
+^(EruditeBookSection basicNew title: 'Lexical Analysis'; document: ((EruditeDocument contents: '
+!!!!Lexical Analysis
+
+Lexical analysis converts character strings into terminal tokens for the parser. 
+
+The lexical analysis part in an Xray grammar consists of two sections: tokens and patterns.
+
+!!!!!! Tokens
+
+The tokens section consists of a list of literal strings that the system recognizes as atomic (valueless) terminals. Such tokens are often keywords and operator symbols. 
+
+For example, the section
+
+tokens
+
+program begin end + *
+
+defines five terminal symbols. These symbols appear in grammar rules exactly as they are written in the defition, except for symbols such as * and + that have a special meaning in grammar rules. These must be protected by double quotes. For example, 
+
+  E : E "+" T ;
+
+is a rule with three symbols E, +, and T, whereas the rule 
+
+  E : E + T ;
+
+is a rule with two symbols the first of which (E +) is a non empty list of Es.
+
+!!!!!! Patterns
+
+The patterns section consists of regular expressions with actions for generating value carrying terminals. The regular expression language is that of {RxParser::class}. 
+
+For example, the section 
+
+patterns
+
+[[:alpha:]][[:alnum:]]*					identifier
+[[:space:]]+					```{ nextTerminal }```
+
+defines two rules. The first rule defines an identifier token, and the second rule recognizes whitespace but instead of returning a token name it sends a nextTerminal message to the scanner causing it to ignore the space and scan the next terminal. 
+
+It is also possible to define both a terminal name and an action to perform on the content of the terminal. For example, 
+
+patterns
+
+```":isDoubleQuote:(:^isDoubleQuote:)+:isDoubleQuote:"											string { strip: }```
+
+recognizes a string of characters surrounded by double quotes, and defines an action that strips the double quotes from the content of the terminal.
+
+!!!!!!!! Patterns with special characters
+
+The following characters are X-ray operators and therefore require care when used in patterns and rules:
+
+```( ) { } + * '' : ;```
+
+when we need to include one of these characters literally in a pattern or a rule we must protect the pattern with double quotes. For example,
+
+patterns
+
+"''[^'']*''"			string 
+
+recognizes a Pascal string. Without the double quotes the pattern will cause a syntax error.
+
+!!!!!! Extending the scanner
+
+It is possible to direct the X-ray system to use a different scanner than the default {XrayScanner::class}. This provides enough flexibility to implement case insensitive scanning, indentation sensitive grammars and so on. A simple example is {PascalScanner::class}.
+
+
+
+
+
+') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+ManagingLargeGrammars
+^(EruditeBookSection basicNew title: 'Managing Large Grammars'; document: ((EruditeDocument contents: '!!!! Managing Large Grammars
+
+When a grammar becomes large, maintaining it in a single sequential scroll of text is no longer effective, as more and more time is spent navigating around to find and edit the relevant parts of the grammar. 
+
+The X-ray language Browser organizes grammars into categories, topics and aspects. 
+
+A category is a coherent functional part of the grammar. Currently an X-ray grammar has four categories:
+
+Directives			Customization instructions
+Tokens			Literal terminal symbols
+Patterns			Regular expressions for terminals 
+Rules			Grammar rules
+
+These categories are predefined parts of each grammar. In addition, you may divide the grammar rules into separate topics and aspects. 
+
+!!!!!! Topics
+
+A topic is a collection of rules related to a particular subject. 
+
+A topic is a classification of rules into common grammatical parts. For example, all the rules for producing types may be collected in a types topic. 
+
+For example, grammar for a language such as C consists of rules that define the structure of expressions and for rules that define the structure of statements. We may define each collection of rules as a separate topic to help us quickly navigate and focus on each topic separately from the rest.
+
+!!!!!! Aspects
+
+An aspect is a collection of semantic rules that compute a cohesive set of semantic values. 
+
+For example, when developing a compiler for a statically typed programming language we need a collection of rules to compute the expression''s type. Another collection of rules could generate the intermediate code. We may define each collection as a separate aspect to make it easier to develop each one separately from the others.
+
+An aspect is a classification of semantic actions into common semantic concerns. For example, the semantic actions for type checking could be placed in a ''type checking aspect'', and the semantic actions for code generation could be placed into a separate ''code generation'' aspect.
+
+Topics and aspects are different ways to organize a grammar. A topic may have semantic actions from several aspects and an aspect may include semantic actions of rules that belong to separate topics. 
+
+!!!!!! The structure of the X-ray langauge Browser
+
+The X-ray language Browser lets you select which topics and aspects of the grammar you want to see and edit. 
+
+It has four lists in the top row, and a text area in the bottom row. The top row lists are (from left to right): languages, categories, topics, and aspects. 
+
+After you select a langauge in the left most list, you can select which categories you wish to see. There are four categories, one for each major section of the grammar: directives, tokens, patterns, and rules. 
+ 
+We often finish developing the lexical analysis part quickly and then spend most of the time developing the grammar rules. By selecting only the grammar rules category we can put aside the distracting information. 
+
+The browser parses the grammar and identifies any topics and aspects that are defined in the grammar. These topics and aspects are presented in the two rightmost panels of the top row. 
+
+The browser updates the text area to show just the selected topics and aspects. You can then edit these parts of the grammar. The browser will never lose your information. Any topics or aspcets that are not visible will be preserved. If you want to remove an aspect you must first select all the topics in which it appears. If you want to remove a topic you must select all the aspects that appear in this topic. 
+
+
+
+
+') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+TestingTheParser
+^(EruditeBookSection basicNew title: 'Testing the Parser'; document: ((EruditeDocument contents: '
+!!!!Testing the Parser
+
+To test the parser select the ''test'' menu option for the language. This would generate the LR parser and (if no conflicts are found) open a grammar test explorer window. 
+
+You may find it useful to read these notes while looking at the [[[ aLanguage := Language at: ''Bit'' . aLanguage test ]]] doItWithButton:'' test explorer for the Bit language''..
+
+The window has three areas (from left to right): a text area for writing text, a list that shows the symbols on the parser''s stack, and a heirarchical list that shows the AST of the selected stack symbol. The lower part of the heirarchical list shows the attributes of the selected symbol.
+
+If the scanner cannot identify some of your text it will color red the area it cannot identify. 
+
+If the parser cannot fully parse the text, the stack will contain the symbols that it did manage to parse. When the parser succeeds in parsing the entire text there will be just two symbols on the stack: the top will hold the special EOF terminal and right below it there will be the grammar''s start symbol. 
+
+When you select a symbol in the AST the test explorer will highlight in yellow the text that corresponds to this symbol. In addition, you will see the attributes of this symbol below the AST tree. However, the attributes will have values only if the parser manages to parse the entire text. This is because the parser computes the semantic attributes only if it successfully parses the entire text. 
+
+
+
+
+
+') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+TheXrayLanguage
+^(EruditeBookSection basicNew title: 'The X-ray Language'; document: ((EruditeDocument contents: '
+!!!! The X-ray Language
+
+You may find it useful to read the following notes while also examining the X-ray grammar for the [[[ Language browse: ''RPCalc'' ]]] doItWithButton:''Reverse Polish Notation calculator''..
+
+!!!!!! Overall structure
+
+An X-ray grammar has three mandatory sections and one optional section:
+
+<optional directives>
+
+tokens
+
+<zero or more token symbols>
+
+patterns
+
+<zero or more pattern rules>
+
+rules
+
+<one or more grammar rules>
+
+The first rule determines the grammar''s starting symbol.
+
+!!!!!! Pattern rules
+
+There are three kinds of pattern rules. 
+
+<regular expression> 				<name>
+
+Creates a terminal <name> when it matches the regular expression. The value of the terminal is the matched string.
+
+<regular expression> 				{ <message> }
+
+Creates whatever terminal is returned when sending <message> to the scanner.
+
+<regular expression> 				{ <message1> }			{ <message2> }
+
+Creates whatever terminal is returned when sending <message1> to the scanner but passes the terminal''s value through <message2>.
+
+To match the next token, the scanner selects the rule that matches the longest prefix. When more than one rule matches the longest prefix the scanner selects the rule that appears earlier in the grammar.
+
+!!!!!! Grammar rules
+
+Each grammar rule has the following structure:
+
+<symbol> ''<name>'' ? : (<symbol> ''<name>'' ?) * <action> * ;
+
+The names that optionally accompany each symbol are used to refer to these symbols in the semantic actions.
+
+A semantic action has the following form:
+
+  { <name> @ <name> = <Smalltalk expression> }
+
+Inside the Smalltalk part, the meaning of  
+
+v @ x 
+
+is to fetch the attribute v from the symbol x.
+
+!!!!!! List operators
+
+The X-ray grammar language provides three operators to simplify common rule patterns: * + and ?.
+
+If X is a symbol in the grammar then 
+
+X * is a list of zero or more Xs
+
+X + is a list of one or more Xs 
+
+X ? is a list of zero or one Xs
+
+In addition, we can create lists of more than one symbol by enclosing them in parenthesis. For example:
+
+Parameters : Parameter ( , Parameter ) *
+
+ 
+
+') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/15/2020 15:02:37'!
+Topics
+^(EruditeBookSection basicNew title: 'Topics'; document: ((EruditeDocument contents: '
+!!!!Topics
+
+A topic is a collection of rules related to a particular subject. 
+
+For example, grammar for a language such as C consists of rules that define the structure of expressions and for rules that define the structure of statements. We may define each collection of rules as a separate topic to help us quickly navigate and focus on each topic separately from the rest.
+
+
+
+') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+UsingTheParser
+^(EruditeBookSection basicNew title: 'Using the Parser '; document: ((EruditeDocument contents: '!!!! Using the Parser
+
+In this section we will see how to use the generated parser in your own code.
+
+The easiest way to access the parser is to send the message {parserFor: ::selector} to the {Language ::class} class, passing it the name of the language:
+
+[[[ aParser := Language parserFor: ''RPCalc'' ]]].
+
+Once you obtain a parser you send it the message {parse: ::selector}
+
+[[[ outcome := aParser parse:''3 5 8 + +
+'' ]]].
+
+The parser returns a pair of arrays. The first member contains the symbol stack and the second the unparsed tokens. 
+
+If the parser has succeeded in parsing the entire input, the second array will be empty, and the first array will contain exactly two symbols. The first one will be the EOF terminal and the second one will be the grammar''s start symbol. This symbol will be the root of the parsed AST. 
+
+The following code fragment demonstrates how it all works:
+
+[[[ | aParser outcome | 
+aParser := Language parserFor: ''RPCalc''.
+outcome := aParser parse:''3 5 8 + +
+''.
+outcome inspect.
+outcome first second xray]]] doIt.
+
+The message {xray ::selector} opens an Xray AST explorer window on the root symbol. This explorer makes it easier to navigate X-ray ASTs. It displays the tree of symbols on the right and on the left the selected symbol''s attributes (if it has any). 
+
+!!!!!! Error handling
+
+If the parser''s scanner cannot tokenize the input string it will throw an {XraySyntaxError ::class} exception. Instances of this class answer the {position ::selector} message that reports the character position in the input string. 
+
+To assist in reporting parse errors each symbol answers two messages {start ::selector} and {end ::selector} which define the interval in the input string that this symbol derives. 
+
+!!!!!! Injecting inherited attributes to the root symbol
+
+It is often useful to pass initial inherited attributes to the AST root. This is done by sending the message {parse:inherit: ::selector} to the parser, passing it in addition to the string, a collection of symbol-value associations. Each symbol will become an inherited attribute of the AST''s root, bound to its corresponding value. 
+
+
+
+') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+WritingSemanticActions
+^(EruditeBookSection basicNew title: 'Writing Semantic Actions'; document: ((EruditeDocument contents: '
+!!!!Writing Semantic Actions
+
+You may find it useful to read this section while examining the [[[ Language browse: ''Bit'' ]]] doItWithButton:''Bit grammar''.. 
+
+The X-ray parser always creates an abstract syntax tree (AST) of {XraySymbol::class} objects. We may use X-ray''s attribute grammar to calculate the tree''s semantics. 
+
+We can accompany each grammar rule with a collection of semantic equations of the form
+
+	{ attribute @ symbol = Smalltalk expression }
+
+Here is a fragment that demonstrates how this works
+
+Expr ''expr'' : Expr ''left'' "+" Expr ''right''
+
+	{ value@expr = (value@left) + (value@right) } ;
+
+Each symbol in the rule has its own unique name to identify it in the semantic action. 
+
+Each AST symbol may have attributes. Attributes are classified according to how they are calculated. 
+
+!!!!!!Synthesized attributes
+
+The synthesized attributes of a symbol are calculated from its child symbols in the AST. They can be recognized by the fact that the left side of the semantic equation is an attribute of the left part of the rule (as in the example above).
+
+!!!!!!Inherited attributes
+
+The inherited attributes of a symbol are calculated by the parent of the symbol in the AST. They can be recognized by the fact that the left side of the semantic equation is an attribute of one of the symbols in the right part of the rule.
+
+!!!!!! Rule operators and semantic actions
+
+Whenever we use one of the list operators, the parser generator automatically propagates the attributes of each symbol in the list according to the following rules:
+
+1. The synthesized attributes of each list member are collected in a list and made accessible as attributes of the list non terminal.
+
+2. Any inherited attribute of the list non terminal is passed on to the members of the list.
+
+For example:
+
+A ''left'' : X * ''list'' 
+	{ v@left = v@list  }
+	{ a@list = 5 } ;
+
+X ''x'' : identifier 
+	{ v@x = a@x } ;
+
+The list in the first rule inherits the attribute a with a value of 5 and passes it to each occurence of X. The second rule creates a synthesized attribute x for X and sets its value to the attribute a that X inherited. These values are collected into a list and put in the synthesized attribute v of the list. The result is that the synthesized attribute v of A will hold a list of 5''s.  
+
+To summarize, the list operators pass on their inherited attributes to the list compoments, and assemble the synthesized attributes of their components into a list which they store in a synthesized attribute of the same name. If this is not the behavior you require for your semantics you should implement the list rules yourself. 
+
+!!!!!! Attribute calculation
+
+The attribute equations are calculated only after the complete parse tree is constructed. At this point the system computes the dependency relation between the attributes. It then sorts the semantic actions according to their dependencies. If there is a cyclic dependency between some attributes the system throws an exception to report the problem. Otherwise the system executes the semantic actions according to their dependency order. 
+
+!!!!!! Indirect Inheritance 
+
+Many times we need to pass an attribute down the AST. For example, we may want to provide the entire source code of the program so that each rule could use it to produce meaningful error messages. In such cases it becomes tedious and error prone to manually write semantic rules just to pass the attribute to each element in the tree. 
+
+X-ray makes this easier by supporting a form of indirect inheritance where any reference to an attribute of the left non terminal that is not defined explicitly is inherited from the rules where this non terminal appears in the right hand side.
+
+For example,
+
+X ''x'' : A { s@x = 1 } ;
+
+A : B ;
+
+B ''b'' : c { v@b = (s@b) + 1  } ;
+
+Here the attribute s is not explicitly defined for B, but it is inherited indirectly from A and then from X.
+
+The benefit of indirect inheritance is not only that it saves us the trouble of manually writing many rote rules, but it is also much more modular because we don''t need to rewrite these rules whenever we change the grammar.
+
+!!!!!! Indirect Synthesis
+
+Similarly, in many cases we create rules that collect information from the bottom of the AST and transfer it to the top parts of the tree. For example, we may collect all the symbol names that we use in the program. 
+
+Just like the case of inherited attributes this requires writing a lot of rules to copy and aggregate the attributes from the children of each rule to their parent. 
+
+To avoid writing all these rules explicitly X-ray provides indirect synthesis of attributes. Whenever the right hand side of a semantic action refrences an attribute of one of the symbols on the right of the grammar rule that is not already defined, the system implicitly adds a synthesized attribute to that symbol and a rule that aggregates the attribute to the parent. For example,
+
+X ''x'' : A ''a'' { v@x = v@a } ;
+
+A : B C ;
+
+B ''b'' : { v@b = { 1 } } ;
+
+C ''c'' : { v@c = { 2 } } ;
+
+Here, even though v is not an attribute of A, it is indirectly synthesized by concatenating the attributes of B and C. The result is that v@a will hold the collection { 1 . 2 }.
+
+To see an example that demonstrates the power of indircet inheritance and synthesis take a look at the [[[ Language browse: ''Turingol'' ]]] doItWithButton:''Turingol language''..
+ ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/24/2020 20:26:08'!
+initialize
+    super initialize.
+    title _ 'X-ray Manual'.
+        self addSection: self Introduction.
+        self addSection: self TheXrayLanguage.
+        self addSection: self LexicalAnalysis.
+        self addSection: self WritingSemanticActions.
+        self addSection: self DebuggingConflicts.
+        self addSection: self TestingTheParser.
+        self addSection: self UsingTheParser.
+        self addSection: self ManagingLargeGrammars.
+! !
+
 !ReduceAction methodsFor: 'as yet unclassified' stamp: 'DF 10/4/2020 20:43:50'!
 performOn: anXrayParser
 	
@@ -1691,22 +2139,6 @@ new: aState
 	
 	^aShiftAction! !
 
-!Attribute methodsFor: 'computation' stamp: 'DF 11/8/2020 10:47:28'!
-compute
-
-	self subclassResponsibility 
-	! !
-
-!Attribute methodsFor: 'computation' stamp: 'DF 11/8/2020 10:47:52'!
-env
-	self subclassResponsibility ! !
-
-!Attribute methodsFor: 'computation' stamp: 'DF 11/12/2020 20:41:05'!
-prereqsInto: aBinaryRelation
-
-	self subclassResponsibility 	
-! !
-
 !Attribute methodsFor: 'accessing' stamp: 'DF 10/6/2020 09:41:06'!
 name: aSymbol
 	name := aSymbol! !
@@ -1722,6 +2154,22 @@ value
 !Attribute methodsFor: 'accessing' stamp: 'DF 10/6/2020 09:41:46'!
 value: anObject
 	value := anObject! !
+
+!Attribute methodsFor: 'computation' stamp: 'DF 11/8/2020 10:47:28'!
+compute
+
+	self subclassResponsibility 
+	! !
+
+!Attribute methodsFor: 'computation' stamp: 'DF 11/8/2020 10:47:52'!
+env
+	self subclassResponsibility ! !
+
+!Attribute methodsFor: 'computation' stamp: 'DF 11/12/2020 20:41:05'!
+prereqsInto: aBinaryRelation
+
+	self subclassResponsibility 	
+! !
 
 !Attribute methodsFor: 'converting' stamp: 'DF 10/6/2020 14:30:33'!
 reference
@@ -1825,7 +2273,7 @@ ifNotState: aState do: aBlock
 	(states includes: aState)
 		ifFalse:[aBlock value]! !
 
-!DFA methodsFor: 'parser tables' stamp: 'DF 10/16/2020 00:16:07'!
+!DFA methodsFor: 'parser tables' stamp: 'DF 11/30/2020 19:29:02'!
 actionTable
  
 	| actionTable terminals |
@@ -1836,14 +2284,14 @@ actionTable
 	
 	states do:[:eachState |
 		terminals do:[:eachSymbol |
-			actionTable at:{eachState . eachSymbol} put: (eachState makeActionOn: eachSymbol on: (transitions fromState:eachState at:eachSymbol))
+			actionTable at:{eachState identifier . eachSymbol} put: (eachState makeActionOn: eachSymbol on: (transitions fromState:eachState at:eachSymbol))
 			]
 		].
 
 	^actionTable
 ! !
 
-!DFA methodsFor: 'parser tables' stamp: 'DF 10/1/2020 11:02:34'!
+!DFA methodsFor: 'parser tables' stamp: 'DF 11/30/2020 19:31:34'!
 gotoTable
  
 	| gotoTable nonTerminals |		
@@ -1854,11 +2302,25 @@ gotoTable
 	
 	states do:[:eachState |
 		nonTerminals do:[:eachSymbol |
-			gotoTable at:{eachState . eachSymbol} put: (transitions fromState:eachState at: eachSymbol).
+			gotoTable at:{eachState identifier . eachSymbol} put: (transitions fromState:eachState at: eachSymbol) identifier.
 			]
 		].
 	
 	^ gotoTable! !
+
+!DFA methodsFor: 'parser tables' stamp: 'DF 11/30/2020 19:26:51'!
+prepareStates
+
+	"give each state a unique integer indentifier, we will use them in the parser tables. "
+	
+	| id |
+	
+	id := 1.
+	
+	states do:[:each | each identifier: id. id := id + 1 ].
+	
+	
+! !
 
 !DFA methodsFor: 'as yet unclassified' stamp: 'DF 10/13/2020 00:06:35'!
 pathToState: aState
@@ -2211,6 +2673,16 @@ hash
 
 	^rule hash bitXor: marker hash! !
 
+!LookAheadRuleItem methodsFor: 'printing' stamp: 'DF 10/14/2020 19:56:43'!
+printDotOn: aStream
+
+	super printDotOn: aStream.
+	
+	aStream nextPut: $, ; nextPut: Character space.
+	
+	lookAhead do:[:each | each printDotOn: aStream. aStream nextPut: Character space ].
+! !
+
 !LookAheadRuleItem methodsFor: 'as yet unclassified' stamp: 'DF 10/1/2020 19:33:18'!
 lookAhead
 	^lookAhead! !
@@ -2227,20 +2699,61 @@ makeActionsOn: aSymbol
 		ifFalse:[{}]
 ! !
 
-!LookAheadRuleItem methodsFor: 'printing' stamp: 'DF 10/14/2020 19:56:43'!
-printDotOn: aStream
-
-	super printDotOn: aStream.
-	
-	aStream nextPut: $, ; nextPut: Character space.
-	
-	lookAhead do:[:each | each printDotOn: aStream. aStream nextPut: Character space ].
-! !
-
 !State methodsFor: 'printing' stamp: 'DF 10/29/2020 23:07:13'!
 printDotOn: aStream
 
 	items do:[:each | each printDotOn: aStream . aStream nextPut:Character lf].! !
+
+!State methodsFor: 'as yet unclassified' stamp: 'DF 9/29/2020 12:55:21'!
+clone: anInteger
+
+	^(1 to: anInteger) collect:[:id | | aClone | aClone := self copy. aClone cloneId: cloneId + id. aClone ]! !
+
+!State methodsFor: 'as yet unclassified' stamp: 'DF 11/30/2020 19:31:02'!
+makeActionOn: aSymbol on: nextState
+
+	| actions |
+	
+	actions := OrderedCollection new.
+	
+	nextState ifNotError:[actions add: (ShiftAction new: nextState identifier) ].
+	 
+	(items select:[:each | each atEnd])
+		do:[:each | actions addAll: (each makeActionsOn: aSymbol) ].
+		
+	actions ifEmpty:[^ErrorAction new: aSymbol].
+	 
+	(actions size > 1)
+		ifTrue:[ | anExceptionClass |
+			anExceptionClass := 
+				((actions count:[:each | each isKindOf: ReduceAction ]) > 1)
+					ifTrue:[ReduceReduceConflict]
+					ifFalse:[	ShiftReduceConflict].
+
+			(anExceptionClass new state: self; items: items; symbol: aSymbol; yourself) signal.
+		].
+		
+	^actions at:1
+			
+! !
+
+!State methodsFor: 'as yet unclassified' stamp: 'DF 10/1/2020 19:53:49'!
+promoteReductionsWith: transitions with: follow
+
+	| reductions promotions |
+		
+	reductions := self reductions.
+		
+	promotions := reductions collect: [:eachItem | 
+		eachItem promoteWithLookAhead: ((transitions lookBack: self rule: eachItem rule) inject:Set new into:[:acc :eachTransition |acc addAll: (follow at: eachTransition). acc ]) ].
+		
+	items removeAll: reductions.
+	
+	items addAll: promotions.
+	
+ 	
+	
+! !
 
 !State methodsFor: 'testing' stamp: 'DF 9/27/2020 11:54:57'!
 = aState
@@ -2300,6 +2813,14 @@ cloneId: anInteger
 hash
 	^ items hash bitXor: cloneId hash! !
 
+!State methodsFor: 'accessing' stamp: 'DF 11/30/2020 19:26:22'!
+identifier
+	^identifier! !
+
+!State methodsFor: 'accessing' stamp: 'DF 11/30/2020 19:26:32'!
+identifier: anInteger
+	identifier := anInteger! !
+
 !State methodsFor: 'accessing' stamp: 'DF 9/24/2020 13:46:05'!
 items
 	^items! !
@@ -2326,57 +2847,6 @@ next: aSymbol in: aTransitionRelation
 !State methodsFor: 'initialization' stamp: 'DF 9/27/2020 11:54:42'!
 initialize
 	cloneId := 0.! !
-
-!State methodsFor: 'as yet unclassified' stamp: 'DF 9/29/2020 12:55:21'!
-clone: anInteger
-
-	^(1 to: anInteger) collect:[:id | | aClone | aClone := self copy. aClone cloneId: cloneId + id. aClone ]! !
-
-!State methodsFor: 'as yet unclassified' stamp: 'DF 10/29/2020 22:48:10'!
-makeActionOn: aSymbol on: nextState
-
-	| actions |
-	
-	actions := OrderedCollection new.
-	
-	nextState ifNotError:[actions add: (ShiftAction new: nextState) ].
-	 
-	(items select:[:each | each atEnd])
-		do:[:each | actions addAll: (each makeActionsOn: aSymbol) ].
-		
-	actions ifEmpty:[^ErrorAction new: aSymbol].
-	 
-	(actions size > 1)
-		ifTrue:[ | anExceptionClass |
-			anExceptionClass := 
-				((actions count:[:each | each isKindOf: ReduceAction ]) > 1)
-					ifTrue:[ReduceReduceConflict]
-					ifFalse:[	ShiftReduceConflict].
-
-			(anExceptionClass new state: self; items: items; symbol: aSymbol; yourself) signal.
-		].
-		
-	^actions at:1
-			
-! !
-
-!State methodsFor: 'as yet unclassified' stamp: 'DF 10/1/2020 19:53:49'!
-promoteReductionsWith: transitions with: follow
-
-	| reductions promotions |
-		
-	reductions := self reductions.
-		
-	promotions := reductions collect: [:eachItem | 
-		eachItem promoteWithLookAhead: ((transitions lookBack: self rule: eachItem rule) inject:Set new into:[:acc :eachTransition |acc addAll: (follow at: eachTransition). acc ]) ].
-		
-	items removeAll: reductions.
-	
-	items addAll: promotions.
-	
- 	
-	
-! !
 
 !State class methodsFor: 'class initialization' stamp: 'DF 10/28/2020 10:22:05'!
 initialize
@@ -2499,6 +2969,11 @@ printDotOn: aStream
 
 ! !
 
+!TransitionFunction methodsFor: 'printing' stamp: 'DF 10/1/2020 10:18:09'!
+printDotOn: aStream
+
+	(self select:[:each | each to ~= errorState ]) "don't show transitions into the error state as they overwhelm the diagram"		do: [:each | each printDotOn: aStream. aStream nextPut: Character lf ].! !
+
 !TransitionFunction methodsFor: 'accessing' stamp: 'DF 10/27/2020 14:32:24'!
 put: aTransition
 
@@ -2620,11 +3095,6 @@ with: aSet reads: aState
 	^(self exiting: aState) 
 		select:[:next |	 aSet includes: next symbol]
 ! !
-
-!TransitionFunction methodsFor: 'printing' stamp: 'DF 10/1/2020 10:18:09'!
-printDotOn: aStream
-
-	(self select:[:each | each to ~= errorState ]) "don't show transitions into the error state as they overwhelm the diagram"		do: [:each | each printDotOn: aStream. aStream nextPut: Character lf ].! !
 
 !TransitionFunction methodsFor: 'enumerating' stamp: 'DF 10/28/2020 10:01:05'!
 directReadsOf: aTransition
@@ -2754,35 +3224,6 @@ initialize
 	
 	index := Dictionary new.! !
 
-!XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 9/24/2020 14:57:50'!
-= anXraySymbol
-
-	self == anXraySymbol ifTrue: [^ true].
-	self class == anXraySymbol class ifFalse: [^ false].
-
-	^self name = anXraySymbol name! !
-
-!XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 10/6/2020 14:23:54'!
-attributesClosure
-	^Set new
-! !
-
-!XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 10/3/2020 21:49:57'!
-calculates: aString
-	^false! !
-
-!XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 9/24/2020 14:59:18'!
-hash
-	^name hash! !
-
-!XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 10/18/2020 12:27:20'!
-prereqs
-	^BinaryRelation new! !
-
-!XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 20:35:37'!
-prereqsInto: aBinaryRelation
-! !
-
 !XraySymbol methodsFor: 'printing' stamp: 'DF 9/24/2020 11:48:27'!
 printDotOn: aStream
 
@@ -2828,6 +3269,35 @@ parent: aNonTerminal
 synthesizedAttributes
 	^Set new! !
 
+!XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 9/24/2020 14:57:50'!
+= anXraySymbol
+
+	self == anXraySymbol ifTrue: [^ true].
+	self class == anXraySymbol class ifFalse: [^ false].
+
+	^self name = anXraySymbol name! !
+
+!XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 10/6/2020 14:23:54'!
+attributesClosure
+	^Set new
+! !
+
+!XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 10/3/2020 21:49:57'!
+calculates: aString
+	^false! !
+
+!XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 9/24/2020 14:59:18'!
+hash
+	^name hash! !
+
+!XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 10/18/2020 12:27:20'!
+prereqs
+	^BinaryRelation new! !
+
+!XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 20:35:37'!
+prereqsInto: aBinaryRelation
+! !
+
 !XraySymbol class methodsFor: 'as yet unclassified' stamp: 'DF 9/26/2020 21:26:47'!
 new: aString
 
@@ -2839,15 +3309,6 @@ new: aString
 	
 	^aTerminal
 	! !
-
-!NonTerminal methodsFor: 'initialization' stamp: 'DF 10/8/2020 14:20:10'!
-initialize
-	
-	children := {}.
-	
-	attributes := Dictionary new.
-	
-	mark := 0.! !
 
 !NonTerminal methodsFor: 'accessing' stamp: 'DF 10/8/2020 14:40:28'!
 attributes
@@ -2895,103 +3356,6 @@ rule: aRule
 !NonTerminal methodsFor: 'accessing' stamp: 'DF 10/25/2020 13:00:29'!
 synthesizedAttributes
 	^attributes values select:[:each | each isKindOf: SynthesizedAttribute ]! !
-
-!NonTerminal methodsFor: 'attributes' stamp: 'DF 10/6/2020 12:57:34'!
-addAttribute: anAttribute
-	
-	attributes at: anAttribute name put: anAttribute.! !
-
-!NonTerminal methodsFor: 'attributes' stamp: 'DF 11/8/2020 11:26:29'!
-at: aSymbol
-	^ (self attributeAt: aSymbol) value! !
-
-!NonTerminal methodsFor: 'attributes' stamp: 'DF 10/7/2020 11:36:27'!
-at: aSymbol put: anObject
-	
-	(attributes at: aSymbol) value: anObject
-	! !
-
-!NonTerminal methodsFor: 'attributes' stamp: 'DF 11/8/2020 12:04:17'!
-attributeAt: aSymbol
-	^ attributes at: aSymbol 
-		ifAbsent:[MissingAttributeReference new nonTerminal: self; attributeName: aSymbol; signal	]
-! !
-
-!NonTerminal methodsFor: 'attributes' stamp: 'DF 11/18/2020 10:44:57'!
-attributeAt: aSymbol ifAbsent: aBlock
-	^ attributes at: aSymbol 	ifAbsent:aBlock
-! !
-
-!NonTerminal methodsFor: 'semantics' stamp: 'DF 10/6/2020 14:22:50'!
-attributesClosure
-
-	| closure |
-		
-	closure := children inject: Set new into:[:acc :each | acc addAll: each attributesClosure. acc].
-	
-	closure addAll: attributes values.
-		
-	^closure
-	! !
-
-!NonTerminal methodsFor: 'semantics' stamp: 'DF 11/12/2020 20:39:49'!
-prereqs
-
-	| aBinaryRelation |
-	
-	aBinaryRelation := BinaryRelation new.
-	
-	self prereqsInto: aBinaryRelation.
-	
-	^aBinaryRelation.
-		! !
-
-!NonTerminal methodsFor: 'semantics' stamp: 'DF 11/12/2020 17:47:38'!
-prereqsInto: aBinaryRelation
-
-	children do:[:each | each prereqsInto: aBinaryRelation ].
-
-	attributes do:[:each | each prereqsInto: aBinaryRelation ].
-	! !
-
-!NonTerminal methodsFor: 'semantics' stamp: 'DF 10/7/2020 13:18:25'!
-semantics 
-
-	| rules attrs order |
-	
-	attrs := self attributesClosure.
-	
-	rules := self prereqs.
-	
-	order := rules topologicalSort: attrs.
-	
-	order 	do:[:each | 	each compute].
-	! !
-
-!NonTerminal methodsFor: 'testing' stamp: 'DF 10/4/2020 19:57:13'!
-= aNonTerminal
-
-	self == aNonTerminal ifTrue: [^ true].
-	self class == aNonTerminal class ifFalse: [^ false].
-
-	^self name = aNonTerminal name and:[mark = aNonTerminal mark]! !
-
-!NonTerminal methodsFor: 'testing' stamp: 'DF 11/20/2020 12:01:26'!
-hasAttribute: aSymbol
-
-	^attributes includesKey: aSymbol! !
-
-!NonTerminal methodsFor: 'testing' stamp: 'DF 11/11/2020 10:30:46'!
-isFirstChild
-	
-	^parent children first = self
-	! !
-
-!NonTerminal methodsFor: 'testing' stamp: 'DF 11/4/2020 19:20:34'!
-isLastChild
-	
-	^parent children last = self
-	! !
 
 !NonTerminal methodsFor: 'as yet unclassified' stamp: 'DF 10/6/2020 10:43:52'!
 args
@@ -3093,6 +3457,112 @@ anASTExplorer root: self.
 
 ASTExplorerWindow open: anASTExplorer
 ! !
+
+!NonTerminal methodsFor: 'initialization' stamp: 'DF 10/8/2020 14:20:10'!
+initialize
+	
+	children := {}.
+	
+	attributes := Dictionary new.
+	
+	mark := 0.! !
+
+!NonTerminal methodsFor: 'attributes' stamp: 'DF 10/6/2020 12:57:34'!
+addAttribute: anAttribute
+	
+	attributes at: anAttribute name put: anAttribute.! !
+
+!NonTerminal methodsFor: 'attributes' stamp: 'DF 11/8/2020 11:26:29'!
+at: aSymbol
+	^ (self attributeAt: aSymbol) value! !
+
+!NonTerminal methodsFor: 'attributes' stamp: 'DF 10/7/2020 11:36:27'!
+at: aSymbol put: anObject
+	
+	(attributes at: aSymbol) value: anObject
+	! !
+
+!NonTerminal methodsFor: 'attributes' stamp: 'DF 11/8/2020 12:04:17'!
+attributeAt: aSymbol
+	^ attributes at: aSymbol 
+		ifAbsent:[MissingAttributeReference new nonTerminal: self; attributeName: aSymbol; signal	]
+! !
+
+!NonTerminal methodsFor: 'attributes' stamp: 'DF 11/18/2020 10:44:57'!
+attributeAt: aSymbol ifAbsent: aBlock
+	^ attributes at: aSymbol 	ifAbsent:aBlock
+! !
+
+!NonTerminal methodsFor: 'semantics' stamp: 'DF 10/6/2020 14:22:50'!
+attributesClosure
+
+	| closure |
+		
+	closure := children inject: Set new into:[:acc :each | acc addAll: each attributesClosure. acc].
+	
+	closure addAll: attributes values.
+		
+	^closure
+	! !
+
+!NonTerminal methodsFor: 'semantics' stamp: 'DF 11/12/2020 20:39:49'!
+prereqs
+
+	| aBinaryRelation |
+	
+	aBinaryRelation := BinaryRelation new.
+	
+	self prereqsInto: aBinaryRelation.
+	
+	^aBinaryRelation.
+		! !
+
+!NonTerminal methodsFor: 'semantics' stamp: 'DF 11/12/2020 17:47:38'!
+prereqsInto: aBinaryRelation
+
+	children do:[:each | each prereqsInto: aBinaryRelation ].
+
+	attributes do:[:each | each prereqsInto: aBinaryRelation ].
+	! !
+
+!NonTerminal methodsFor: 'semantics' stamp: 'DF 10/7/2020 13:18:25'!
+semantics 
+
+	| rules attrs order |
+	
+	attrs := self attributesClosure.
+	
+	rules := self prereqs.
+	
+	order := rules topologicalSort: attrs.
+	
+	order 	do:[:each | 	each compute].
+	! !
+
+!NonTerminal methodsFor: 'testing' stamp: 'DF 10/4/2020 19:57:13'!
+= aNonTerminal
+
+	self == aNonTerminal ifTrue: [^ true].
+	self class == aNonTerminal class ifFalse: [^ false].
+
+	^self name = aNonTerminal name and:[mark = aNonTerminal mark]! !
+
+!NonTerminal methodsFor: 'testing' stamp: 'DF 11/20/2020 12:01:26'!
+hasAttribute: aSymbol
+
+	^attributes includesKey: aSymbol! !
+
+!NonTerminal methodsFor: 'testing' stamp: 'DF 11/11/2020 10:30:46'!
+isFirstChild
+	
+	^parent children first = self
+	! !
+
+!NonTerminal methodsFor: 'testing' stamp: 'DF 11/4/2020 19:20:34'!
+isLastChild
+	
+	^parent children last = self
+	! !
 
 !NonTerminal class methodsFor: 'as yet unclassified' stamp: 'DF 11/4/2020 19:51:36'!
 testTreeTraversal
@@ -3277,7 +3747,7 @@ growNFA: anNFA fromItem: anItem
 		
 		! !
 
-!Grammar methodsFor: 'parser generation' stamp: 'DF 11/12/2020 09:47:18'!
+!Grammar methodsFor: 'parser generation' stamp: 'DF 11/30/2020 19:31:54'!
 parser
  
 	| anNFA aDFA actionTable gotoTable aParser nullable prefixes |
@@ -3293,6 +3763,8 @@ parser
 	nullable := self emptyProductions.
 	
 	aDFA computeLookAheadWith: prefixes with: nullable.
+	
+	aDFA prepareStates.
 	
 	[actionTable := aDFA actionTable] 	
 	on: ShiftReduceConflict do: [ :aShiftReduceConflict | 
@@ -6516,12 +6988,12 @@ input: aSequence
 nextToken
 	^ input removeFirst! !
 
-!XrayParser methodsFor: 'private' stamp: 'DF 10/11/2020 16:36:32'!
+!XrayParser methodsFor: 'private' stamp: 'DF 11/30/2020 19:33:22'!
 parse
 
 	self clear.
 	
- 	self push: start.
+ 	self push: start identifier.
 	
 	[(input isEmpty) or:[syntaxError notNil]] 
 		whileFalse:[			
@@ -6740,9 +7212,11 @@ result := aParser parse:'((lambda (x y) 1) 2 3)'.
 result first second xray.
 ! !
 
-!XrayParserGenerator class methodsFor: 'testing' stamp: 'DF 11/4/2020 09:04:23'!
+!XrayParserGenerator class methodsFor: 'testing' stamp: 'DF 11/30/2020 19:13:22'!
 testBitLanguage
 
+	"self testBitLanguage"
+	
 | aParser result |
 
 aParser := XrayParserGenerator new parserFor: Grammar bitLanguage.
@@ -6837,8 +7311,11 @@ B : 1 ;
 
 ! !
 
-!XrayParserGenerator class methodsFor: 'testing' stamp: 'DF 11/4/2020 08:56:47'!
+!XrayParserGenerator class methodsFor: 'testing' stamp: 'DF 11/30/2020 19:44:33'!
 testShiftReduceConflict
+
+	"[self testShiftReduceConflict]
+	on: ConflictExplorer do:[: aConflictExplorer | aConflictExplorer open]."
 
 XrayParserGenerator new parserFor:  '
 
@@ -6852,11 +7329,11 @@ rules
 
 A : a ;
 
-A : b B;
+A : b B ;
 
-B : c C;
+B : c C ;
 
-B : c C f;
+B : c C f ;
 
 C : d A ;
 
@@ -6864,8 +7341,11 @@ C : d A ;
 
 ! !
 
-!XrayParserGenerator class methodsFor: 'testing' stamp: 'DF 11/4/2020 08:57:39'!
+!XrayParserGenerator class methodsFor: 'testing' stamp: 'DF 11/30/2020 19:44:55'!
 testShiftReduceConflict2
+
+	"[ self testShiftReduceConflict2 ]
+	on: ConflictExplorer do:[: aConflictExplorer | aConflictExplorer open]."
 
 XrayParserGenerator new parserFor: '
 
@@ -7065,20 +7545,6 @@ consumeComment
 		
 			! !
 
-!Language methodsFor: 'initialization' stamp: 'DF 11/3/2020 14:02:58'!
-initialize
-
-	directives := ''.
-	
-	tokens := ''.
-	
-	patterns := ''.
-
-	topics := OrderedCollection new.
-	
-	
-! !
-
 !Language methodsFor: 'accessing' stamp: 'DF 11/2/2020 15:47:08'!
 aspectNames
 
@@ -7124,6 +7590,20 @@ topics
 !Language methodsFor: 'accessing' stamp: 'DF 11/2/2020 15:36:27'!
 topics: anOrderedCollection
 	topics := anOrderedCollection! !
+
+!Language methodsFor: 'initialization' stamp: 'DF 11/3/2020 14:02:58'!
+initialize
+
+	directives := ''.
+	
+	tokens := ''.
+	
+	patterns := ''.
+
+	topics := OrderedCollection new.
+	
+	
+! !
 
 !Language methodsFor: 'printing' stamp: 'DF 11/17/2020 15:55:30'!
 writeCategories: aCategoryCollection topics: aTopicCollection aspects: anAspectCollection on: aWriteStream
@@ -8011,106 +8491,6 @@ writeOn: aStream
 
 	aStream nextPutAll: source! !
 
-!SequenceGenerator methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:26:15'!
-initialize
-
-	next := 1.
-	
-! !
-
-!SequenceGenerator methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:26:22'!
-next
-	
-	next := next + 1.
-	
-	^ next - 1! !
-
-!TuringMachine methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 17:54:02'!
-alphabet: aSet
-
-	alphabet := aSet
-	! !
-
-!TuringMachine methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 17:57:03'!
-halt: anInteger
-
-	halt := anInteger! !
-
-!TuringMachine methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 17:55:59'!
-head
-	^head
-	! !
-
-!TuringMachine methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 18:05:58'!
-initialize
-
-	tape := OrderedCollection new.
-
-	blank := 'blank'.
-	
-	10 timesRepeat:[ tape add: blank ].
-	
-	head := 5.! !
-
-!TuringMachine methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 17:55:29'!
-moveLeft
-
-	(head = 1) ifTrue:[
-		10 timesRepeat: [tape addFirst: blank ].
-		head := 10
-	].
-
-	head := head - 1.
-	! !
-
-!TuringMachine methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 17:55:54'!
-moveRight
-
-	(head = tape size) ifTrue:[
-		10 timesRepeat: [tape add: blank ].
-	].
-
-	head := head + 1.
-	! !
-
-!TuringMachine methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 17:57:26'!
-program: aBinaryFunction
-
-	program := aBinaryFunction
-	! !
-
-!TuringMachine methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 17:58:06'!
-reset
-
-	state := start.
-	
-	head := tape size / 2.
-	! !
-
-!TuringMachine methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 17:56:56'!
-start: anInteger
-	start := anInteger! !
-
-!TuringMachine methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 18:00:07'!
-step
-
-	| instruction |
-	
-	instruction := program at: { state . (tape at: head) }.
-	
-	tape at: head put: instruction first.
-	
-	(instruction second = -1) ifTrue:[self moveLeft].
-	
-	(instruction second = 1) ifTrue:[self moveRight].
-	
-	state := instruction third.
-	! !
-
-!TuringMachine methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 17:56:02'!
-tape
-	^tape! !
-
 !UnclassifiedAspect methodsFor: 'accessing' stamp: 'DF 11/15/2020 15:55:49'!
 actions
 	^actions! !
@@ -8667,474 +9047,6 @@ selectedText
 stack
 	^stack collect:[:each | each name ]
 	! !
-
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/15/2020 15:02:37'!
-Aspects
-^(EruditeBookSection basicNew title: 'Aspects'; document: ((EruditeDocument contents: '
-!!!!Aspects
-
-An aspect is a collection of semantic rules that compute a cohesive set of semantic values. 
-
-For example, when developing a compiler for a statically typed programming language we need a collection of rules to compute the expression''s type. Another collection of rules could generate the intermediate code. We may define each collection as a separate aspect to make it easier to develop each one separately from the others.
-
-
-
-') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
-
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
-DebuggingConflicts
-^(EruditeBookSection basicNew title: 'Debugging Conflicts'; document: ((EruditeDocument contents: '
-!!!!Debugging Conflicts
-
-In some cases a grammar may be ambigous (or just not LR). In such cases the parser generator will report the problem as either a shift-reduce or a reduce-reduce conflict. 
-
-Here is a typical example:
-
-E : E "+" E ;
-
-E : integer ;
-
-This grammar is ambigous because it can generate two distinct parse trees for the string E + E + E: 
-
-	(E + E) + E 			  or 		E + (E + E)
-
-The conflicting symbol is the second ''+'' because the parser may either shift it to create the first version, or reduce the expression preceding it to create the second version.
-
-When such a problem occurs X-ray displays 
-[[[ [Language parserFor:''ShiftReduceConflict''] on: ConflictExplorer do:[: aConflictExplorer | aConflictExplorer open] ]]] doItWithButton:''a conflict explorer window''..
-
-The window shows the rules involving the conflict at the bottom, and two examples of ambigous parsing at the top. 
-
-In case of a shift-reduce conflict the left side is an example of shifting the conflicting symbol, and the right side is an example of reducing right before the conflicting symbol. 
-
-
-') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
-
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
-Introduction
-^(EruditeBookSection basicNew title: 'Introduction'; document: ((EruditeDocument contents: '
-!!!!X-ray Manual
-
-by **David Faitelson** (//davidf@afeka.ac.il//)
-
-This is the manual for the X-ray parser generator system.
-
-X-ray is an LR(1) parser generator and a collection of tools for writing, editing, testing and debugging grammars. 
-
-X-ray has the following major features:
-
-1. It is an LR(1) parser, thus avoiding the mysterious Reduce-Reduce conflicts that plague LALR parsers.
-
-2. It uses examples to report conflicts. 
-
-3. It provides a powerful attribute grammar that is free of the limitations of L-attributed grammars.
-
-4. Its development environment makes it easier to develop large large grammars by breaking them into //topics// and //aspects//. 
-
-
-
-
- ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
-
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
-LexicalAnalysis
-^(EruditeBookSection basicNew title: 'Lexical Analysis'; document: ((EruditeDocument contents: '
-!!!!Lexical Analysis
-
-Lexical analysis converts character strings into terminal tokens for the parser. 
-
-The lexical analysis part in an Xray grammar consists of two sections: tokens and patterns.
-
-!!!!!! Tokens
-
-The tokens section consists of a list of literal strings that the system recognizes as atomic (valueless) terminals. Such tokens are often keywords and operator symbols. 
-
-For example, the section
-
-tokens
-
-program begin end + *
-
-defines five terminal symbols. These symbols appear in grammar rules exactly as they are written in the defition, except for symbols such as * and + that have a special meaning in grammar rules. These must be protected by double quotes. For example, 
-
-  E : E "+" T ;
-
-is a rule with three symbols E, +, and T, whereas the rule 
-
-  E : E + T ;
-
-is a rule with two symbols the first of which (E +) is a non empty list of Es.
-
-!!!!!! Patterns
-
-The patterns section consists of regular expressions with actions for generating value carrying terminals. The regular expression language is that of {RxParser::class}. 
-
-For example, the section 
-
-patterns
-
-[[:alpha:]][[:alnum:]]*					identifier
-[[:space:]]+					```{ nextTerminal }```
-
-defines two rules. The first rule defines an identifier token, and the second rule recognizes whitespace but instead of returning a token name it sends a nextTerminal message to the scanner causing it to ignore the space and scan the next terminal. 
-
-It is also possible to define both a terminal name and an action to perform on the content of the terminal. For example, 
-
-patterns
-
-```":isDoubleQuote:(:^isDoubleQuote:)+:isDoubleQuote:"											string { strip: }```
-
-recognizes a string of characters surrounded by double quotes, and defines an action that strips the double quotes from the content of the terminal.
-
-!!!!!!!! Patterns with special characters
-
-The following characters are X-ray operators and therefore require care when used in patterns and rules:
-
-```( ) { } + * '' : ;```
-
-when we need to include one of these characters literally in a pattern or a rule we must protect the pattern with double quotes. For example,
-
-patterns
-
-"''[^'']*''"			string 
-
-recognizes a Pascal string. Without the double quotes the pattern will cause a syntax error.
-
-!!!!!! Extending the scanner
-
-It is possible to direct the X-ray system to use a different scanner than the default {XrayScanner::class}. This provides enough flexibility to implement case insensitive scanning, indentation sensitive grammars and so on. A simple example is {PascalScanner::class}.
-
-
-
-
-
-') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
-
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
-ManagingLargeGrammars
-^(EruditeBookSection basicNew title: 'Managing Large Grammars'; document: ((EruditeDocument contents: '!!!! Managing Large Grammars
-
-When a grammar becomes large, maintaining it in a single sequential scroll of text is no longer effective, as more and more time is spent navigating around to find and edit the relevant parts of the grammar. 
-
-The X-ray language Browser organizes grammars into categories, topics and aspects. 
-
-A category is a coherent functional part of the grammar. Currently an X-ray grammar has four categories:
-
-Directives			Customization instructions
-Tokens			Literal terminal symbols
-Patterns			Regular expressions for terminals 
-Rules			Grammar rules
-
-These categories are predefined parts of each grammar. In addition, you may divide the grammar rules into separate topics and aspects. 
-
-!!!!!! Topics
-
-A topic is a collection of rules related to a particular subject. 
-
-A topic is a classification of rules into common grammatical parts. For example, all the rules for producing types may be collected in a types topic. 
-
-For example, grammar for a language such as C consists of rules that define the structure of expressions and for rules that define the structure of statements. We may define each collection of rules as a separate topic to help us quickly navigate and focus on each topic separately from the rest.
-
-!!!!!! Aspects
-
-An aspect is a collection of semantic rules that compute a cohesive set of semantic values. 
-
-For example, when developing a compiler for a statically typed programming language we need a collection of rules to compute the expression''s type. Another collection of rules could generate the intermediate code. We may define each collection as a separate aspect to make it easier to develop each one separately from the others.
-
-An aspect is a classification of semantic actions into common semantic concerns. For example, the semantic actions for type checking could be placed in a ''type checking aspect'', and the semantic actions for code generation could be placed into a separate ''code generation'' aspect.
-
-Topics and aspects are different ways to organize a grammar. A topic may have semantic actions from several aspects and an aspect may include semantic actions of rules that belong to separate topics. 
-
-!!!!!! The structure of the X-ray langauge Browser
-
-The X-ray language Browser lets you select which topics and aspects of the grammar you want to see and edit. 
-
-It has four lists in the top row, and a text area in the bottom row. The top row lists are (from left to right): languages, categories, topics, and aspects. 
-
-After you select a langauge in the left most list, you can select which categories you wish to see. There are four categories, one for each major section of the grammar: directives, tokens, patterns, and rules. 
- 
-We often finish developing the lexical analysis part quickly and then spend most of the time developing the grammar rules. By selecting only the grammar rules category we can put aside the distracting information. 
-
-The browser parses the grammar and identifies any topics and aspects that are defined in the grammar. These topics and aspects are presented in the two rightmost panels of the top row. 
-
-The browser updates the text area to show just the selected topics and aspects. You can then edit these parts of the grammar. The browser will never lose your information. Any topics or aspcets that are not visible will be preserved. If you want to remove an aspect you must first select all the topics in which it appears. If you want to remove a topic you must select all the aspects that appear in this topic. 
-
-
-
-
-') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
-
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
-TestingTheParser
-^(EruditeBookSection basicNew title: 'Testing the Parser'; document: ((EruditeDocument contents: '
-!!!!Testing the Parser
-
-To test the parser select the ''test'' menu option for the language. This would generate the LR parser and (if no conflicts are found) open a grammar test explorer window. 
-
-You may find it useful to read these notes while looking at the [[[ aLanguage := Language at: ''Bit'' . aLanguage test ]]] doItWithButton:'' test explorer for the Bit language''..
-
-The window has three areas (from left to right): a text area for writing text, a list that shows the symbols on the parser''s stack, and a heirarchical list that shows the AST of the selected stack symbol. The lower part of the heirarchical list shows the attributes of the selected symbol.
-
-If the scanner cannot identify some of your text it will color red the area it cannot identify. 
-
-If the parser cannot fully parse the text, the stack will contain the symbols that it did manage to parse. When the parser succeeds in parsing the entire text there will be just two symbols on the stack: the top will hold the special EOF terminal and right below it there will be the grammar''s start symbol. 
-
-When you select a symbol in the AST the test explorer will highlight in yellow the text that corresponds to this symbol. In addition, you will see the attributes of this symbol below the AST tree. However, the attributes will have values only if the parser manages to parse the entire text. This is because the parser computes the semantic attributes only if it successfully parses the entire text. 
-
-
-
-
-
-') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
-
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
-TheXrayLanguage
-^(EruditeBookSection basicNew title: 'The X-ray Language'; document: ((EruditeDocument contents: '
-!!!! The X-ray Language
-
-You may find it useful to read the following notes while also examining the X-ray grammar for the [[[ Language browse: ''RPCalc'' ]]] doItWithButton:''Reverse Polish Notation calculator''..
-
-!!!!!! Overall structure
-
-An X-ray grammar has three mandatory sections and one optional section:
-
-<optional directives>
-
-tokens
-
-<zero or more token symbols>
-
-patterns
-
-<zero or more pattern rules>
-
-rules
-
-<one or more grammar rules>
-
-The first rule determines the grammar''s starting symbol.
-
-!!!!!! Pattern rules
-
-There are three kinds of pattern rules. 
-
-<regular expression> 				<name>
-
-Creates a terminal <name> when it matches the regular expression. The value of the terminal is the matched string.
-
-<regular expression> 				{ <message> }
-
-Creates whatever terminal is returned when sending <message> to the scanner.
-
-<regular expression> 				{ <message1> }			{ <message2> }
-
-Creates whatever terminal is returned when sending <message1> to the scanner but passes the terminal''s value through <message2>.
-
-To match the next token, the scanner selects the rule that matches the longest prefix. When more than one rule matches the longest prefix the scanner selects the rule that appears earlier in the grammar.
-
-!!!!!! Grammar rules
-
-Each grammar rule has the following structure:
-
-<symbol> ''<name>'' ? : (<symbol> ''<name>'' ?) * <action> * ;
-
-The names that optionally accompany each symbol are used to refer to these symbols in the semantic actions.
-
-A semantic action has the following form:
-
-  { <name> @ <name> = <Smalltalk expression> }
-
-Inside the Smalltalk part, the meaning of  
-
-v @ x 
-
-is to fetch the attribute v from the symbol x.
-
-!!!!!! List operators
-
-The X-ray grammar language provides three operators to simplify common rule patterns: * + and ?.
-
-If X is a symbol in the grammar then 
-
-X * is a list of zero or more Xs
-
-X + is a list of one or more Xs 
-
-X ? is a list of zero or one Xs
-
-In addition, we can create lists of more than one symbol by enclosing them in parenthesis. For example:
-
-Parameters : Parameter ( , Parameter ) *
-
- 
-
-') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
-
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/15/2020 15:02:37'!
-Topics
-^(EruditeBookSection basicNew title: 'Topics'; document: ((EruditeDocument contents: '
-!!!!Topics
-
-A topic is a collection of rules related to a particular subject. 
-
-For example, grammar for a language such as C consists of rules that define the structure of expressions and for rules that define the structure of statements. We may define each collection of rules as a separate topic to help us quickly navigate and focus on each topic separately from the rest.
-
-
-
-') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
-
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
-UsingTheParser
-^(EruditeBookSection basicNew title: 'Using the Parser '; document: ((EruditeDocument contents: '!!!! Using the Parser
-
-In this section we will see how to use the generated parser in your own code.
-
-The easiest way to access the parser is to send the message {parserFor: ::selector} to the {Language ::class} class, passing it the name of the language:
-
-[[[ aParser := Language parserFor: ''RPCalc'' ]]].
-
-Once you obtain a parser you send it the message {parse: ::selector}
-
-[[[ outcome := aParser parse:''3 5 8 + +
-'' ]]].
-
-The parser returns a pair of arrays. The first member contains the symbol stack and the second the unparsed tokens. 
-
-If the parser has succeeded in parsing the entire input, the second array will be empty, and the first array will contain exactly two symbols. The first one will be the EOF terminal and the second one will be the grammar''s start symbol. This symbol will be the root of the parsed AST. 
-
-The following code fragment demonstrates how it all works:
-
-[[[ | aParser outcome | 
-aParser := Language parserFor: ''RPCalc''.
-outcome := aParser parse:''3 5 8 + +
-''.
-outcome inspect.
-outcome first second xray]]] doIt.
-
-The message {xray ::selector} opens an Xray AST explorer window on the root symbol. This explorer makes it easier to navigate X-ray ASTs. It displays the tree of symbols on the right and on the left the selected symbol''s attributes (if it has any). 
-
-!!!!!! Error handling
-
-If the parser''s scanner cannot tokenize the input string it will throw an {XraySyntaxError ::class} exception. Instances of this class answer the {position ::selector} message that reports the character position in the input string. 
-
-To assist in reporting parse errors each symbol answers two messages {start ::selector} and {end ::selector} which define the interval in the input string that this symbol derives. 
-
-!!!!!! Injecting inherited attributes to the root symbol
-
-It is often useful to pass initial inherited attributes to the AST root. This is done by sending the message {parse:inherit: ::selector} to the parser, passing it in addition to the string, a collection of symbol-value associations. Each symbol will become an inherited attribute of the AST''s root, bound to its corresponding value. 
-
-
-
-') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
-
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
-WritingSemanticActions
-^(EruditeBookSection basicNew title: 'Writing Semantic Actions'; document: ((EruditeDocument contents: '
-!!!!Writing Semantic Actions
-
-You may find it useful to read this section while examining the [[[ Language browse: ''Bit'' ]]] doItWithButton:''Bit grammar''.. 
-
-The X-ray parser always creates an abstract syntax tree (AST) of {XraySymbol::class} objects. We may use X-ray''s attribute grammar to calculate the tree''s semantics. 
-
-We can accompany each grammar rule with a collection of semantic equations of the form
-
-	{ attribute @ symbol = Smalltalk expression }
-
-Here is a fragment that demonstrates how this works
-
-Expr ''expr'' : Expr ''left'' "+" Expr ''right''
-
-	{ value@expr = (value@left) + (value@right) } ;
-
-Each symbol in the rule has its own unique name to identify it in the semantic action. 
-
-Each AST symbol may have attributes. Attributes are classified according to how they are calculated. 
-
-!!!!!!Synthesized attributes
-
-The synthesized attributes of a symbol are calculated from its child symbols in the AST. They can be recognized by the fact that the left side of the semantic equation is an attribute of the left part of the rule (as in the example above).
-
-!!!!!!Inherited attributes
-
-The inherited attributes of a symbol are calculated by the parent of the symbol in the AST. They can be recognized by the fact that the left side of the semantic equation is an attribute of one of the symbols in the right part of the rule.
-
-!!!!!! Rule operators and semantic actions
-
-Whenever we use one of the list operators, the parser generator automatically propagates the attributes of each symbol in the list according to the following rules:
-
-1. The synthesized attributes of each list member are collected in a list and made accessible as attributes of the list non terminal.
-
-2. Any inherited attribute of the list non terminal is passed on to the members of the list.
-
-For example:
-
-A ''left'' : X * ''list'' 
-	{ v@left = v@list  }
-	{ a@list = 5 } ;
-
-X ''x'' : identifier 
-	{ v@x = a@x } ;
-
-The list in the first rule inherits the attribute a with a value of 5 and passes it to each occurence of X. The second rule creates a synthesized attribute x for X and sets its value to the attribute a that X inherited. These values are collected into a list and put in the synthesized attribute v of the list. The result is that the synthesized attribute v of A will hold a list of 5''s.  
-
-To summarize, the list operators pass on their inherited attributes to the list compoments, and assemble the synthesized attributes of their components into a list which they store in a synthesized attribute of the same name. If this is not the behavior you require for your semantics you should implement the list rules yourself. 
-
-!!!!!! Attribute calculation
-
-The attribute equations are calculated only after the complete parse tree is constructed. At this point the system computes the dependency relation between the attributes. It then sorts the semantic actions according to their dependencies. If there is a cyclic dependency between some attributes the system throws an exception to report the problem. Otherwise the system executes the semantic actions according to their dependency order. 
-
-!!!!!! Indirect Inheritance 
-
-Many times we need to pass an attribute down the AST. For example, we may want to provide the entire source code of the program so that each rule could use it to produce meaningful error messages. In such cases it becomes tedious and error prone to manually write semantic rules just to pass the attribute to each element in the tree. 
-
-X-ray makes this easier by supporting a form of indirect inheritance where any reference to an attribute of the left non terminal that is not defined explicitly is inherited from the rules where this non terminal appears in the right hand side.
-
-For example,
-
-X ''x'' : A { s@x = 1 } ;
-
-A : B ;
-
-B ''b'' : c { v@b = (s@b) + 1  } ;
-
-Here the attribute s is not explicitly defined for B, but it is inherited indirectly from A and then from X.
-
-The benefit of indirect inheritance is not only that it saves us the trouble of manually writing many rote rules, but it is also much more modular because we don''t need to rewrite these rules whenever we change the grammar.
-
-!!!!!! Indirect Synthesis
-
-Similarly, in many cases we create rules that collect information from the bottom of the AST and transfer it to the top parts of the tree. For example, we may collect all the symbol names that we use in the program. 
-
-Just like the case of inherited attributes this requires writing a lot of rules to copy and aggregate the attributes from the children of each rule to their parent. 
-
-To avoid writing all these rules explicitly X-ray provides indirect synthesis of attributes. Whenever the right hand side of a semantic action refrences an attribute of one of the symbols on the right of the grammar rule that is not already defined, the system implicitly adds a synthesized attribute to that symbol and a rule that aggregates the attribute to the parent. For example,
-
-X ''x'' : A ''a'' { v@x = v@a } ;
-
-A : B C ;
-
-B ''b'' : { v@b = { 1 } } ;
-
-C ''c'' : { v@c = { 2 } } ;
-
-Here, even though v is not an attribute of A, it is indirectly synthesized by concatenating the attributes of B and C. The result is that v@a will hold the collection { 1 . 2 }.
-
-To see an example that demonstrates the power of indircet inheritance and synthesis take a look at the [[[ Language browse: ''Turingol'' ]]] doItWithButton:''Turingol language''..
- ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
-
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/24/2020 20:26:08'!
-initialize
-    super initialize.
-    title _ 'X-ray Manual'.
-        self addSection: self Introduction.
-        self addSection: self TheXrayLanguage.
-        self addSection: self LexicalAnalysis.
-        self addSection: self WritingSemanticActions.
-        self addSection: self DebuggingConflicts.
-        self addSection: self TestingTheParser.
-        self addSection: self UsingTheParser.
-        self addSection: self ManagingLargeGrammars.
-! !
 
 !Character methodsFor: '*X-ray' stamp: 'DF 10/10/2020 14:00:29'!
 isDoubleQuote
