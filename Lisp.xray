@@ -1,0 +1,24 @@
+tokens
+
+0 1 ( ) proc
+
+patterns
+
+[[:space:]]+				{ nextTerminal } 
+[a-z]+				identifier
+
+rules 
+ 
+%topic unclassified
+
+	P : E 'e' { env@e = SchemeEnv new } ;
+
+	E 'e' : 0 { value @ e = 0 } | 1 { value @ e = 1 } ;
+
+	E 'e' : identifier 'var' { value @ e = (env @ e) lookup: var value asString } ;
+
+	E 'e' : "(" E 'rator' E 'rand' ")" { value @ e = value @ rator applyTo: value @ rand } ;
+
+	E 'e' : "(" proc "(" identifier 'param' ")" E [[ body ]] ")" 
+
+		{ value @ e = SchemeClosure new param: param value asString ; body: body copy ; env: env@e; yourself } ;

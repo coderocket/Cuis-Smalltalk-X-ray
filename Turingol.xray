@@ -1,29 +1,23 @@
 tokens
 
- : { } ; , . \" tape alphabet is print go to if symbol then move left right one square 
+ : { } ; , . \" tape to alphabet is print accept reject go to if symbol then move left right one square
 
 patterns
 
+"//[^[:cntrl:]]*$"					{ nextTerminal }
 [[:space:]]+					{ nextTerminal } 
-[a-z]+					identifier
+[a-z_]+					identifier
+"\$[a-z]+"					variable
 
 rules
 
-%topic unclassified
+%topic Start
 
-Program 'program' : Definition 'def' ";" List 'list' . 
+Program 'program' : Definition 'def' List 'list' . 
 
 	%aspect labels
 
-	{ labels@program = (label@list) asDictionary } 
-
-	%aspect transitions
-
-	{ transitions@program = transitions@list }	
-
-	%aspect definitions
-
-	{ alphabet@program = definitions@def }  
+	{ labels@program = (label@list) asDictionary }
 
 	%aspect states
 
@@ -33,9 +27,75 @@ Program 'program' : Definition 'def' ";" List 'list' .
 
 	{ start@list = q0@program } 
 
-	{ qe@program = follow@list }
+	{ qe@program = follow@list } 
+
+	%aspect transitions
+
+	{ transitions@program = transitions@list }	
+
+	%aspect definitions
+
+	{ alphabet@program = definitions@def }  
+
+	{ procedures@program = (procedures@def) asDictionary }
 
 	;
+
+
+%topic Expressions
+
+Expression 'expr' : \" Identifier 'literal' \" 
+
+		{ value@expr = text@literal }
+
+	| variable 'v'
+
+		{ value@expr = env @ expr at: v value asString }
+
+	;
+
+%topic Procedures
+
+Procedure 'procedure' : to MessageProtocol 'protocol' "{" Block [[ block ]] "}" 
+
+	%aspect definitions
+
+	{ definitions @ procedure = name @ protocol -> (TuringolProcedure new alphabet: alphabet@procedure; parameters: parameters @ protocol; statements: block ; yourself)  } 
+
+;
+
+Block 'block' : List 'list' 
+
+	%aspect labels
+
+	{ labels@block = (label@list) asDictionary }
+
+	%aspect transitions
+
+	{ transitions@block = transitions @ list }
+
+	%aspect states 
+
+	{ follow@block = follow@list }
+;
+	
+Statement 'statement' : Message 'message'
+
+	%aspect procedure-calls
+
+	{ result @ statement = (procedures @ statement at: name @ message) applyTo: arguments @ message start: start @ statement generator: generator @ statement }
+
+	%aspect states  
+
+	{ follow@statement = result @ statement at: #follow }
+
+	%aspect transitions
+
+	{ transitions@statement = result @ statement at: #transitions }
+
+;
+
+%topic Statements
 
 Statement 's1' : Identifier 'identifier' ":" Statement 's2' 
 
@@ -51,11 +111,15 @@ Statement 's1' : Identifier 'identifier' ":" Statement 's2'
 
 	;
 
-Statement 's1' : if tape symbol is \" Identifier 'identifier' \" then Statement 's2' 
+Direction 'direction' : 
 
-	%aspect transitions
+	left { d@direction = -1 } { text@direction = 'left' } 
 
-	{ transitions@s1 = ((alphabet@s1) reject:[:each | each = (text@identifier) ] thenCollect:[:each | { start@s1 . each } -> { each . 0 .  (follow@s2) } ]) , { { start@s1 . (text@identifier) } -> { (text@identifier) . 0 . (start@s2) } } , (transitions@s2) }
+	| 
+
+	right { d@direction = 1 } { text@direction = 'right' } ;
+
+Statement 's1' : if tape symbol is Expression 'expr' then Statement 's2'
 
 	%aspect states
 
@@ -63,84 +127,94 @@ Statement 's1' : if tape symbol is \" Identifier 'identifier' \" then Statement 
 
 	{ follow@s1 = follow@s2 } 
 
+	{ states@s1 = { start@s2 } , (states@s2) } 
+
+	%aspect transitions
+
+	{ transitions@s1 = ((alphabet@s1) reject:[:each | each = (value@expr) ] thenCollect:[:each | { start@s1 . each } -> { each . 0 .  (follow@s2) } ]) , { { start@s1 . (value@expr) } -> { (value@expr) . 0 . (start@s2) } } , (transitions@s2) } 
+
 ;
 
 Statement 'statement' : go to Identifier 'identifier' 
 
-	%aspect transitions
-
-	{ transitions@statement = (alphabet@statement) collect:[:each | { (start@statement) . each } -> { each . 0 . ( (labels@statement) at: (text@identifier) ) } ] } 
-
 	%aspect states 
 
 	{ follow@statement = (generator@statement) next }
+
+	{ states@statement = { follow@statement } } 
+
+	%aspect transitions
+
+	{ transitions@statement = (alphabet@statement) collect:[:each | { (start@statement) . each } -> { each . 0 . ( (labels@statement) at: (text@identifier) ) } ] }
 
 	;
 
 Statement 'statement' : move Direction 'direction' one square 
 
+	%aspect states 
+
+	{ follow@statement = (generator@statement) next }
+
+	{ states@statement = { follow@statement } } 
+
 	%aspect transitions
 
-	{ transitions@statement = (alphabet@statement) collect:[:each | { (start@statement) . each } -> { each . (d@direction) . (follow@statement) }  ] } 
+	{ transitions@statement = (alphabet@statement) collect:[:each | { (start@statement) . each } -> { each . (d@direction) . (follow@statement) }  ] }
+
+	;
+
+Statement 'statement' : print Expression 'expr'
+
+	%aspect states 
+
+	{ follow@statement = (generator@statement) next } 
+
+	{ states@statement = { follow@statement } } 
+
+	%aspect transitions
+
+	{ transitions@statement = (alphabet@statement) collect:[:each | { (start@statement) . each } -> { (value@expr) . 0 . (follow@statement) } ] } 
+;
+
+Statement 'statement' : accept 
 
 	%aspect states 
 
 	{ follow@statement = (generator@statement) next }
 
-	;
-
-Statement 'statement' : print \" Identifier 'identifier' \" 
+	{ states@statement = { follow@statement } } 
 
 	%aspect transitions
 
-	{ transitions@statement = (alphabet@statement) collect:[:each | { (start@statement) . each } -> { (text@identifier) . 0 . (follow@statement) } ] } 
-
-	%aspect states 
-
-	{ follow@statement = (generator@statement) next } 
-;
-
-Direction 'direction' : left { d@direction = -1 } | right { d@direction = 1 } ;
-
-Definition 'definition' : tape alphabet is Identifier 'identifier'
-
-	%aspect definitions 
-
-	{ definitions@definition = { text@identifier }  }
+	{ transitions@statement = (alphabet@statement) collect:[:each | { (start@statement) . each } -> { each . 0 . #yes } ] }
 
 	;
 
-Definition 'definition' : Definition 'tail' , Identifier 'identifier'
+Statement 'statement' : reject 
 
-	%aspect definitions 
+	%aspect states 
 
-	{ definitions@definition = definitions@tail , { text@identifier } } ;
+	{ follow@statement = (generator@statement) next }
 
-Identifier 'symbol' : identifier 'token' %aspect definitions { text@symbol = token value asString } ;
+	{ states@statement = { follow@statement } } 
 
-Identifier 'symbol': one 'token'  %aspect definitions { text@symbol = token name } ;
+	%aspect transitions
 
-Statement 'statement' : "{" List 'list' "}" 
+	{ transitions@statement = (alphabet@statement) collect:[:each | { (start@statement) . each } -> { each . 0 . #no } ] }
 
-	%aspect states
-
-	{ start@list = start@statement } 
-
-	{ follow@statement = follow@list } ;
+	;
 
 Statement 'statement' :
 
 	%aspect states 
 
-	{ follow@statement = start@startement } ;  
+	{ follow@statement = start@statement } ;
 
 List 'list' : List 'tail' ";" Statement 'statement'
 
 	%aspect states
 
 	{ start@tail = start@list } 
-
-	{ start@statement = follow@tail } 
 
 	{ follow@tail = (generator@list) next } 
 
@@ -157,3 +231,111 @@ List 'list' : Statement 'statement'
 	{ follow@list = follow@statement } 
 
 	;
+
+Statement 'statement' : "{" List 'list' "}" 
+
+	%aspect states
+
+	{ start@list = start@statement } 
+
+	{ follow@statement = follow@list } ;
+
+%topic Definitions
+
+Definition 'definition' : Symbols 'symbols' ";" 
+
+	%aspect definitions 
+ 
+	{ definitions@definition = definitions@symbols } 
+
+	{ procedures@definition = {} asDictionary }; 
+
+Definition 'definition' : Symbols 'symbols' ";" Procedure + 'procs' ";" 
+
+	%aspect definitions 
+ 
+	{ definitions@definition = definitions@symbols } 
+
+	{ procedures@definition = definitions@procs }; 
+
+Symbols 'symbols' : tape alphabet is Identifier 'identifier'
+
+	%aspect definitions  
+
+	{ definitions@symbols = { text@identifier }  }
+
+	;
+
+Symbols 'symbols' : Symbols 'tail' , Identifier 'identifier'
+
+	%aspect definitions 
+
+	{ definitions@symbols = definitions@tail , { text@identifier } } ;
+
+Identifier 'symbol' : identifier 'token' 
+
+	%aspect definitions 
+
+		{ text@symbol = token value asString } ;
+
+Identifier 'symbol': one 'token'  
+
+	%aspect definitions 
+
+		{ text@symbol = token name } ;
+
+%topic Messages
+
+Message 'message' : Identifier 'head' MessagePart * 'tail' 
+
+	{ name @ message = text @ head , ( text @ tail fold:[ :x :y | x,y ] ) } 
+
+	{ arguments @ message = (arguments @ tail) concatenation } 
+;
+
+Message 'message' : move 'move' Direction 'dir' MessagePart + 'tail' 
+
+	{ name @ message = move value asString, (text @ dir) , ( text @ tail fold:[ :x :y | x,y ] ) } 
+
+	{ arguments @ message = (arguments @ tail) concatenation } 
+;
+
+MessagePart 'part' : Identifier 'name' 
+
+		{ text @ part = text @ name } 
+
+		{ arguments @ part = {} }
+
+	| Expression 'expr' 
+
+		{ text @ part = String new } 
+
+		{ arguments @ expr = { value @ expr } } ;
+
+MessageProtocol 'protocol' : Identifier 'head' MessageProtocolPart * 'tail' 
+
+	{ name @ protocol = text @ head , ( text @ tail fold:[ :x :y | x,y ] ) } 
+
+	{ parameters @ protocol = (parameters @ tail) concatenation } 
+
+	;
+
+MessageProtocol 'protocol' : move 'move' Direction 'dir' MessageProtocolPart + 'tail' 
+
+	{ name @ protocol = move value asString, (text @ dir) , ( text @ tail fold:[ :x :y | x,y ] ) } 
+
+	{ parameters @ protocol = (parameters @ tail) concatenation } 
+
+	;
+
+MessageProtocolPart 'part' : Identifier 'name' 
+
+		{ text @ part = text @ name } 
+
+		{ parameters @ part = {} }
+
+	| variable 'var'
+
+		{ text @ part = String new } 
+
+		{ parameters @ part = { var value asString } } ;

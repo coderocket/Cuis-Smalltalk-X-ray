@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4426] on 30 November 2020 at 7:45:17 pm'!
+'From Cuis 5.0 [latest update: #4426] on 30 December 2020 at 6:39:45 pm'!
 'Description '!
-!provides: 'X-ray' 1 861!
+!provides: 'X-ray' 1 862!
 !requires: 'Erudite' 1 144 nil!
 !requires: 'Regex-Core' 1 9 nil!
 SystemOrganization addCategory: 'X-ray'!
@@ -399,7 +399,7 @@ XraySymbol class
 
 !classDefinition: #NonTerminal category: 'X-ray'!
 XraySymbol subclass: #NonTerminal
-	instanceVariableNames: 'children attributes mark rule'
+	instanceVariableNames: 'children attributes mark rule delayed'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
@@ -489,7 +489,7 @@ PriorityBlock class
 
 !classDefinition: #Rule category: 'X-ray'!
 Object subclass: #Rule
-	instanceVariableNames: 'left right semantics aliases'
+	instanceVariableNames: 'left right semantics aliases aliasesDelayed'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'X-ray'!
@@ -605,6 +605,26 @@ Object subclass: #RuleTopic
 	category: 'X-ray-Browser'!
 !classDefinition: 'RuleTopic class' category: 'X-ray-Browser'!
 RuleTopic class
+	instanceVariableNames: ''!
+
+!classDefinition: #SchemeClosure category: 'X-ray-Browser'!
+Object subclass: #SchemeClosure
+	instanceVariableNames: 'env param body'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray-Browser'!
+!classDefinition: 'SchemeClosure class' category: 'X-ray-Browser'!
+SchemeClosure class
+	instanceVariableNames: ''!
+
+!classDefinition: #SchemeEnv category: 'X-ray-Browser'!
+Object subclass: #SchemeEnv
+	instanceVariableNames: 'parent param arg'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray-Browser'!
+!classDefinition: 'SchemeEnv class' category: 'X-ray-Browser'!
+SchemeEnv class
 	instanceVariableNames: ''!
 
 !classDefinition: #SemanticSource category: 'X-ray-Browser'!
@@ -3290,6 +3310,10 @@ calculates: aString
 hash
 	^name hash! !
 
+!XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 12/29/2020 13:55:01'!
+isDelayed
+	^false! !
+
 !XraySymbol methodsFor: 'as yet unclassified' stamp: 'DF 10/18/2020 12:27:20'!
 prereqs
 	^BinaryRelation new! !
@@ -3458,14 +3482,16 @@ anASTExplorer root: self.
 ASTExplorerWindow open: anASTExplorer
 ! !
 
-!NonTerminal methodsFor: 'initialization' stamp: 'DF 10/8/2020 14:20:10'!
+!NonTerminal methodsFor: 'initialization' stamp: 'DF 12/29/2020 13:58:42'!
 initialize
 	
 	children := {}.
 	
 	attributes := Dictionary new.
 	
-	mark := 0.! !
+	mark := 0.
+	
+	delayed _ false.! !
 
 !NonTerminal methodsFor: 'attributes' stamp: 'DF 10/6/2020 12:57:34'!
 addAttribute: anAttribute
@@ -3493,17 +3519,25 @@ attributeAt: aSymbol ifAbsent: aBlock
 	^ attributes at: aSymbol 	ifAbsent:aBlock
 ! !
 
-!NonTerminal methodsFor: 'semantics' stamp: 'DF 10/6/2020 14:22:50'!
+!NonTerminal methodsFor: 'semantics' stamp: 'DF 12/29/2020 18:17:44'!
 attributesClosure
 
 	| closure |
-		
-	closure := children inject: Set new into:[:acc :each | acc addAll: each attributesClosure. acc].
+	
+	self markDelayedChildren.
+	
+	closure := children inject: Set new into:[:acc :each | 
+		each isDelayed ifFalse:[ acc addAll: each attributesClosure ]. acc].
 	
 	closure addAll: attributes values.
 		
 	^closure
 	! !
+
+!NonTerminal methodsFor: 'semantics' stamp: 'DF 12/29/2020 15:56:22'!
+markDelayedChildren
+
+	^rule delayedIndices do:[:each | (children at: each) delay: true. ]! !
 
 !NonTerminal methodsFor: 'semantics' stamp: 'DF 11/12/2020 20:39:49'!
 prereqs
@@ -3525,7 +3559,7 @@ prereqsInto: aBinaryRelation
 	attributes do:[:each | each prereqsInto: aBinaryRelation ].
 	! !
 
-!NonTerminal methodsFor: 'semantics' stamp: 'DF 10/7/2020 13:18:25'!
+!NonTerminal methodsFor: 'semantics' stamp: 'DF 12/29/2020 18:18:06'!
 semantics 
 
 	| rules attrs order |
@@ -3547,10 +3581,19 @@ semantics
 
 	^self name = aNonTerminal name and:[mark = aNonTerminal mark]! !
 
+!NonTerminal methodsFor: 'testing' stamp: 'DF 12/29/2020 13:55:34'!
+delay: aBoolean
+	delayed _ aBoolean! !
+
 !NonTerminal methodsFor: 'testing' stamp: 'DF 11/20/2020 12:01:26'!
 hasAttribute: aSymbol
 
 	^attributes includesKey: aSymbol! !
+
+!NonTerminal methodsFor: 'testing' stamp: 'DF 12/29/2020 13:55:19'!
+isDelayed
+	^delayed
+	! !
 
 !NonTerminal methodsFor: 'testing' stamp: 'DF 11/11/2020 10:30:46'!
 isFirstChild
@@ -3747,7 +3790,7 @@ growNFA: anNFA fromItem: anItem
 		
 		! !
 
-!Grammar methodsFor: 'parser generation' stamp: 'DF 11/30/2020 19:31:54'!
+!Grammar methodsFor: 'parser generation' stamp: 'DF 12/27/2020 13:02:22'!
 parser
  
 	| anNFA aDFA actionTable gotoTable aParser nullable prefixes |
@@ -5325,13 +5368,17 @@ terminals: aTerminalsDictionary nonterms: aNonTerminalsDictionary rules: anOrder
 	^aGrammar
 	! !
 
-!Grammar class methodsFor: 'bootstrapping' stamp: 'DF 11/8/2020 13:36:46'!
+!Grammar class methodsFor: 'bootstrapping' stamp: 'DF 12/29/2020 14:50:18'!
 handCodedXrayGrammar
 
-	| ntRule ntSymbols ntSymbol tBar tStar tPlus tQmark tToken tColon tSemiColon tTokens tPatterns tRules tQuote tLBrace tRBrace tLPar tRPar r aGrammar ntPragma ntPragmas ntTail ntTails ntRules ntRulePart ntRuleParts ntFragment ntGroup ntGrammar ntToken ntTokens ntPatterns ntPattern ntAction ntActions ntParts ntPart  ntHead |
+	| ntRule ntSymbols ntSymbol tLDelay tRDelay tBar tStar tPlus tQmark tToken tColon tSemiColon tTokens tPatterns tRules tQuote tLBrace tRBrace tLPar tRPar r aGrammar ntPragma ntPragmas ntTail ntTails ntRules ntRulePart ntRuleParts ntFragment ntGroup ntGrammar ntToken ntTokens ntPatterns ntPattern ntAction ntActions ntParts ntPart ntHead ntAlias |
 
 	aGrammar := Grammar new.
 
+	tLDelay := Terminal new:'[['.
+
+	tRDelay := Terminal new:']]'.
+			
 	tBar := Terminal new:'|'.
 
 	tStar := Terminal new:'*'.
@@ -5400,15 +5447,17 @@ handCodedXrayGrammar
 
 	ntFragment := NonTerminal new:'Fragment'.
 
+	ntAlias := NonTerminal new:'Alias'.
+	
 	ntGroup := NonTerminal new:'Group'.
 
 	ntSymbol := NonTerminal new:'Symbol'.
 
 	ntSymbols := NonTerminal new:'Symbol*'.
 	
-	aGrammar addTerminal: tColon; addTerminal: tSemiColon; addTerminal: tQuote; addTerminal: tTokens; addTerminal: tPatterns; addTerminal: tRules; addTerminal: tToken; addTerminal: tLBrace; addTerminal: tRBrace; addTerminal: tLPar; addTerminal: tRPar; addTerminal: tStar; addTerminal: tPlus; addTerminal: tQmark; addTerminal: tBar.
+	aGrammar addTerminal: tColon; addTerminal: tSemiColon; addTerminal: tQuote; addTerminal: tTokens; addTerminal: tPatterns; addTerminal: tRules; addTerminal: tToken; addTerminal: tLBrace; addTerminal: tRBrace; addTerminal: tLPar; addTerminal: tRPar; addTerminal: tStar; addTerminal: tPlus; addTerminal: tQmark; addTerminal: tBar; addTerminal: tLDelay; addTerminal: tRDelay.
 	
-	aGrammar addNonTerminal: ntSymbol; addNonTerminal: ntSymbols; addNonTerminal: ntRule; addNonTerminal: ntRules; addNonTerminal: ntHead; addNonTerminal: ntTail; addNonTerminal: ntTails; addNonTerminal: ntRulePart; addNonTerminal: ntRuleParts; addNonTerminal: ntFragment; addNonTerminal: ntGroup; addNonTerminal: ntToken; addNonTerminal: ntTokens; addNonTerminal: ntPatterns; addNonTerminal: ntPattern; addNonTerminal: ntActions; addNonTerminal: ntAction; addNonTerminal: ntParts; addNonTerminal: ntPart; addNonTerminal: ntPragma; addNonTerminal: ntPragmas; addNonTerminal: ntGrammar.
+	aGrammar addNonTerminal: ntSymbol; addNonTerminal: ntSymbols; addNonTerminal: ntRule; addNonTerminal: ntRules; addNonTerminal: ntHead; addNonTerminal: ntTail; addNonTerminal: ntTails; addNonTerminal: ntRulePart; addNonTerminal: ntRuleParts; addNonTerminal: ntFragment; addNonTerminal: ntAlias; addNonTerminal: ntGroup; addNonTerminal: ntToken; addNonTerminal: ntTokens; addNonTerminal: ntPatterns; addNonTerminal: ntPattern; addNonTerminal: ntActions; addNonTerminal: ntAction; addNonTerminal: ntParts; addNonTerminal: ntPart; addNonTerminal: ntPragma; addNonTerminal: ntPragmas; addNonTerminal: ntGrammar.
 
 	aGrammar start: ntGrammar.
 
@@ -5538,7 +5587,7 @@ handCodedXrayGrammar
 	
 	r alias: #tail to:1 ; alias: #parts to:2; alias: #actions to:3.
 	
-	r addSemanticRule: 'tail at:#v put:(Rule new left: (tail at:#left) ; right: (parts at:#v) ; aliases: ( {tail at:#leftAlias }, (parts at:#alias) ) ; actions: (actions at:#v); yourself)'.
+	r addSemanticRule: 'tail at:#v put:(Rule new left: (tail at:#left) ; right: (parts at:#v) ; aliases: ( {tail at:#leftAlias }, (parts at:#alias) ) ; actions: (actions at:#v); aliasesDelayed: (parts at:#delayed) concatenation; yourself)'.
 	
 	r addSemanticRule: 'tail at:#blocks put: (parts at:#blocks)'.
 
@@ -5604,13 +5653,15 @@ handCodedXrayGrammar
 
 	r addSemanticRule: 'rule at:#alias put: {}'.
 	
+	r addSemanticRule: 'rule at:#delayed put: {}'.
+	
 	aGrammar addRule:r.
 	
-	"RulePart 'rule' : Fragment 'fragment' '' token '' 'alias' ;"
+	"RulePart 'rule' : Fragment 'fragment' Alias 'alias' ;"
 
-	r := Rule new left: ntRulePart; addToRight: ntFragment ; addToRight: tQuote; addToRight: tToken; addToRight: tQuote; yourself.
+	r := Rule new left: ntRulePart; addToRight: ntFragment ; addToRight: ntAlias; yourself.
 	
-	r alias: #rule to:1  ; alias: #fragment to:2; alias: #alias to:4.
+	r alias: #rule to:1  ; alias: #fragment to:2; alias: #alias to:3.
 	
 	r addSemanticRule: 'fragment at:#terminals put:(rule at:#terminals)'.
 	
@@ -5620,7 +5671,9 @@ handCodedXrayGrammar
 		
 	r addSemanticRule: 'rule at:#blocks put: (fragment at:#blocks)'.
 	
-	r addSemanticRule: 'rule at:#alias put: alias value'.
+	r addSemanticRule: 'rule at:#alias put: (alias at:#v)'.
+
+	r addSemanticRule: 'rule at:#delayed put: (alias at:#delayed)'.
 
 	r addSemanticRule: 'rule at:#v put: (fragment at:#v)'.
 
@@ -5629,6 +5682,30 @@ handCodedXrayGrammar
 	(Rule list: ntRuleParts children: {ntRulePart}) do:[:each | aGrammar addRule: each].
 	
 	"we can add the rules for the list of parts only here because only at this point we know what are the inherited attributes of ntRulePart "
+	
+	"Alias : '' token '' "
+	
+	r := Rule new left: ntAlias ; addToRight: tQuote; addToRight: tToken; addToRight: tQuote. 
+	
+	r alias: #alias to:1 ; alias:#name to: 3.
+	
+	r addSemanticRule: 'alias at:#v put: name value'.
+
+	r addSemanticRule: 'alias at:#delayed put: { } '.
+	
+	aGrammar addRule:r.
+
+	"Alias : [[ token ]] "
+	
+	r := Rule new left: ntAlias ; addToRight: tLDelay; addToRight: tToken; addToRight: tRDelay. 
+	
+	r alias: #alias to:1 ; alias:#name to: 3.
+	
+	r addSemanticRule: 'alias at:#v put: name value'.
+
+	r addSemanticRule: 'alias at:#delayed put: { name value } '.
+	
+	aGrammar addRule:r.
 	
 	" Fragment f : Symbol s "
 	
@@ -6235,6 +6312,11 @@ aliases: anOrderedCollection
 
 	aliases := ((anOrderedCollection withIndexCollect:[:each :i | each -> i]) reject:[:each | each key = {}]) asDictionary.! !
 
+!Rule methodsFor: 'accessing' stamp: 'DF 12/29/2020 15:07:00'!
+aliasesDelayed: aCollection
+
+	aliasesDelayed := aCollection asSet.! !
+
 !Rule methodsFor: 'accessing' stamp: 'DF 10/5/2020 20:41:35'!
 at: aSymbol
 	^aliases at: aSymbol! !
@@ -6270,7 +6352,7 @@ right: anOrderedCollection
 
 	right := anOrderedCollection ! !
 
-!Rule methodsFor: 'initialization' stamp: 'DF 11/7/2020 16:44:40'!
+!Rule methodsFor: 'initialization' stamp: 'DF 12/29/2020 15:05:53'!
 initialize
 
 	right := OrderedCollection new.
@@ -6279,7 +6361,7 @@ initialize
 	
 	aliases := Dictionary new.
 	
-	priority := 1.! !
+	aliasesDelayed _ Set new.! !
 
 !Rule methodsFor: 'attribute dependencies' stamp: 'DF 11/20/2020 12:16:10'!
 addImplicitInheritedAttributes
@@ -6302,18 +6384,24 @@ compute: anAttribute
 	
 	aSemanticRule compute: (aliases compose: anAttribute env)! !
 
-!Rule methodsFor: 'attribute dependencies' stamp: 'DF 11/18/2020 19:40:35'!
+!Rule methodsFor: 'attribute dependencies' stamp: 'DF 12/29/2020 15:57:09'!
+delayedIndices
+
+	^ aliases associations select: [:each | aliasesDelayed includes: each key ] thenCollect:[:each | each value - 1 ]
+	! !
+
+!Rule methodsFor: 'attribute dependencies' stamp: 'DF 12/27/2020 16:43:32'!
 hand: attributeName to: index
 
 	| leftIndex |
 	
-	leftIndex := left name, '00'.
+	leftIndex := left name asXrayAttributeName, '00'.
 
 	self addSemanticRuleNewVersion: attributeName, '@',  index , ' = ', attributeName, '@', leftIndex.
 	left attributeAt: attributeName ifAbsent:[
 		left addAttribute:(InheritedAttribute new name: attributeName; owner: left; yourself) ].! !
 
-!Rule methodsFor: 'attribute dependencies' stamp: 'DF 11/20/2020 13:19:06'!
+!Rule methodsFor: 'attribute dependencies' stamp: 'DF 12/27/2020 17:13:49'!
 handDownInheritedAttributes
 	
 	" add a semantic rule that inherits from self left every inherited attribute that has no semantic definition.
@@ -6326,7 +6414,7 @@ handDownInheritedAttributes
 	
 	positions := aliases invert.
 	
-	leftIndex := left name, '00'.
+	leftIndex := left name asXrayAttributeName, '00'.
 	
 	self alias: leftIndex to: 1.
 	
@@ -6337,14 +6425,14 @@ handDownInheritedAttributes
 					ifNone:[ result := false. self hand: eachAttribute name to: index ] ]
 				ifAbsent:[ | index |
 					result := false.
-					index :=  eachSymbol name, '00', (i + 1) asString.
+					index :=  eachSymbol name asXrayAttributeName , '00', (i + 1) asString.
 					self alias: index to: i + 1.
 					self hand: eachAttribute name to: index 	] ] ].
 
 	^result		
 ! !
 
-!Rule methodsFor: 'attribute dependencies' stamp: 'DF 11/21/2020 16:27:01'!
+!Rule methodsFor: 'attribute dependencies' stamp: 'DF 12/30/2020 12:15:38'!
 handUpSynthesizedAttributes
 	
 	" for each synthesized variable that has no semantic rule, add a semantic rule that concatenates all the  values of these attributes in the right part of the rule.
@@ -6373,7 +6461,7 @@ handUpSynthesizedAttributes
 
 	"create aliases to each symbol on the right "
 	
-	(1 to: right size) select:[:each | (right at:each) isKindOf:NonTerminal] thenDo:[:each | self alias: (right at: each) name, '007', each asString to: each + 1 ].
+	(1 to: right size) select:[:each | (right at:each) isKindOf:NonTerminal] thenDo:[:each | self alias: (right at: each) name asXrayAttributeName, '007', each asString to: each + 1 ].
 	
 	undefined do:[:eachAttribute | | indices fragments action index |
 		
@@ -7226,6 +7314,38 @@ result := aParser parse:'11.1'.
 result first second xray.
 ! !
 
+!XrayParserGenerator class methodsFor: 'testing' stamp: 'DF 12/29/2020 15:44:11'!
+testDelayedSemantics1
+
+	| aParser result |
+
+		"self testDelayedSemantics1"
+
+	aParser := XrayParserGenerator new parserFor: 
+'tokens
+
+0 1 ( ) proc
+
+patterns
+
+[[:space:]]+				{ nextTerminal } 
+[a-z]+				identifier
+
+rules 
+
+	E ''e'' : 0 | 1 ;
+
+	E ''e'' : identifier ''var'' ;
+
+	E ''e'' : "(" E ''rator'' E ''rand'' ")" ;
+
+	E ''e'' : "(" proc "(" identifier ''param'' ")" E [[ body ]] ")" ;'.
+	
+result := aParser parse:'(proc (x) x)'.
+
+result first second xray.
+! !
+
 !XrayParserGenerator class methodsFor: 'testing' stamp: 'DF 11/8/2020 11:30:55'!
 testGroup
 
@@ -7461,7 +7581,7 @@ test
 		aTerminal := aScanner nextTerminal.
 		]! !
 
-!XrayScanner class methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 12:17:08'!
+!XrayScanner class methodsFor: 'as yet unclassified' stamp: 'DF 12/29/2020 14:36:06'!
 xrayLanguageScanner
 
 	| aScanner |
@@ -7475,6 +7595,10 @@ xrayLanguageScanner
 	aScanner action:(Terminal valueAction:'patterns') forPattern: 'patterns'.
 	
 	aScanner action:(Terminal valueAction:'rules') forPattern: 'rules'.
+
+	aScanner action:(Terminal valueAction:'[[') forPattern: '\[\['.
+
+	aScanner action:(Terminal valueAction:']]') forPattern: ']]'.
 
 	aScanner action:(Terminal valueAction:'|') forPattern: '\|'.
 
@@ -7704,13 +7828,13 @@ parser
 	
 	^ XrayParserGenerator new parserFor: grammarSource ! !
 
-!Language methodsFor: 'as yet unclassified' stamp: 'DF 11/15/2020 18:17:11'!
+!Language methodsFor: 'as yet unclassified' stamp: 'DF 12/27/2020 12:02:34'!
 test
 
 	| anXrayParserTestModel |
 	
 	anXrayParserTestModel := XrayParserTestModel new.
-
+	
 	[
 		anXrayParserTestModel parser: self parser.
 		XrayParserTestWindow open: anXrayParserTestModel.	
@@ -7878,13 +8002,13 @@ initialize
 	
 ! !
 
-!Language class methodsFor: 'initialization' stamp: 'DF 11/21/2020 14:50:34'!
+!Language class methodsFor: 'initialization' stamp: 'DF 12/29/2020 17:57:08'!
 languageGrammar
 ^
 ' 
 tokens 
  
-"tokens" "patterns" "rules" ; { | } '' : ( ) * + ? %topic %aspect
+"tokens" "patterns" "rules" ; { | } '' : ( ) "[[" "]]" * + ? %topic %aspect
 
 patterns
 
@@ -8104,6 +8228,10 @@ RulePart ''part'' : Fragment ''fragment''
 	{ name@part = name@fragment } ;
 	
 RulePart ''part''  : Fragment ''fragment'' "''" token "''" 
+
+	{ name@part = name@fragment } ;
+
+RulePart ''part''  : Fragment ''fragment'' "[[" token "]]" 
 
 	{ name@part = name@fragment } ;
 
@@ -8461,6 +8589,59 @@ writeOn: aWriteStream
 	rules 	do:[:eachRule | eachRule writeOn: aWriteStream. aWriteStream newLine ]
 
 ! !
+
+!SchemeClosure methodsFor: 'as yet unclassified' stamp: 'DF 12/29/2020 18:47:24'!
+applyTo: anObject
+
+	self halt.
+	
+	body parent: nil.
+	
+	body at: #env put: (env extendWithParam: param arg: anObject).
+	
+	body semantics. 
+	
+	^ #value @ body.! !
+
+!SchemeClosure methodsFor: 'as yet unclassified' stamp: 'DF 12/29/2020 13:18:25'!
+body: anXraySymbol
+	body _ anXraySymbol! !
+
+!SchemeClosure methodsFor: 'as yet unclassified' stamp: 'DF 12/29/2020 13:18:05'!
+env: aSchemeEnv
+	env _ aSchemeEnv ! !
+
+!SchemeClosure methodsFor: 'as yet unclassified' stamp: 'DF 12/29/2020 13:18:15'!
+param: aString
+	param _ aString! !
+
+!SchemeEnv methodsFor: 'as yet unclassified' stamp: 'DF 12/29/2020 13:23:22'!
+arg: anObject
+	arg _ anObject! !
+
+!SchemeEnv methodsFor: 'as yet unclassified' stamp: 'DF 12/29/2020 13:23:12'!
+extendWithParam: aString arg: anObject
+
+	^ self class new parent: self; param: aString; arg: anObject; yourself! !
+
+!SchemeEnv methodsFor: 'as yet unclassified' stamp: 'DF 12/29/2020 13:24:33'!
+lookup: aString
+
+	param = aString ifTrue:[^arg].
+	
+	parent ifNotNil:[^parent lookup: aString].
+	
+	self error: 'No such variable: ', aString.
+	
+	! !
+
+!SchemeEnv methodsFor: 'as yet unclassified' stamp: 'DF 12/29/2020 13:23:28'!
+param: aString
+	param _ aString! !
+
+!SchemeEnv methodsFor: 'as yet unclassified' stamp: 'DF 12/29/2020 13:23:38'!
+parent: aSchemeEnv
+	parent _ aSchemeEnv! !
 
 !SemanticSource methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 22:10:19'!
 location
@@ -9147,6 +9328,12 @@ asAST
 	].
 
 	^root! !
+
+!String methodsFor: '*X-ray' stamp: 'DF 12/27/2020 16:34:48'!
+asXrayAttributeName
+
+	^ (self asLowercase copyWithRegex:'\+' matchesReplacedWith: 'PLUS') copyWithRegex: '\*' matchesReplacedWith: 'STAR'  
+	! !
 
 !String methodsFor: '*X-ray' stamp: 'DF 10/26/2020 11:55:01'!
 escape: aString with: anEscapeString
