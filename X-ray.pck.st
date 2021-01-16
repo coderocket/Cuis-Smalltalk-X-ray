@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4426] on 30 December 2020 at 6:39:45 pm'!
+'From Cuis 5.0 [latest update: #4426] on 16 January 2021 at 8:34:18 pm'!
 'Description '!
-!provides: 'X-ray' 1 862!
+!provides: 'X-ray' 1 863!
 !requires: 'Erudite' 1 144 nil!
 !requires: 'Regex-Core' 1 9 nil!
 SystemOrganization addCategory: 'X-ray'!
@@ -7780,7 +7780,7 @@ writeOn: aWriteStream
 	topics do:[:each | each writeOn: aWriteStream].
 ! !
 
-!Language methodsFor: 'removing' stamp: 'DF 11/2/2020 22:09:12'!
+!Language methodsFor: 'removing' stamp: 'DF 1/16/2021 18:00:51'!
 removeAspects: visibleAspects fromTopics: visibleTopics
 
 	"Remove all the aspects from every rule. If as a result a rule is left 
@@ -7790,9 +7790,14 @@ removeAspects: visibleAspects fromTopics: visibleTopics
 	(topics select:[:eachTopic | visibleTopics includes: eachTopic topic]) 
 		do:[:eachTopic | eachTopic removeAspects: visibleAspects ].
 	
-	topics := topics reject:[:eachTopic | eachTopic rules isEmpty ].
+	"topics := topics reject:[:eachTopic | eachTopic rules isEmpty ]."
 		
 	! !
+
+!Language methodsFor: 'removing' stamp: 'DF 1/16/2021 18:03:58'!
+removeEmptyTopics
+
+	topics _ topics reject:[:each | each rules isEmpty ].! !
 
 !Language methodsFor: 'updating' stamp: 'DF 11/9/2020 15:44:37'!
 absorb: aLanguage
@@ -8753,7 +8758,7 @@ initialize
 
 	selectedTextInterval := 1 to:0.! !
 
-!XrayLanguageExplorerModel methodsFor: 'updating' stamp: 'DF 11/17/2020 15:51:58'!
+!XrayLanguageExplorerModel methodsFor: 'updating' stamp: 'DF 1/16/2021 18:18:17'!
 merge: aLanguage with: aNewLanguage
 
 		| remainingVisibleAspectNames remainingVisibleTopicNames updatedVisibleAspectNames updatedVisibleTopicNames currentlyVisibleAspectNames currentlyVisibleTopicNames |
@@ -8798,7 +8803,11 @@ merge: aLanguage with: aNewLanguage
 		"  incorporate the new language into the existing language "
 		
 		aLanguage absorb: aNewLanguage.
+
+		" finally, remove all the topics that are now empty."
 		
+		aLanguage removeEmptyTopics.
+				
 		" now all the topic and aspect names have an index "
 		
 		self selectTopics: updatedVisibleTopicNames.
@@ -8855,7 +8864,7 @@ visibleAspectNames
 
 	^ selectedAspects collect:[:eachIndex | allAspectNames at: eachIndex ]! !
 
-!XrayLanguageExplorerModel methodsFor: 'updating' stamp: 'DF 11/9/2020 10:14:51'!
+!XrayLanguageExplorerModel methodsFor: 'updating' stamp: 'DF 1/16/2021 18:39:13'!
 visibleTopicNames
 
 	| allTopicNames |
@@ -8864,7 +8873,7 @@ visibleTopicNames
 	
 	selectedTopics := selectedTopics reject:[:each | each > allTopicNames size ].
 	
-	^ selectedTopics collect:[:eachIndex | allTopicNames at: eachIndex ]! !
+	^ selectedTopics collect:[:eachIndex | eachIndex > 0 and: [allTopicNames at: eachIndex ] ]! !
 
 !XrayLanguageExplorerModel methodsFor: 'view interface' stamp: 'DF 11/17/2020 15:26:04'!
 acceptContents: aString
@@ -9075,7 +9084,7 @@ removeLanguage
 	
 	self changed: #acceptedContents; changed: #languages; changed: #topics; changed: #aspects.! !
 
-!XrayLanguageExplorerModel methodsFor: 'menu operations' stamp: 'DF 11/20/2020 13:43:57'!
+!XrayLanguageExplorerModel methodsFor: 'menu operations' stamp: 'DF 1/16/2021 17:52:11'!
 renameLanguage
 
 	| aLanguage oldName |
@@ -9093,6 +9102,7 @@ renameLanguage
 			aString notEmpty and:[ (Language includes: aString) not ] ] 
 		do: [ :aString | 
 				Language rename: oldName to: aString.
+				selectedLanguageName _ aString.
 				self changed: #languages ]! !
 
 !XrayLanguageExplorerModel methodsFor: 'menu operations' stamp: 'DF 11/17/2020 15:44:41'!
