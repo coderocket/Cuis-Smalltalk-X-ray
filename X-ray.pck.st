@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4426] on 16 January 2021 at 8:34:18 pm'!
+'From Cuis 5.0 [latest update: #4526] on 31 January 2021 at 9:23:50 am'!
 'Description '!
-!provides: 'X-ray' 1 863!
+!provides: 'X-ray' 1 864!
 !requires: 'Erudite' 1 144 nil!
 !requires: 'Regex-Core' 1 9 nil!
 SystemOrganization addCategory: 'X-ray'!
@@ -2008,7 +2008,7 @@ It is often useful to pass initial inherited attributes to the AST root. This is
 
 ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2020 21:25:33'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 1/31/2021 09:23:32'!
 WritingSemanticActions
 ^(EruditeBookSection basicNew title: 'Writing Semantic Actions'; document: ((EruditeDocument contents: '
 !!!!Writing Semantic Actions
@@ -2019,13 +2019,13 @@ The X-ray parser always creates an abstract syntax tree (AST) of {XraySymbol::cl
 
 We can accompany each grammar rule with a collection of semantic equations of the form
 
-	{ attribute @ symbol = Smalltalk expression }
+	```{ attribute @ symbol = Smalltalk expression }```
 
 Here is a fragment that demonstrates how this works
 
 Expr ''expr'' : Expr ''left'' "+" Expr ''right''
 
-	{ value@expr = (value@left) + (value@right) } ;
+	```{ value@expr = (value@left) + (value@right) } ;```
 
 Each symbol in the rule has its own unique name to identify it in the semantic action. 
 
@@ -2043,18 +2043,20 @@ The inherited attributes of a symbol are calculated by the parent of the symbol 
 
 Whenever we use one of the list operators, the parser generator automatically propagates the attributes of each symbol in the list according to the following rules:
 
-1. The synthesized attributes of each list member are collected in a list and made accessible as attributes of the list non terminal.
+1. The synthesized attributes of each list member are collected in a list and made accessible as attributes of the list''s non terminal.
 
-2. Any inherited attribute of the list non terminal is passed on to the members of the list.
+2. Any inherited attribute of the list''s non terminal is passed on to the members of the list.
 
 For example:
 
+```
 A ''left'' : X * ''list'' 
 	{ v@left = v@list  }
 	{ a@list = 5 } ;
 
 X ''x'' : identifier 
 	{ v@x = a@x } ;
+```
 
 The list in the first rule inherits the attribute a with a value of 5 and passes it to each occurence of X. The second rule creates a synthesized attribute x for X and sets its value to the attribute a that X inherited. These values are collected into a list and put in the synthesized attribute v of the list. The result is that the synthesized attribute v of A will hold a list of 5''s.  
 
@@ -2072,11 +2074,13 @@ X-ray makes this easier by supporting a form of indirect inheritance where any r
 
 For example,
 
+```
 X ''x'' : A { s@x = 1 } ;
 
 A : B ;
 
 B ''b'' : c { v@b = (s@b) + 1  } ;
+```
 
 Here the attribute s is not explicitly defined for B, but it is inherited indirectly from A and then from X.
 
@@ -2090,6 +2094,7 @@ Just like the case of inherited attributes this requires writing a lot of rules 
 
 To avoid writing all these rules explicitly X-ray provides indirect synthesis of attributes. Whenever the right hand side of a semantic action refrences an attribute of one of the symbols on the right of the grammar rule that is not already defined, the system implicitly adds a synthesized attribute to that symbol and a rule that aggregates the attribute to the parent. For example,
 
+```
 X ''x'' : A ''a'' { v@x = v@a } ;
 
 A : B C ;
@@ -2097,11 +2102,26 @@ A : B C ;
 B ''b'' : { v@b = { 1 } } ;
 
 C ''c'' : { v@c = { 2 } } ;
+```
 
-Here, even though v is not an attribute of A, it is indirectly synthesized by concatenating the attributes of B and C. The result is that v@a will hold the collection { 1 . 2 }.
+Here, even though v is not an attribute of A, it is indirectly synthesized by concatenating the attributes of B and C. The result is that v@a will hold the collection [[[{ 1 . 2 }]]].
 
 To see an example that demonstrates the power of indircet inheritance and synthesis take a look at the [[[ Language browse: ''Turingol'' ]]] doItWithButton:''Turingol language''..
- ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!!!!!! Lazy semantics
+
+In some cases we cannot calculate the semantics of a non terminal because we dot not have all the required information. A typical example is the semantics of procedures. We cannot calculate the semantics of the procedure''s body because we are missing the values of its formal parameters. 
+
+In such a case we can use X-ray''s delayed operator. For example,
+
+E ''e'' : "(" proc "(" identifier ''param'' ")" E [[ body ]] ")" 
+
+Here the body of the procedure is surrounded with double brackets to indicate that X-ray should not calculate the semantics of this occurrence of the non terminal. 
+
+The non terminal can be stored in an object. Later, when all the required information is ready we can it send {semantics ::selector} to calculate its semantics.
+
+For a complete example that shows how all of this is put together look at [[[ Language browse: ''Lisp'' ]]] doItWithButton:''Lisp''..
+') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
 !XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/24/2020 20:26:08'!
 initialize
