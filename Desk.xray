@@ -1,0 +1,60 @@
+tokens
+
+	print where , = + 
+
+patterns
+
+[[:space:]]+					{ nextTerminal } 
+[0-9]+					number
+[[:alpha:]]+					identifier
+
+rules
+
+	%topic desk
+
+	Program 'p' : print Expression 'e' where DefinitionList 'defs'
+
+		%aspect environment 
+
+		{ env@p = (env @ defs) asDictionary }
+
+		%aspect evaluation
+
+		{ value@p = value@e }
+;
+
+	%topic expressions
+
+	Expression 'e' : Expression 'left' "+" Factor 'right'
+
+		%aspect evaluation
+
+		{ value@e = (value@left) + (value@right) } 
+
+	| Factor 'f'
+
+		%aspect evaluation
+
+		{ value@e = value@f } ;
+
+	Factor 'f' : number 'n'
+
+		%aspect evaluation 
+
+		{ value@f = n value asNumber } 
+
+	| identifier 'id'
+
+		%aspect evaluation 
+
+		{ value@f = env@f at: id value asString } ;
+
+	%topic definitions
+
+	DefinitionList : Definition | DefinitionList "," Definition ;
+
+	Definition 'd' : identifier 'id' = number 'num'
+
+		%aspect environment 
+
+		{ env@d = { id value asString -> num value asNumber }  } ;
