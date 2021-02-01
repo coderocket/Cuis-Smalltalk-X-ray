@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4526] on 31 January 2021 at 9:23:50 am'!
+'From Cuis 5.0 [latest update: #4526] on 1 February 2021 at 9:10:11 pm'!
 'Description '!
-!provides: 'X-ray' 1 864!
+!provides: 'X-ray' 1 865!
 !requires: 'Erudite' 1 144 nil!
 !requires: 'Regex-Core' 1 9 nil!
 SystemOrganization addCategory: 'X-ray'!
@@ -952,6 +952,17 @@ image: anObject
 	^ aSet.
 	
 	! !
+
+!BinaryRelation methodsFor: 'as yet unclassified' stamp: 'DF 2/1/2021 18:05:50'!
+invert
+
+	| aBinaryRelation |
+	
+	aBinaryRelation _ self class new.
+	
+	self do:[:each | aBinaryRelation add: each value -> each key].
+	
+	^aBinaryRelation! !
 
 !BinaryRelation methodsFor: 'as yet unclassified' stamp: 'DF 10/18/2020 12:25:46'!
 toFunction
@@ -3913,6 +3924,49 @@ derivation: anItem for: aTerminal
 	^path
 	! !
 
+!Grammar methodsFor: 'grammar debugging' stamp: 'DF 2/1/2021 19:04:08'!
+generator: aNonTerminal and: anotherNonTerminal
+
+	| gens common done |
+	
+	gens _ self generators invert.
+	
+	common _ (gens image: aNonTerminal) intersect: (gens image: anotherNonTerminal).
+	
+	done _ false.
+	
+	[done] whileFalse:[ | rejects |
+		
+		rejects _ common inject: Set new into:[:acc :nt |
+			
+			acc addAll: (common select:[:each | each ~= nt and: [ gens includes: nt -> each ] ] ). acc ].
+		
+		common removeAll: rejects.
+		
+		done _ rejects isEmpty.
+	].
+
+	^common! !
+
+!Grammar methodsFor: 'grammar debugging' stamp: 'DF 2/1/2021 18:02:26'!
+generators
+
+	| gens | 
+	
+	gens _ BinaryRelation new.
+	
+	nonTerminals do:[:each | gens add: each -> each ].
+	
+	rules do:[:each | 
+		each right 
+			select:[:nt | nt isKindOf: NonTerminal ] 
+			thenDo:[:nt | gens add: each left -> nt ] ].
+		
+	^[:gs :ngs | gens do:[:each | 
+			(gs image: each value) do:[:other | 
+				ngs add: each key -> other ] ] ] fixedPoint: gens.
+		! !
+
 !Grammar methodsFor: 'grammar debugging' stamp: 'DF 10/20/2020 14:07:26'!
 reduceExample: anItem trace: aTrace
 
@@ -3926,10 +3980,12 @@ reduceExample: anItem trace: aTrace
 	
 	^root! !
 
-!Grammar methodsFor: 'grammar debugging' stamp: 'DF 10/20/2020 16:48:25'!
+!Grammar methodsFor: 'grammar debugging' stamp: 'DF 2/1/2021 19:10:05'!
 shiftExample: anItem start: aNonTerminal trace: anOrderedSequence
 	
-	| prefix goalRule pairs parent p path current prev |
+	| prefix goalRule pairs parent p path current prev counter |
+	
+	counter _ 1.
 	
 	prefix := anOrderedSequence.
 	
@@ -3937,7 +3993,7 @@ shiftExample: anItem start: aNonTerminal trace: anOrderedSequence
 	
 	goalRule left: Goal new.
 	
-	goalRule addToRight: aNonTerminal.
+	goalRule addToRight: (self generator: aNonTerminal and: anItem rule left) anyOne.
 
 	pairs := Set new.
 	
@@ -3970,6 +4026,9 @@ shiftExample: anItem start: aNonTerminal trace: anOrderedSequence
 						pairs add: child. 	parent at: child put: each] ].				
 		
 		p := parent keys detect:[:each |  ((each at:2) = (prefix size + 1)) and: [(each at:1) = anItem]  ] ifNone:[nil].
+		
+		counter _ counter + 1. 
+		counter > 50 ifTrue:[self error: 'Shift example too long'].
 		
 	].
 
@@ -9464,6 +9523,15 @@ unique
 !Set methodsFor: '*X-ray' stamp: 'DF 10/28/2020 12:46:46'!
 flatten
 	^self inject: self class new into:[:acc :each | acc addAll: each . acc ]
+	! !
+
+!Set methodsFor: '*X-ray' stamp: 'DF 2/1/2021 18:11:55'!
+intersect: aSet
+
+	"answer a set that contains all the elements that appear in both self and aSet"
+	
+	^ self select:[:each | aSet includes: each ].
+	
 	! !
 
 !Dictionary methodsFor: '*X-ray' stamp: 'DF 10/6/2020 11:04:48'!
