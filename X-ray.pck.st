@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4526] on 1 February 2021 at 9:10:11 pm'!
+'From Cuis 5.0 [latest update: #4526] on 11 March 2021 at 9:47:29 pm'!
 'Description '!
-!provides: 'X-ray' 1 865!
+!provides: 'X-ray' 1 866!
 !requires: 'Erudite' 1 144 nil!
 !requires: 'Regex-Core' 1 9 nil!
 SystemOrganization addCategory: 'X-ray'!
@@ -1582,7 +1582,42 @@ worldMenuForOpenGroup
 			#balloonText 	-> 		'An X-ray grammar browser for editing and generating LR parsers'.
 		} asDictionary}`! !
 
-!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/15/2020 18:25:06'!
+!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 3/11/2021 21:40:01'!
+astMenu
+	"Borrow a menu from my inspector"
+	
+	| aMenu |
+	aMenu _ MenuMorph new defaultTarget: self.
+	model getASTSelection
+		ifNil: [
+			aMenu
+				add: '*nothing selected*'
+				target: self
+				action: #yourself]
+		ifNotNil: [
+			aMenu
+				addItemsFromDictionaries: `{
+					{
+						#label 			-> 		'xray (x)'.
+						#selector 		-> 		#xrayASTSelection.
+						#icon 			-> 		#inspectIcon
+					} asDictionary.
+					{
+						#label 			-> 		'inspect (i)'.
+						#selector 		-> 		#inspectASTSelection.
+						#icon 			-> 		#inspectIcon
+					} asDictionary.
+					{
+						#label 			-> 		'explore (I)'.
+						#selector 		-> 		#exploreASTSelection.
+						#icon 			-> 		#exploreIcon
+					} asDictionary.
+				}`.
+		].
+	
+	^ aMenu! !
+
+!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 3/11/2021 21:38:33'!
 buildMorphicWindow
 
 	| textMorph stackMorph astMorph attrsMorph row ast |
@@ -1608,7 +1643,7 @@ buildMorphicWindow
 			indexGetter: #getASTSelection
 			indexSetter:  #noteASTSelection:
 			mainView: self
-			menuGetter: nil
+			menuGetter: #astMenu
 			keystrokeAction: nil.
 
 	attrsMorph _ PluggableListMorph
@@ -1637,9 +1672,27 @@ buildMorphicWindow
 		
 	self setLabel: 'X-ray Parser Tester'! !
 
+!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 3/11/2021 21:38:45'!
+exploreASTSelection
+	"Create and schedule an Explorer on the receiver's model's currently selected object."
+
+	^ model getASTSelection item explore! !
+
+!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 3/11/2021 21:39:02'!
+inspectASTSelection
+	"Create and schedule an Inspector on the receiver's model's currently selected object."
+
+	^ model getASTSelection item inspect! !
+
 !XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 10:22:28'!
 windowColor
 	^ Color r:65.0/100 g:68.2/100 b:38.4/100! !
+
+!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 3/11/2021 21:40:22'!
+xrayASTSelection
+	"Create and schedule an Xray Explorer on the receiver's model's currently selected object."
+
+	^ model getASTSelection item xray! !
 
 !ASTExplorerWrapper methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 15:03:15'!
 asString
