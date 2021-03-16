@@ -1,8 +1,9 @@
-'From Cuis 5.0 [latest update: #4526] on 11 March 2021 at 9:47:29 pm'!
+'From Cuis 5.0 [latest update: #4526] on 16 March 2021 at 1:36:41 pm'!
 'Description '!
-!provides: 'X-ray' 1 866!
+!provides: 'X-ray' 1 871!
 !requires: 'Erudite' 1 144 nil!
 !requires: 'Regex-Core' 1 9 nil!
+!requires: 'Automata' 1 1 nil!
 SystemOrganization addCategory: 'X-ray'!
 SystemOrganization addCategory: 'X-ray-Browser'!
 
@@ -297,16 +298,6 @@ Object subclass: #AttributeVariable
 AttributeVariable class
 	instanceVariableNames: ''!
 
-!classDefinition: #DFA category: 'X-ray'!
-Object subclass: #DFA
-	instanceVariableNames: 'states transitions start alphabet include read'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'DFA class' category: 'X-ray'!
-DFA class
-	instanceVariableNames: ''!
-
 !classDefinition: #DotPrintable category: 'X-ray'!
 Object subclass: #DotPrintable
 	instanceVariableNames: ''
@@ -335,56 +326,6 @@ RuleItem subclass: #LookAheadRuleItem
 	category: 'X-ray'!
 !classDefinition: 'LookAheadRuleItem class' category: 'X-ray'!
 LookAheadRuleItem class
-	instanceVariableNames: ''!
-
-!classDefinition: #State category: 'X-ray'!
-DotPrintable subclass: #State
-	instanceVariableNames: 'items cloneId identifier'
-	classVariableNames: 'ErrorState'
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'State class' category: 'X-ray'!
-State class
-	instanceVariableNames: ''!
-
-!classDefinition: #Transition category: 'X-ray'!
-DotPrintable subclass: #Transition
-	instanceVariableNames: 'from to symbol'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'Transition class' category: 'X-ray'!
-Transition class
-	instanceVariableNames: ''!
-
-!classDefinition: #CanonicTransition category: 'X-ray'!
-Transition subclass: #CanonicTransition
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'CanonicTransition class' category: 'X-ray'!
-CanonicTransition class
-	instanceVariableNames: ''!
-
-!classDefinition: #TransitionFunction category: 'X-ray'!
-DotPrintable subclass: #TransitionFunction
-	instanceVariableNames: 'tuples transitionClass'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'TransitionFunction class' category: 'X-ray'!
-TransitionFunction class
-	instanceVariableNames: ''!
-
-!classDefinition: #TransitionRelation category: 'X-ray'!
-DotPrintable subclass: #TransitionRelation
-	instanceVariableNames: 'tuples index'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'TransitionRelation class' category: 'X-ray'!
-TransitionRelation class
 	instanceVariableNames: ''!
 
 !classDefinition: #XraySymbol category: 'X-ray'!
@@ -465,16 +406,6 @@ Object subclass: #Grammar
 	category: 'X-ray'!
 !classDefinition: 'Grammar class' category: 'X-ray'!
 Grammar class
-	instanceVariableNames: ''!
-
-!classDefinition: #NFA category: 'X-ray'!
-Object subclass: #NFA
-	instanceVariableNames: 'alphabet start states transitions'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'X-ray'!
-!classDefinition: 'NFA class' category: 'X-ray'!
-NFA class
 	instanceVariableNames: ''!
 
 !classDefinition: #PriorityBlock category: 'X-ray'!
@@ -677,6 +608,36 @@ Object subclass: #XrayParserTestModel
 XrayParserTestModel class
 	instanceVariableNames: ''!
 
+!classDefinition: #ParserDFA category: 'X-ray'!
+DFA subclass: #ParserDFA
+	instanceVariableNames: 'read include'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'ParserDFA class' category: 'X-ray'!
+ParserDFA class
+	instanceVariableNames: ''!
+
+!classDefinition: #ParserState category: 'X-ray'!
+CompositeState subclass: #ParserState
+	instanceVariableNames: 'cloneId identifier'
+	classVariableNames: 'ErrorState'
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'ParserState class' category: 'X-ray'!
+ParserState class
+	instanceVariableNames: ''!
+
+!classDefinition: #CanonicTransition category: 'X-ray'!
+Transition subclass: #CanonicTransition
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'X-ray'!
+!classDefinition: 'CanonicTransition class' category: 'X-ray'!
+CanonicTransition class
+	instanceVariableNames: ''!
+
 
 !SemanticRule commentStamp: '<historical>' prior: 0!
 A semantic rule consists of three parts: a left attribute whose value is to be determined by the effect block, and a set of attributes (right) that the effect may read. When a semantic rule is activated, the effect block is called with the bindings of values to the right attributes and its result is used to update the value of the left attribute.!
@@ -736,53 +697,6 @@ printOn: aStream
 	
 	lookAhead printOn: aStream.
 ! !
-
-!State methodsFor: 'printing' stamp: 'DF 10/27/2020 10:36:57'!
-printOn: aStream
-
-	super printOn: aStream.
-	
-	cloneId printOn: aStream.
-	
-	"(items first:3) do:[:each | each printOn: aStream]."! !
-
-!State methodsFor: 'as yet unclassified' stamp: 'DF 10/1/2020 19:52:38'!
-postCopy
-	items := items copy! !
-
-!Transition methodsFor: 'printing' stamp: 'DF 9/30/2020 22:26:52'!
-printOn: aStream
-
-	super printOn: aStream.
-	
-	aStream nextPut:$(.
-	
-	from printOn: aStream.
-	
-	aStream nextPut:$,.
-	
-	symbol printOn: aStream.
-	
-	aStream nextPut:$,.
-	
-	to printOn: aStream.
-	
-	aStream nextPut:$).
-! !
-
-!TransitionFunction methodsFor: 'printing' stamp: 'DF 9/25/2020 14:26:03'!
-printOn: aStream
-
-	super printOn: aStream.	
-	tuples printOn: aStream.
-! !
-
-!TransitionRelation methodsFor: 'printing' stamp: 'DF 9/23/2020 19:08:37'!
-printOn: aStream
-
-	super printOn: aStream.
-	
-	tuples printOn: aStream.! !
 
 !XraySymbol methodsFor: 'printing' stamp: 'DF 9/20/2020 13:00:34'!
 printOn: aStream
@@ -863,6 +777,19 @@ printOn: aStream
 !Language methodsFor: 'accessing' stamp: 'DF 10/31/2020 17:45:49'!
 name
 	^name! !
+
+!ParserState methodsFor: 'printing' stamp: 'DF 10/27/2020 10:36:57'!
+printOn: aStream
+
+	super printOn: aStream.
+	
+	cloneId printOn: aStream.
+	
+	"(items first:3) do:[:each | each printOn: aStream]."! !
+
+!ParserState methodsFor: 'as yet unclassified' stamp: 'DF 10/1/2020 19:52:38'!
+postCopy
+	items := items copy! !
 
 !ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:26:57'!
 astList
@@ -2365,296 +2292,6 @@ resolve: aDictionary ifAbsent: aBlock
 	^(aDictionary at: index) attributeAt: name ifAbsent: aBlock
 	! !
 
-!DFA methodsFor: 'initialization' stamp: 'DF 9/25/2020 14:26:21'!
-initialize
-
-	states := Set new.
-	transitions := TransitionFunction new.! !
-
-!DFA methodsFor: 'testing' stamp: 'DF 9/24/2020 14:10:06'!
-ifNotState: aState do: aBlock
-
-	(states includes: aState)
-		ifFalse:[aBlock value]! !
-
-!DFA methodsFor: 'parser tables' stamp: 'DF 11/30/2020 19:29:02'!
-actionTable
- 
-	| actionTable terminals |
-	
-	terminals := alphabet select:[:each | each isKindOf: Terminal ].
-	
-	actionTable := Dictionary new.
-	
-	states do:[:eachState |
-		terminals do:[:eachSymbol |
-			actionTable at:{eachState identifier . eachSymbol} put: (eachState makeActionOn: eachSymbol on: (transitions fromState:eachState at:eachSymbol))
-			]
-		].
-
-	^actionTable
-! !
-
-!DFA methodsFor: 'parser tables' stamp: 'DF 11/30/2020 19:31:34'!
-gotoTable
- 
-	| gotoTable nonTerminals |		
-	
-	nonTerminals := alphabet select:[:each | each isKindOf: NonTerminal ].
-	
-	gotoTable := Dictionary new.
-	
-	states do:[:eachState |
-		nonTerminals do:[:eachSymbol |
-			gotoTable at:{eachState identifier . eachSymbol} put: (transitions fromState:eachState at: eachSymbol) identifier.
-			]
-		].
-	
-	^ gotoTable! !
-
-!DFA methodsFor: 'parser tables' stamp: 'DF 11/30/2020 19:26:51'!
-prepareStates
-
-	"give each state a unique integer indentifier, we will use them in the parser tables. "
-	
-	| id |
-	
-	id := 1.
-	
-	states do:[:each | each identifier: id. id := id + 1 ].
-	
-	
-! !
-
-!DFA methodsFor: 'as yet unclassified' stamp: 'DF 10/13/2020 00:06:35'!
-pathToState: aState
-
-	| mst |
-	
-	mst := transitions minimalSpanningTreeFrom: start.
-		
-	^(mst select:[:each | each state = aState]) anyOne path.
-! !
-
-!DFA methodsFor: 'as yet unclassified' stamp: 'DF 10/18/2020 18:46:13'!
-shortestPathFrom: aState to: anotherState
-
-	| mst |
-	
-	mst := transitions minimalSpanningTreeFrom: aState.
-		
-	^(mst select:[:each | each state = anotherState]) anyOne path.
-! !
-
-!DFA methodsFor: 'as yet unclassified' stamp: 'DF 9/30/2020 19:42:24'!
-splitConflictingStates
-
-	| conflicts clones |
-
-	conflicts := states select:[:each | each hasMultipleReduces and:[(transitions entering: each) size > 1] ].
-	
-	" there is no need to split states that have only one entering transition. "
-	
-	" we have to unroll all the cyclic conflicting states"
-	
-	(conflicts select:[:each | transitions isCyclicState: each]) 
-		do:[:each | 		states add: (transitions unrollCyclicState: each)].
-
-	" the last step may change the conflicting states so now we have to find them again"
-	
-	conflicts := states select:[:each | each hasMultipleReduces and:[(transitions entering: each) size > 1] ].
-	
-	"we are not splitting cyclic states "
-	
-	conflicts := conflicts reject:[:each | transitions isCyclicState:each ].
-	
-	clones := conflicts inject:Set new into:[:acc :each |		acc addAll: (transitions splitState: each). acc ].
-
-	states removeAll: conflicts.
-	
-	states addAll: clones.
-		! !
-
-!DFA methodsFor: 'accessing' stamp: 'DF 9/24/2020 14:07:15'!
-addState: aState
-	states add: aState! !
-
-!DFA methodsFor: 'accessing' stamp: 'DF 9/25/2020 22:29:12'!
-alphabet: aSet
-	alphabet := aSet! !
-
-!DFA methodsFor: 'accessing' stamp: 'DF 9/27/2020 11:37:54'!
-setTransitionFrom: fromState onSymbol: aSymbol to: toState
-
-	| aTransition |
-	
-	aTransition := Transition new.
-	
-	aTransition from: fromState ; symbol: aSymbol; to: toState.
-	
-	transitions put: aTransition
-	! !
-
-!DFA methodsFor: 'accessing' stamp: 'DF 10/2/2020 19:17:14'!
-start
-	^start! !
-
-!DFA methodsFor: 'accessing' stamp: 'DF 9/24/2020 14:05:52'!
-start: aState
-	start := aState! !
-
-!DFA methodsFor: 'accessing' stamp: 'DF 9/28/2020 13:51:57'!
-stateLike: aState
-	^states like: aState! !
-
-!DFA methodsFor: 'accessing' stamp: 'DF 10/1/2020 10:16:50'!
-states
-	^states! !
-
-!DFA methodsFor: 'accessing' stamp: 'DF 10/1/2020 10:29:39'!
-transitionClass: aClass
-	transitions transitionClass: aClass! !
-
-!DFA methodsFor: 'converting' stamp: 'DF 10/28/2020 09:59:31'!
-toCanonicForm
-	
-	| id aDFA |
-	
-	aDFA := DFA new.
-		
-	aDFA transitionClass: CanonicTransition. 
-	
-	aDFA alphabet: alphabet.
-	
-	id := Dictionary new.
-	
-	states asArray withIndexDo:[:eachState :i | 
-		id at: eachState put: i ].
-	
-	(1 to: states size) do:[:i | aDFA addState: i].
-		
-	(transitions select:[:each | true ]) do:[:each |
-		aDFA setTransitionFrom: (id at:each from) onSymbol: (each symbol) to: (id at:each to).
-	].
-
-	^aDFA
-	! !
-
-!DFA methodsFor: 'computing lookahead' stamp: 'DF 10/16/2020 21:34:41'!
-computeFollowWith: prefixes with: nullable
-
-	| follows |
-	
-	include := self computeIncludesWith: prefixes.
-	
-	read := self computeReadsWith: nullable.
-
-	follows := [:f :fn | 	
-		include do:[:each | fn addAll: ((f image: each value) collect:[:included | each key -> included ] )] ] fixedPoint: read. 
-
-	^follows toFunction! !
-
-!DFA methodsFor: 'computing lookahead' stamp: 'DF 10/28/2020 10:02:01'!
-computeIncludesWith: prefixes
-
-	|  includes nonTerminalTransitions |
-			
-	includes := BinaryRelation new.
-	
-	nonTerminalTransitions := transitions select:[:each | each symbol isKindOf: NonTerminal ].
-	
-	nonTerminalTransitions do:[:each |
-		nonTerminalTransitions do:[:other |
-			((prefixes at: (other symbol -> each symbol) ifAbsent:[Set new]) "other -> path each"
-				anySatisfy:[:path | 		(transitions path: path from: other from) = each from])
-					ifTrue:[ includes add: each -> other ] ] ].
-					
-	^includes! !
-
-!DFA methodsFor: 'computing lookahead' stamp: 'DF 10/16/2020 21:33:57'!
-computeLookAheadWith: prefixes with: nullable
-
-	| follow conflicts |
-	
-	follow := self computeFollowWith: prefixes with: nullable.
-	
-	conflicts := states select:[:each | each hasConflicts ].
-	
-	conflicts do:[:eachState | eachState promoteReductionsWith: transitions with: follow ].
-! !
-
-!DFA methodsFor: 'computing lookahead' stamp: 'DF 10/28/2020 10:02:20'!
-computeReadsWith: nullable
-
-	| nonTerminalTransitions directReads |
-	
-	nonTerminalTransitions := transitions select:[:each | each symbol isKindOf: NonTerminal ].
-
-	directReads := nonTerminalTransitions inject: BinaryRelation new into:[:acc :each | acc addAll: (transitions directReadsOf: each). acc ].
-
-	^ [ :reads :readsNext | 
-		nonTerminalTransitions do:[:each | 
-			
-			readsNext addAll:((transitions with: nullable reads: each to)
-				inject: BinaryRelation new into: [:acc :next | 
-					acc addAll:((reads image: next) 
-						collect:[:other |  each -> other ]). acc]) ]	] fixedPoint: directReads.
-! !
-
-!DFA methodsFor: 'grammar debugging' stamp: 'DF 10/27/2020 23:52:33'!
-itemsContributingToReduction: aReduceItem inState: aState lookAhead: aTerminal
-
-	|  including reading contributing parent |
-	
-	parent := BinaryFunction new.
-	
-	including := (transitions lookBack: aState rule: aReduceItem rule) asSet.
-	
-	reading := including			select:[:each | (read image: each) includes: aTerminal ].
-	
-	[reading isEmpty] 
-		whileTrue:[ | next | 
-		
-			next := Set new.
-			
-			including do:[:each | | children |
-			
-				children := include image: each.
-			
-				children := children reject:[:eachChild | including includes: eachChild ].
-			
-				children := children reject:[:eachChild | next includes: eachChild ].
-			
-				children 	do:[:eachChild | parent at: eachChild put: each ].
-			
-				next addAll: children 
-			].
-		
-			including addAll: next.
-	
-			reading := including			select:[:each | (read image: each) includes: aTerminal ].	
-		].
-
-	contributing := reading collect:[:eachTransition | | path items pre |
-				
-		path := (parent path: eachTransition) collect:[:each | each from].
-		
-		pre := OrderedCollection new.
-
-		[path size > 1] whileTrue:[ 
-			pre add: (path second items detect:[:item | (transitions path: item left from: path first) = path second ]).
-			path removeFirst.
-		].
-		
-		items := eachTransition to items 	
-			select:[:eachItem | (eachItem atEnd not)  and:[eachItem left isEmpty not] and:[ eachItem left last = eachTransition symbol  ] ].
-				
-		{ pre . items }
-	].
-	
-	^contributing  
-	! !
-
 !DotPrintable methodsFor: 'as yet unclassified' stamp: 'DF 9/24/2020 11:43:09'!
 printDot
 
@@ -2802,531 +2439,6 @@ makeActionsOn: aSymbol
 	 	ifTrue:[{ReduceAction new: self}]
 		ifFalse:[{}]
 ! !
-
-!State methodsFor: 'printing' stamp: 'DF 10/29/2020 23:07:13'!
-printDotOn: aStream
-
-	items do:[:each | each printDotOn: aStream . aStream nextPut:Character lf].! !
-
-!State methodsFor: 'as yet unclassified' stamp: 'DF 9/29/2020 12:55:21'!
-clone: anInteger
-
-	^(1 to: anInteger) collect:[:id | | aClone | aClone := self copy. aClone cloneId: cloneId + id. aClone ]! !
-
-!State methodsFor: 'as yet unclassified' stamp: 'DF 11/30/2020 19:31:02'!
-makeActionOn: aSymbol on: nextState
-
-	| actions |
-	
-	actions := OrderedCollection new.
-	
-	nextState ifNotError:[actions add: (ShiftAction new: nextState identifier) ].
-	 
-	(items select:[:each | each atEnd])
-		do:[:each | actions addAll: (each makeActionsOn: aSymbol) ].
-		
-	actions ifEmpty:[^ErrorAction new: aSymbol].
-	 
-	(actions size > 1)
-		ifTrue:[ | anExceptionClass |
-			anExceptionClass := 
-				((actions count:[:each | each isKindOf: ReduceAction ]) > 1)
-					ifTrue:[ReduceReduceConflict]
-					ifFalse:[	ShiftReduceConflict].
-
-			(anExceptionClass new state: self; items: items; symbol: aSymbol; yourself) signal.
-		].
-		
-	^actions at:1
-			
-! !
-
-!State methodsFor: 'as yet unclassified' stamp: 'DF 10/1/2020 19:53:49'!
-promoteReductionsWith: transitions with: follow
-
-	| reductions promotions |
-		
-	reductions := self reductions.
-		
-	promotions := reductions collect: [:eachItem | 
-		eachItem promoteWithLookAhead: ((transitions lookBack: self rule: eachItem rule) inject:Set new into:[:acc :eachTransition |acc addAll: (follow at: eachTransition). acc ]) ].
-		
-	items removeAll: reductions.
-	
-	items addAll: promotions.
-	
- 	
-	
-! !
-
-!State methodsFor: 'testing' stamp: 'DF 9/27/2020 11:54:57'!
-= aState
-
-	self == aState ifTrue: [^ true].
-	self class == aState class ifFalse: [^ false].
-
-	^items = aState items	and:[cloneId = aState cloneId ]! !
-
-!State methodsFor: 'testing' stamp: 'DF 10/1/2020 11:38:44'!
-hasConflicts
-
-	^self hasMultipleReduces or:[self hasReduces and:self hasShifts ]! !
-
-!State methodsFor: 'testing' stamp: 'DF 9/28/2020 13:41:32'!
-hasMultipleReduces
-
-	^ (items select:[:each | each atEnd ]) size > 1! !
-
-!State methodsFor: 'testing' stamp: 'DF 9/28/2020 13:38:30'!
-hasReduces
-
-	^ (items select:[:each | each atEnd ]) notEmpty! !
-
-!State methodsFor: 'testing' stamp: 'DF 9/28/2020 13:38:12'!
-hasShifts
-
-	^ (items select:[:each | each atEnd not ]) notEmpty! !
-
-!State methodsFor: 'testing' stamp: 'DF 9/28/2020 12:17:24'!
-ifError: aBlockClosure 
-	(items isEmpty)
-		ifTrue:[^aBlockClosure value]! !
-
-!State methodsFor: 'testing' stamp: 'DF 9/28/2020 14:17:52'!
-ifNotError: aBlockClosure 
-	(items isEmpty) 
-		ifFalse:[^aBlockClosure value]! !
-
-!State methodsFor: 'testing' stamp: 'DF 9/25/2020 21:41:54'!
-isError
-	^items isEmpty! !
-
-!State methodsFor: 'testing' stamp: 'DF 9/25/2020 21:42:20'!
-isGoal
-	^ items anySatisfy: [:each | each isGoal ]! !
-
-!State methodsFor: 'accessing' stamp: 'DF 9/27/2020 11:55:07'!
-cloneId
-	^cloneId! !
-
-!State methodsFor: 'accessing' stamp: 'DF 9/27/2020 12:52:19'!
-cloneId: anInteger
-	cloneId := anInteger! !
-
-!State methodsFor: 'accessing' stamp: 'DF 9/27/2020 11:55:19'!
-hash
-	^ items hash bitXor: cloneId hash! !
-
-!State methodsFor: 'accessing' stamp: 'DF 11/30/2020 19:26:22'!
-identifier
-	^identifier! !
-
-!State methodsFor: 'accessing' stamp: 'DF 11/30/2020 19:26:32'!
-identifier: anInteger
-	identifier := anInteger! !
-
-!State methodsFor: 'accessing' stamp: 'DF 9/24/2020 13:46:05'!
-items
-	^items! !
-
-!State methodsFor: 'accessing' stamp: 'DF 9/24/2020 13:46:34'!
-items: aSet
-	items := aSet! !
-
-!State methodsFor: 'accessing' stamp: 'DF 10/14/2020 19:08:56'!
-itemsAt: anXraySymbol
-
-	^items select:[:each | each atEnd not and:[each symbol = anXraySymbol ] ]! !
-
-!State methodsFor: 'accessing' stamp: 'DF 10/1/2020 12:01:09'!
-reductions
-
-	^items select:[:each | each atEnd ]! !
-
-!State methodsFor: 'epsilon closure' stamp: 'DF 9/24/2020 19:18:35'!
-next: aSymbol in: aTransitionRelation
-
-	^State new: (aTransitionRelation epsilonClosureOf: (aTransitionRelation fromStateSet: items at: aSymbol))! !
-
-!State methodsFor: 'initialization' stamp: 'DF 9/27/2020 11:54:42'!
-initialize
-	cloneId := 0.! !
-
-!State class methodsFor: 'class initialization' stamp: 'DF 10/28/2020 10:22:05'!
-initialize
-
-	"self initialize"
-	
-	ErrorState := State new items: Set new; yourself.! !
-
-!State class methodsFor: 'instance creation' stamp: 'DF 10/28/2020 10:20:11'!
-errorState
-
-	^ErrorState! !
-
-!State class methodsFor: 'instance creation' stamp: 'DF 9/25/2020 20:55:21'!
-new: items
-
-	| aState  |
-	
-	aState := self new.
-	
-	aState items: items.
-	
-	^aState! !
-
-!Transition methodsFor: 'printing' stamp: 'DF 9/24/2020 14:34:12'!
-printDotOn: aStream
-
-	aStream nextPut:$".
-	
-	from printDotOn: aStream.
-
-	aStream nextPut:$".
-	
-	aStream nextPutAll:' -> '.
-	
-	aStream nextPut:$".
-	
-	to printDotOn: aStream.
-	
-	aStream nextPut:$".
-	
-	aStream nextPutAll: ' [ label ="'.
-		
-	symbol printDotOn: aStream.
-	
-	aStream nextPutAll: '" ];'.! !
-
-!Transition methodsFor: 'as yet unclassified' stamp: 'DF 9/30/2020 23:31:30'!
-= aTransition
-
-	self == aTransition ifTrue: [^ true].
-	self class == aTransition class ifFalse: [^ false].
-
-	^from = aTransition from and:[symbol = aTransition symbol] and:[to = aTransition to]! !
-
-!Transition methodsFor: 'as yet unclassified' stamp: 'DF 9/23/2020 18:54:36'!
-from
-	^from! !
-
-!Transition methodsFor: 'as yet unclassified' stamp: 'DF 9/23/2020 18:54:11'!
-from: aState
-	from := aState! !
-
-!Transition methodsFor: 'as yet unclassified' stamp: 'DF 9/30/2020 23:32:15'!
-hash
-	^ from hash bitXor: (symbol hash bitXor: to hash)! !
-
-!Transition methodsFor: 'as yet unclassified' stamp: 'DF 10/28/2020 12:48:10'!
-replaceFromWith: aState
-
-	| aTransition |
-		
-	aTransition := self copy.
-	
-	aTransition from: aState.
-	
-	^aTransition! !
-
-!Transition methodsFor: 'as yet unclassified' stamp: 'DF 9/27/2020 12:54:12'!
-replaceToWith: aState
-
-	| aTransition |
-	
-	aTransition := self copy.
-	
-	aTransition to: aState.
-	
-	^aTransition! !
-
-!Transition methodsFor: 'as yet unclassified' stamp: 'DF 9/23/2020 18:54:43'!
-symbol
-	^symbol! !
-
-!Transition methodsFor: 'as yet unclassified' stamp: 'DF 9/23/2020 18:54:25'!
-symbol: aSymbol
-	symbol := aSymbol! !
-
-!Transition methodsFor: 'as yet unclassified' stamp: 'DF 9/23/2020 18:54:39'!
-to
-	^to! !
-
-!Transition methodsFor: 'as yet unclassified' stamp: 'DF 9/23/2020 18:54:16'!
-to: aState
-	to := aState! !
-
-!CanonicTransition methodsFor: 'as yet unclassified' stamp: 'DF 10/1/2020 10:20:24'!
-printDotOn: aStream
-
-	from printOn: aStream. 
-	
-	aStream nextPutAll:' -> '. 
-	
-	to printOn: aStream. 
-	
-	aStream nextPutAll:' [ label ="'.  
-		
-	symbol printDotOn: aStream. 
-	
-	aStream nextPutAll: '" ];'. 
-
-! !
-
-!TransitionFunction methodsFor: 'printing' stamp: 'DF 10/1/2020 10:18:09'!
-printDotOn: aStream
-
-	(self select:[:each | each to ~= errorState ]) "don't show transitions into the error state as they overwhelm the diagram"		do: [:each | each printDotOn: aStream. aStream nextPut: Character lf ].! !
-
-!TransitionFunction methodsFor: 'accessing' stamp: 'DF 10/27/2020 14:32:24'!
-put: aTransition
-
-	(tuples at: aTransition from ifAbsentPut:[Dictionary new]) at: aTransition symbol put: aTransition.! !
-
-!TransitionFunction methodsFor: 'accessing' stamp: 'DF 10/1/2020 10:22:17'!
-transitionClass: aClass
-	transitionClass := aClass! !
-
-!TransitionFunction methodsFor: 'initialization' stamp: 'DF 9/25/2020 14:19:36'!
-initialize
-	tuples := Dictionary new! !
-
-!TransitionFunction methodsFor: 'as yet unclassified' stamp: 'DF 10/28/2020 10:02:30'!
-lookBack: aState rule: aRule
-
-^self select: [:eachTransition | eachTransition symbol = aRule left 
-						and:[(self path: aRule right from:eachTransition from) = aState] ]! !
-
-!TransitionFunction methodsFor: 'as yet unclassified' stamp: 'DF 10/28/2020 10:01:16'!
-minimalSpanningTreeFrom: aState
-
-	"build a tree that represents the shortest paths of each state to aState"
-	
-	| done todo |
-	
-	done := Set new.
-	
-	todo := OrderedCollection new.
-	
-	todo addLast: (TreeNode new state: aState ; yourself).
-		
-	[todo isEmpty] whileFalse:[ | s |
-		
-		s := todo removeFirst.
-		
-		done add: s.
-		
-		todo addAll: (((self exiting: s state) 
-						collect:[:each | TreeNode new state: each to ; parent: s; symbol: each symbol; yourself]) 
-							reject:[:each | done includes: each ]).
-		
-	].
-
-	^done	
-	
-	
-	! !
-
-!TransitionFunction methodsFor: 'as yet unclassified' stamp: 'DF 11/16/2020 16:21:13'!
-removeState: aState
-
-	tuples removeKey: aState ifAbsent:[].
-	
-	tuples values do:[:each | each keysAndValuesRemove:[:key :value | value to = aState ] ].
-	
-	! !
-
-!TransitionFunction methodsFor: 'as yet unclassified' stamp: 'DF 9/29/2020 12:41:54'!
-splitState: aState
-
-	| entering exiting clones |
-
-	entering := self entering: aState.
-	
-	exiting := self exiting: aState.
-	
-	" create a clone for every transition entering aState "
-			
-	clones := aState clone: entering size.
-			
-	" add to each clone the transitions exiting aState"
-			
-	clones do: [:each | 
-		exiting collect:[: eachTransition | 
-			self put: (eachTransition replaceFromWith: each) ] ].
-			
-	" replace the transitions entering aState with transitions into the clones"
-			
-	(entering with:clones collect:[:eachTransition :each | 
-		eachTransition replaceToWith: each ]) do: [:eachTransition | 
-			self put: eachTransition ].
-	
-	" finally, remove the original state"
-	
-	self removeState: aState. 
-	
-	^ clones! !
-
-!TransitionFunction methodsFor: 'as yet unclassified' stamp: 'DF 9/30/2020 17:44:56'!
-unrollCyclicState: aState
-
-	"unroll a cyclic state into two states, one with no cylces, that takes all the incoming transitions, and the other with cycles that has only one (non cyclic) incoming transition"
-		
-	| aClone entering exiting |
-	
-	entering := self entering: aState.
-	
-	exiting := self exiting: aState.
-
-	aClone := (aState clone:1) at:1.
-	
-	" add all the exiting transitions of aState to aClone "
-	
-	(exiting collect:[:each | each replaceFromWith: aClone ]) do:[:each | self put: each ].
-
-	" move all the (non self loop) entering transitions to aClone".
-	
-	((entering reject:[:each | each from = aState ]) collect:[:each | each replaceToWith: aClone ]) do:[:each | self put: each].
-	
-	^aClone
-	
-	
-	! !
-
-!TransitionFunction methodsFor: 'as yet unclassified' stamp: 'DF 10/28/2020 10:01:23'!
-with: aSet reads: aState
-
-	^(self exiting: aState) 
-		select:[:next |	 aSet includes: next symbol]
-! !
-
-!TransitionFunction methodsFor: 'enumerating' stamp: 'DF 10/28/2020 10:01:05'!
-directReadsOf: aTransition
-
-	^(self exiting: aTransition to) 
-			select:[:next |	 next symbol isKindOf: Terminal]
-				thenCollect:[:next | aTransition -> next symbol ].
-! !
-
-!TransitionFunction methodsFor: 'enumerating' stamp: 'DF 10/1/2020 10:23:47'!
-entering: aState
-
-	^ self select:[:each | each to = aState ]
-! !
-
-!TransitionFunction methodsFor: 'enumerating' stamp: 'DF 10/28/2020 10:28:11'!
-exiting: aState
-
-	^tuples at: aState ifPresent:[:aDictionary | aDictionary values] ifAbsent:[Set new].! !
-
-!TransitionFunction methodsFor: 'enumerating' stamp: 'DF 10/28/2020 10:30:14'!
-fromState: aState at: aSymbol
-
-	^tuples at: aState 
-		ifPresent:[:aDictionary | 
-			aDictionary at: aSymbol 
-				ifPresent:[:aTransition | aTransition to] 
-				ifAbsent:[State errorState] ]
-		ifAbsent:[State errorState ]
-	! !
-
-!TransitionFunction methodsFor: 'enumerating' stamp: 'DF 9/30/2020 15:38:29'!
-path: aSequence from: aState
-
-	| current |
-	
-	current := aState.
-	
-	aSequence do:[:each |
-		current := self fromState: current 	at:each ].
-	
-	^current! !
-
-!TransitionFunction methodsFor: 'enumerating' stamp: 'DF 10/27/2020 14:43:50'!
-select: aBlock
-
-	^ (tuples values collect:[:each | each values ]) flatten select: aBlock
-	
-! !
-
-!TransitionFunction methodsFor: 'testing' stamp: 'DF 9/29/2020 13:21:27'!
-isCyclicState: aState
-
-	^ ((self exiting: aState) select:[:each | each to = aState]) notEmpty! !
-
-!TransitionRelation methodsFor: 'printing' stamp: 'DF 9/24/2020 12:01:17'!
-printDotOn: aStream
-
-	tuples do:[:each | each printDotOn: aStream. aStream nextPut: Character lf ].! !
-
-!TransitionRelation methodsFor: 'accessing' stamp: 'DF 10/28/2020 12:23:33'!
-add: aTransition
-
-	| aSet |
-	
-	tuples add: aTransition.
-	
-	" the index is used to speed up popular queries esp. fromState:at: and fromStateSet:at:"
-	
-	aSet := index at: { aTransition from . aTransition symbol } ifAbsentPut:[Set new].
-	
-	aSet add: aTransition.
-	
-	index associations do:[:assoc | assoc value do:[:t | (assoc key first = t from) ifFalse:[self halt] ] ].
-! !
-
-!TransitionRelation methodsFor: 'as yet unclassified' stamp: 'DF 10/28/2020 12:49:25'!
-epsilonClosureOf: aSet
-
-	| closure extension |
-		
-	closure := Set new.
-	
-	closure addAll: aSet.
-	
-	extension := Set new.
-	
-	closure do:[:each | 
-		extension addAll: ((self fromState: each at: Epsilon new) reject:[:other | closure includes: other ]) ].
-	
-	[extension isEmpty]
-		whileFalse:[
-			closure addAll: extension.
-			
-			extension := Set new.
-	
-			closure do:[:each | 
-				extension addAll: ((self fromState: each at: Epsilon new) reject:[:other | closure includes: other ]) ].
-			].
-	
-	^closure! !
-
-!TransitionRelation methodsFor: 'as yet unclassified' stamp: 'DF 10/28/2020 11:33:37'!
-fromState: aState at: aSymbol
-
-	^index at: { aState . aSymbol } ifPresent:[:aSet | aSet collect:[:each | each to] ] ifAbsent:[Set new]
-	
-! !
-
-!TransitionRelation methodsFor: 'as yet unclassified' stamp: 'DF 10/28/2020 12:51:30'!
-fromStateSet: aSet at: aSymbol
-
-	| xs |
-	
-	xs := (aSet collect:[:each | index at: { each . aSymbol} ifAbsent:[Set new] ]).
-
-	^xs flatten collect:[:each | each to].
-	
-	
-	
-! !
-
-!TransitionRelation methodsFor: 'initialization' stamp: 'DF 10/28/2020 10:45:39'!
-initialize
-
-	tuples := Set new.
-	
-	index := Dictionary new.! !
 
 !XraySymbol methodsFor: 'printing' stamp: 'DF 9/24/2020 11:48:27'!
 printDotOn: aStream
@@ -3874,14 +2986,14 @@ growNFA: anNFA fromItem: anItem
 		
 		! !
 
-!Grammar methodsFor: 'parser generation' stamp: 'DF 12/27/2020 13:02:22'!
+!Grammar methodsFor: 'parser generation' stamp: 'DF 3/16/2021 13:21:15'!
 parser
  
 	| anNFA aDFA actionTable gotoTable aParser nullable prefixes |
 	
 	anNFA := self buildNFA.
 
-	aDFA := anNFA toDFA.
+	aDFA := anNFA toDFA: ParserDFA withStateBuilder: ParserState.
 	
 	aDFA splitConflictingStates.
 	
@@ -6271,98 +5383,6 @@ handCodedXrayGrammar
 	^aGrammar.
 	
 	! !
-
-!NFA methodsFor: 'as yet unclassified' stamp: 'DF 9/23/2020 22:15:02'!
-addState: aState
-	states add: aState! !
-
-!NFA methodsFor: 'as yet unclassified' stamp: 'DF 10/28/2020 12:48:58'!
-addTransitionFrom: fromState onSymbol: aSymbol to: toState
-
-	| aTransition |
-	
-	aTransition := Transition new.
-	
-	aTransition from: fromState.
-	
-	aTransition symbol: aSymbol.
-	
-	aTransition to: toState.
-	
-	transitions add: aTransition.
-	
-	! !
-
-!NFA methodsFor: 'as yet unclassified' stamp: 'DF 9/23/2020 22:15:42'!
-alphabet: aSet
-	alphabet := aSet! !
-
-!NFA methodsFor: 'as yet unclassified' stamp: 'DF 9/24/2020 11:57:42'!
-initialize
-	states := Set new.
-	transitions := TransitionRelation new.! !
-
-!NFA methodsFor: 'as yet unclassified' stamp: 'DF 9/23/2020 22:55:10'!
-isState: aState
-	^states includes: aState! !
-
-!NFA methodsFor: 'as yet unclassified' stamp: 'DF 9/23/2020 23:07:39'!
-start
-	^start! !
-
-!NFA methodsFor: 'as yet unclassified' stamp: 'DF 9/23/2020 22:14:43'!
-start: aState
-	start := aState! !
-
-!NFA methodsFor: 'as yet unclassified' stamp: 'DF 10/28/2020 12:49:39'!
-toDFA
-	
-	| aDFA current todo |
-		
-	todo := OrderedCollection new.
-	 
-	aDFA := DFA new.
-	
-	aDFA transitionClass: Transition.
-		
-	aDFA alphabet: alphabet.
-	
-	current := State new: (transitions epsilonClosureOf: (Set with:start)).
-	
-	aDFA addState: current. 
-	aDFA start: current.
-	
-	todo addLast: current.
-
-	[todo isEmpty] whileFalse:[
-		current := todo removeFirst.
-		alphabet do:[:eachSymbol |  | next existingState |
-			
-			next := current next: eachSymbol in: transitions.
-			
-			 "we will not add the empty state to aDFA. this is an efficiency optimisation as 
-			most of the transitions end up to the empty state and all the work of adding them 
-			and then filtering them out later dominates the runtime."
-			
-			next isError
-			ifFalse:[
-				existingState := aDFA stateLike: next.
-			
-				existingState 
-				ifNil:[
-					aDFA addState: next.
-					todo addLast: next.
-					existingState := next.
-				].
-				aDFA setTransitionFrom: current onSymbol: eachSymbol to: existingState.
-
-
-			]
-		]
-	].
-
-	^aDFA
-		! !
 
 !PriorityBlock methodsFor: 'as yet unclassified' stamp: 'DF 11/7/2020 18:52:24'!
 block: aBlock
@@ -9371,6 +8391,391 @@ stack
 	^stack collect:[:each | each name ]
 	! !
 
+!ParserDFA methodsFor: 'parser generation' stamp: 'DF 3/13/2021 12:15:13'!
+actionTable
+ 
+	| actionTable terminals |
+	
+	terminals := alphabet select:[:each | each isKindOf: Terminal ].
+	
+	actionTable := Dictionary new.
+	
+	states do:[:eachState |
+		terminals do:[:eachSymbol |
+			actionTable at:{eachState identifier . eachSymbol} put: (eachState makeActionOn: eachSymbol on: (transitions fromState:eachState at:eachSymbol))
+			]
+		].
+
+	^actionTable
+! !
+
+!ParserDFA methodsFor: 'parser generation' stamp: 'DF 3/13/2021 12:15:27'!
+computeFollowWith: prefixes with: nullable
+
+	| follows |
+	
+	include := self computeIncludesWith: prefixes.
+	
+	read := self computeReadsWith: nullable.
+
+	follows := [:f :fn | 	
+		include do:[:each | fn addAll: ((f image: each value) collect:[:included | each key -> included ] )] ] fixedPoint: read. 
+
+	^follows toFunction! !
+
+!ParserDFA methodsFor: 'parser generation' stamp: 'DF 3/13/2021 12:15:31'!
+computeIncludesWith: prefixes
+
+	|  includes nonTerminalTransitions |
+			
+	includes := BinaryRelation new.
+	
+	nonTerminalTransitions := transitions select:[:each | each symbol isKindOf: NonTerminal ].
+	
+	nonTerminalTransitions do:[:each |
+		nonTerminalTransitions do:[:other |
+			((prefixes at: (other symbol -> each symbol) ifAbsent:[Set new]) "other -> path each"
+				anySatisfy:[:path | 		(transitions path: path from: other from) = each from])
+					ifTrue:[ includes add: each -> other ] ] ].
+					
+	^includes! !
+
+!ParserDFA methodsFor: 'parser generation' stamp: 'DF 3/13/2021 12:15:36'!
+computeLookAheadWith: prefixes with: nullable
+
+	| follow conflicts |
+	
+	follow := self computeFollowWith: prefixes with: nullable.
+	
+	conflicts := states select:[:each | each hasConflicts ].
+	
+	conflicts do:[:eachState | eachState promoteReductionsWith: transitions with: follow ].
+! !
+
+!ParserDFA methodsFor: 'parser generation' stamp: 'DF 3/13/2021 12:15:42'!
+computeReadsWith: nullable
+
+	| nonTerminalTransitions directReads |
+	
+	nonTerminalTransitions := transitions select:[:each | each symbol isKindOf: NonTerminal ].
+
+	directReads := nonTerminalTransitions inject: BinaryRelation new into:[:acc :each | acc addAll: (transitions directReadsOf: each). acc ].
+
+	^ [ :reads :readsNext | 
+		nonTerminalTransitions do:[:each | 
+			
+			readsNext addAll:((transitions with: nullable reads: each to)
+				inject: BinaryRelation new into: [:acc :next | 
+					acc addAll:((reads image: next) 
+						collect:[:other |  each -> other ]). acc]) ]	] fixedPoint: directReads.
+! !
+
+!ParserDFA methodsFor: 'parser generation' stamp: 'DF 3/13/2021 12:15:46'!
+gotoTable
+ 
+	| gotoTable nonTerminals |		
+	
+	nonTerminals := alphabet select:[:each | each isKindOf: NonTerminal ].
+	
+	gotoTable := Dictionary new.
+	
+	states do:[:eachState |
+		nonTerminals do:[:eachSymbol |
+			gotoTable at:{eachState identifier . eachSymbol} put: (transitions fromState:eachState at: eachSymbol) identifier.
+			]
+		].
+	
+	^ gotoTable! !
+
+!ParserDFA methodsFor: 'parser generation' stamp: 'DF 3/13/2021 12:16:06'!
+prepareStates
+
+	"give each state a unique integer indentifier, we will use them in the parser tables. "
+	
+	| id |
+	
+	id := 1.
+	
+	states do:[:each | each identifier: id. id := id + 1 ].
+	
+	
+! !
+
+!ParserDFA methodsFor: 'parser generation' stamp: 'DF 3/13/2021 12:16:15'!
+splitConflictingStates
+
+	| conflicts clones |
+
+	conflicts := states select:[:each | each hasMultipleReduces and:[(transitions entering: each) size > 1] ].
+	
+	" there is no need to split states that have only one entering transition. "
+	
+	" we have to unroll all the cyclic conflicting states"
+	
+	(conflicts select:[:each | transitions isCyclicState: each]) 
+		do:[:each | 		states add: (transitions unrollCyclicState: each)].
+
+	" the last step may change the conflicting states so now we have to find them again"
+	
+	conflicts := states select:[:each | each hasMultipleReduces and:[(transitions entering: each) size > 1] ].
+	
+	"we are not splitting cyclic states "
+	
+	conflicts := conflicts reject:[:each | transitions isCyclicState:each ].
+	
+	clones := conflicts inject:Set new into:[:acc :each |		acc addAll: (transitions splitState: each). acc ].
+
+	states removeAll: conflicts.
+	
+	states addAll: clones.
+		! !
+
+!ParserDFA methodsFor: 'grammar debugging' stamp: 'DF 3/13/2021 12:15:53'!
+itemsContributingToReduction: aReduceItem inState: aState lookAhead: aTerminal
+
+	|  including reading contributing parent |
+	
+	parent := BinaryFunction new.
+	
+	including := (transitions lookBack: aState rule: aReduceItem rule) asSet.
+	
+	reading := including			select:[:each | (read image: each) includes: aTerminal ].
+	
+	[reading isEmpty] 
+		whileTrue:[ | next | 
+		
+			next := Set new.
+			
+			including do:[:each | | children |
+			
+				children := include image: each.
+			
+				children := children reject:[:eachChild | including includes: eachChild ].
+			
+				children := children reject:[:eachChild | next includes: eachChild ].
+			
+				children 	do:[:eachChild | parent at: eachChild put: each ].
+			
+				next addAll: children 
+			].
+		
+			including addAll: next.
+	
+			reading := including			select:[:each | (read image: each) includes: aTerminal ].	
+		].
+
+	contributing := reading collect:[:eachTransition | | path items pre |
+				
+		path := (parent path: eachTransition) collect:[:each | each from].
+		
+		pre := OrderedCollection new.
+
+		[path size > 1] whileTrue:[ 
+			pre add: (path second items detect:[:item | (transitions path: item left from: path first) = path second ]).
+			path removeFirst.
+		].
+		
+		items := eachTransition to items 	
+			select:[:eachItem | (eachItem atEnd not)  and:[eachItem left isEmpty not] and:[ eachItem left last = eachTransition symbol  ] ].
+				
+		{ pre . items }
+	].
+	
+	^contributing  
+	! !
+
+!ParserDFA methodsFor: 'grammar debugging' stamp: 'DF 3/13/2021 12:15:57'!
+pathToState: aState
+
+	| mst |
+	
+	mst := transitions minimalSpanningTreeFrom: start.
+		
+	^(mst select:[:each | each state = aState]) anyOne path.
+! !
+
+!ParserDFA methodsFor: 'grammar debugging' stamp: 'DF 3/13/2021 12:16:11'!
+shortestPathFrom: aState to: anotherState
+
+	| mst |
+	
+	mst := transitions minimalSpanningTreeFrom: aState.
+		
+	^(mst select:[:each | each state = anotherState]) anyOne path.
+! !
+
+!ParserState methodsFor: 'printing' stamp: 'DF 3/16/2021 13:35:50'!
+printDot
+
+	| aWriteStream |
+	
+	aWriteStream := WriteStream on: String new.
+	self printDotOn: aWriteStream.
+	^aWriteStream contents
+! !
+
+!ParserState methodsFor: 'printing' stamp: 'DF 10/29/2020 23:07:13'!
+printDotOn: aStream
+
+	items do:[:each | each printDotOn: aStream . aStream nextPut:Character lf].! !
+
+!ParserState methodsFor: 'as yet unclassified' stamp: 'DF 9/29/2020 12:55:21'!
+clone: anInteger
+
+	^(1 to: anInteger) collect:[:id | | aClone | aClone := self copy. aClone cloneId: cloneId + id. aClone ]! !
+
+!ParserState methodsFor: 'as yet unclassified' stamp: 'DF 11/30/2020 19:31:02'!
+makeActionOn: aSymbol on: nextState
+
+	| actions |
+	
+	actions := OrderedCollection new.
+	
+	nextState ifNotError:[actions add: (ShiftAction new: nextState identifier) ].
+	 
+	(items select:[:each | each atEnd])
+		do:[:each | actions addAll: (each makeActionsOn: aSymbol) ].
+		
+	actions ifEmpty:[^ErrorAction new: aSymbol].
+	 
+	(actions size > 1)
+		ifTrue:[ | anExceptionClass |
+			anExceptionClass := 
+				((actions count:[:each | each isKindOf: ReduceAction ]) > 1)
+					ifTrue:[ReduceReduceConflict]
+					ifFalse:[	ShiftReduceConflict].
+
+			(anExceptionClass new state: self; items: items; symbol: aSymbol; yourself) signal.
+		].
+		
+	^actions at:1
+			
+! !
+
+!ParserState methodsFor: 'as yet unclassified' stamp: 'DF 10/1/2020 19:53:49'!
+promoteReductionsWith: transitions with: follow
+
+	| reductions promotions |
+		
+	reductions := self reductions.
+		
+	promotions := reductions collect: [:eachItem | 
+		eachItem promoteWithLookAhead: ((transitions lookBack: self rule: eachItem rule) inject:Set new into:[:acc :eachTransition |acc addAll: (follow at: eachTransition). acc ]) ].
+		
+	items removeAll: reductions.
+	
+	items addAll: promotions.
+	
+ 	
+	
+! !
+
+!ParserState methodsFor: 'testing' stamp: 'DF 3/16/2021 13:17:51'!
+= aState
+
+	^super = aState 	and:[cloneId = aState cloneId ]! !
+
+!ParserState methodsFor: 'testing' stamp: 'DF 10/1/2020 11:38:44'!
+hasConflicts
+
+	^self hasMultipleReduces or:[self hasReduces and:self hasShifts ]! !
+
+!ParserState methodsFor: 'testing' stamp: 'DF 9/28/2020 13:41:32'!
+hasMultipleReduces
+
+	^ (items select:[:each | each atEnd ]) size > 1! !
+
+!ParserState methodsFor: 'testing' stamp: 'DF 9/28/2020 13:38:30'!
+hasReduces
+
+	^ (items select:[:each | each atEnd ]) notEmpty! !
+
+!ParserState methodsFor: 'testing' stamp: 'DF 9/28/2020 13:38:12'!
+hasShifts
+
+	^ (items select:[:each | each atEnd not ]) notEmpty! !
+
+!ParserState methodsFor: 'testing' stamp: 'DF 3/16/2021 13:19:32'!
+ifError: aBlockClosure 
+	(self isEmpty)
+		ifTrue:[^aBlockClosure value]! !
+
+!ParserState methodsFor: 'testing' stamp: 'DF 3/16/2021 13:19:27'!
+ifNotError: aBlockClosure 
+	(self isEmpty) 
+		ifFalse:[^aBlockClosure value]! !
+
+!ParserState methodsFor: 'testing' stamp: 'DF 3/16/2021 13:13:20'!
+isError
+	^self isEmpty! !
+
+!ParserState methodsFor: 'testing' stamp: 'DF 9/25/2020 21:42:20'!
+isGoal
+	^ items anySatisfy: [:each | each isGoal ]! !
+
+!ParserState methodsFor: 'accessing' stamp: 'DF 9/27/2020 11:55:07'!
+cloneId
+	^cloneId! !
+
+!ParserState methodsFor: 'accessing' stamp: 'DF 9/27/2020 12:52:19'!
+cloneId: anInteger
+	cloneId := anInteger! !
+
+!ParserState methodsFor: 'accessing' stamp: 'DF 3/16/2021 13:18:14'!
+hash
+	^ super hash bitXor: cloneId hash! !
+
+!ParserState methodsFor: 'accessing' stamp: 'DF 11/30/2020 19:26:22'!
+identifier
+	^identifier! !
+
+!ParserState methodsFor: 'accessing' stamp: 'DF 11/30/2020 19:26:32'!
+identifier: anInteger
+	identifier := anInteger! !
+
+!ParserState methodsFor: 'accessing' stamp: 'DF 10/14/2020 19:08:56'!
+itemsAt: anXraySymbol
+
+	^items select:[:each | each atEnd not and:[each symbol = anXraySymbol ] ]! !
+
+!ParserState methodsFor: 'accessing' stamp: 'DF 10/1/2020 12:01:09'!
+reductions
+
+	^items select:[:each | each atEnd ]! !
+
+!ParserState methodsFor: 'initialization' stamp: 'DF 9/27/2020 11:54:42'!
+initialize
+	cloneId := 0.! !
+
+!ParserState class methodsFor: 'class initialization' stamp: 'DF 3/15/2021 19:21:17'!
+initialize
+
+	"self initialize"
+	
+	ErrorState := ParserState new items: Set new; yourself.! !
+
+!ParserState class methodsFor: 'instance creation' stamp: 'DF 10/28/2020 10:20:11'!
+errorState
+
+	^ErrorState! !
+
+!CanonicTransition methodsFor: 'as yet unclassified' stamp: 'DF 10/1/2020 10:20:24'!
+printDotOn: aStream
+
+	from printOn: aStream. 
+	
+	aStream nextPutAll:' -> '. 
+	
+	to printOn: aStream. 
+	
+	aStream nextPutAll:' [ label ="'.  
+		
+	symbol printDotOn: aStream. 
+	
+	aStream nextPutAll: '" ];'. 
+
+! !
+
 !Character methodsFor: '*X-ray' stamp: 'DF 10/10/2020 14:00:29'!
 isDoubleQuote
 	^ self = $".! !
@@ -9609,6 +9014,137 @@ invert
 	self associations do:[:each | aDictionary at: each value put: each key ].
 	
 	^aDictionary! !
-State initialize!
+
+!TransitionFunction methodsFor: '*X-ray' stamp: 'DF 10/28/2020 10:01:05'!
+directReadsOf: aTransition
+
+	^(self exiting: aTransition to) 
+			select:[:next |	 next symbol isKindOf: Terminal]
+				thenCollect:[:next | aTransition -> next symbol ].
+! !
+
+!TransitionFunction methodsFor: '*X-ray' stamp: 'DF 3/15/2021 19:21:17'!
+fromState: aState at: aSymbol
+
+	^tuples at: aState 
+		ifPresent:[:aDictionary | 
+			aDictionary at: aSymbol 
+				ifPresent:[:aTransition | aTransition to] 
+				ifAbsent:[ParserState errorState] ]
+		ifAbsent:[ParserState errorState ]
+	! !
+
+!TransitionFunction methodsFor: '*X-ray' stamp: 'DF 10/28/2020 10:02:30'!
+lookBack: aState rule: aRule
+
+^self select: [:eachTransition | eachTransition symbol = aRule left 
+						and:[(self path: aRule right from:eachTransition from) = aState] ]! !
+
+!TransitionFunction methodsFor: '*X-ray' stamp: 'DF 10/28/2020 10:01:16'!
+minimalSpanningTreeFrom: aState
+
+	"build a tree that represents the shortest paths of each state to aState"
+	
+	| done todo |
+	
+	done := Set new.
+	
+	todo := OrderedCollection new.
+	
+	todo addLast: (TreeNode new state: aState ; yourself).
+		
+	[todo isEmpty] whileFalse:[ | s |
+		
+		s := todo removeFirst.
+		
+		done add: s.
+		
+		todo addAll: (((self exiting: s state) 
+						collect:[:each | TreeNode new state: each to ; parent: s; symbol: each symbol; yourself]) 
+							reject:[:each | done includes: each ]).
+		
+	].
+
+	^done	
+	
+	
+	! !
+
+!TransitionFunction methodsFor: '*X-ray' stamp: 'DF 9/30/2020 15:38:29'!
+path: aSequence from: aState
+
+	| current |
+	
+	current := aState.
+	
+	aSequence do:[:each |
+		current := self fromState: current 	at:each ].
+	
+	^current! !
+
+!TransitionFunction methodsFor: '*X-ray' stamp: 'DF 9/29/2020 12:41:54'!
+splitState: aState
+
+	| entering exiting clones |
+
+	entering := self entering: aState.
+	
+	exiting := self exiting: aState.
+	
+	" create a clone for every transition entering aState "
+			
+	clones := aState clone: entering size.
+			
+	" add to each clone the transitions exiting aState"
+			
+	clones do: [:each | 
+		exiting collect:[: eachTransition | 
+			self put: (eachTransition replaceFromWith: each) ] ].
+			
+	" replace the transitions entering aState with transitions into the clones"
+			
+	(entering with:clones collect:[:eachTransition :each | 
+		eachTransition replaceToWith: each ]) do: [:eachTransition | 
+			self put: eachTransition ].
+	
+	" finally, remove the original state"
+	
+	self removeState: aState. 
+	
+	^ clones! !
+
+!TransitionFunction methodsFor: '*X-ray' stamp: 'DF 9/30/2020 17:44:56'!
+unrollCyclicState: aState
+
+	"unroll a cyclic state into two states, one with no cylces, that takes all the incoming transitions, and the other with cycles that has only one (non cyclic) incoming transition"
+		
+	| aClone entering exiting |
+	
+	entering := self entering: aState.
+	
+	exiting := self exiting: aState.
+
+	aClone := (aState clone:1) at:1.
+	
+	" add all the exiting transitions of aState to aClone "
+	
+	(exiting collect:[:each | each replaceFromWith: aClone ]) do:[:each | self put: each ].
+
+	" move all the (non self loop) entering transitions to aClone".
+	
+	((entering reject:[:each | each from = aState ]) collect:[:each | each replaceToWith: aClone ]) do:[:each | self put: each].
+	
+	^aClone
+	
+	
+	! !
+
+!TransitionFunction methodsFor: '*X-ray' stamp: 'DF 10/28/2020 10:01:23'!
+with: aSet reads: aState
+
+	^(self exiting: aState) 
+		select:[:next |	 aSet includes: next symbol]
+! !
 XrayParserGenerator initialize!
 Language initialize!
+ParserState initialize!
