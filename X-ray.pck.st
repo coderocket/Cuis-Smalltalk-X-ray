@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4526] on 16 March 2021 at 1:36:41 pm'!
+'From Cuis 5.0 [latest update: #4526] on 2 April 2021 at 8:50:25 pm'!
 'Description '!
-!provides: 'X-ray' 1 871!
+!provides: 'X-ray' 1 872!
 !requires: 'Erudite' 1 144 nil!
 !requires: 'Regex-Core' 1 9 nil!
 !requires: 'Automata' 1 1 nil!
@@ -8705,10 +8705,6 @@ ifNotError: aBlockClosure
 	(self isEmpty) 
 		ifFalse:[^aBlockClosure value]! !
 
-!ParserState methodsFor: 'testing' stamp: 'DF 3/16/2021 13:13:20'!
-isError
-	^self isEmpty! !
-
 !ParserState methodsFor: 'testing' stamp: 'DF 9/25/2020 21:42:20'!
 isGoal
 	^ items anySatisfy: [:each | each isGoal ]! !
@@ -9023,15 +9019,10 @@ directReadsOf: aTransition
 				thenCollect:[:next | aTransition -> next symbol ].
 ! !
 
-!TransitionFunction methodsFor: '*X-ray' stamp: 'DF 3/15/2021 19:21:17'!
+!TransitionFunction methodsFor: '*X-ray' stamp: 'DF 3/16/2021 17:39:15'!
 fromState: aState at: aSymbol
 
-	^tuples at: aState 
-		ifPresent:[:aDictionary | 
-			aDictionary at: aSymbol 
-				ifPresent:[:aTransition | aTransition to] 
-				ifAbsent:[ParserState errorState] ]
-		ifAbsent:[ParserState errorState ]
+	^self at: aState at: aSymbol ifAbsent:[ParserState errorState]
 	! !
 
 !TransitionFunction methodsFor: '*X-ray' stamp: 'DF 10/28/2020 10:02:30'!
