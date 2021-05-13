@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4526] on 2 April 2021 at 8:50:25 pm'!
+'From Cuis 5.0 [latest update: #4526] on 13 May 2021 at 11:17:36 am'!
 'Description '!
-!provides: 'X-ray' 1 872!
+!provides: 'X-ray' 1 873!
 !requires: 'Erudite' 1 144 nil!
 !requires: 'Regex-Core' 1 9 nil!
 !requires: 'Automata' 1 1 nil!
@@ -5584,7 +5584,7 @@ handDownInheritedAttributes
 	^result		
 ! !
 
-!Rule methodsFor: 'attribute dependencies' stamp: 'DF 12/30/2020 12:15:38'!
+!Rule methodsFor: 'attribute dependencies' stamp: 'DF 5/13/2021 11:16:41'!
 handUpSynthesizedAttributes
 	
 	" for each synthesized variable that has no semantic rule, add a semantic rule that concatenates all the  values of these attributes in the right part of the rule.
@@ -5625,7 +5625,7 @@ handUpSynthesizedAttributes
 			
 		fragments := indices collect:[:each | '(', eachAttribute name, ' @ ', each key, ')' ].
 
-		action := fragments inject:'{}' into:[:acc :each | acc, ',' , each ].
+		action := fragments inject:'{}' into:[:acc :each | acc, ',' , '(', each, 'promoteTo: Array)' ].
 		
 		index := aliases associations detect:[:each | each value = 1].			
 		
@@ -8771,6 +8771,12 @@ printDotOn: aStream
 	aStream nextPutAll: '" ];'. 
 
 ! !
+
+!Object methodsFor: '*X-ray' stamp: 'DF 5/13/2021 11:13:10'!
+promoteTo: aCollectionClass
+	"wrap an object in a collection if it is not already a collection"
+
+	^ self class == aCollectionClass ifTrue: [self] ifFalse: [{ self } as: aCollectionClass ]! !
 
 !Character methodsFor: '*X-ray' stamp: 'DF 10/10/2020 14:00:29'!
 isDoubleQuote

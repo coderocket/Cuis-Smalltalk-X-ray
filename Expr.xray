@@ -1,0 +1,17 @@
+tokens
+
++ *
+
+patterns
+
+[0-9]+		number
+
+rules
+
+%topic unclassified
+
+E : E "+" F | F ;
+
+F 'f' : F 'x' "*" N 'y' { v@f = (v@x) * (v@y) } | N  ;
+
+N 'x' : number 't' { v@x = t value asNumber } ;
