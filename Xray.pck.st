@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #6053] on 21 November 2023 at 7:52:42 pm'!
+'From Cuis 6.0 [latest update: #6053] on 21 November 2023 at 10:41:47 pm'!
 'Description '!
-!provides: 'Xray' 1 2!
+!provides: 'Xray' 1 3!
 !requires: 'Erudite' 1 240 nil!
 !requires: 'Regex-Core' 1 10 nil!
 !requires: 'Automata' 1 20 nil!
@@ -690,7 +690,7 @@ XrayLanguageExplorerModel class
 
 !classDefinition: #XrayParserTestModel category: #'Xray-Browser'!
 Object subclass: #XrayParserTestModel
-	instanceVariableNames: 'text selectedTextInterval stack selectedStackSymbol selectedASTSymbol parser languageName'
+	instanceVariableNames: 'text selectedTextInterval stack selectedStackSymbol selectedASTSymbol parser languageName selectedAttrIndex'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Xray-Browser'!
@@ -1514,10 +1514,10 @@ astMenu
 	
 	^ aMenu! !
 
-!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/18/2023 22:44:08'!
+!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2023 22:40:30'!
 buildMorphicWindow
 
-	| textModel textMorph stackMorph astMorph attrsMorph row ast |
+	| textModel textMorph stackMorph astMorph attrsListMorph attrContentsMorph attrsLayoutMorph row ast |
 			
 	textModel := XrayPluggableTextModel on: model.
 	textModel textGetter: #acceptedText textSetter: #acceptText: selectionGetter: #selectedText.
@@ -1544,19 +1544,30 @@ buildMorphicWindow
 			menuGetter: #astMenu
 			keystrokeAction: nil.
 
-	attrsMorph := PluggableListMorph
+	attrsListMorph := PluggableListMorph
 			model: model 
 			listGetter: #attrs
 			indexGetter: #getAttrSelection
-			indexSetter: #noteNewAttrSelection:
+			indexSetter: #noteAttrSelection:
 			mainView: self
 			menuGetter: nil
 			keystrokeAction: nil.
 
+	attrContentsMorph := TextModelMorph
+			textProvider: model
+			textGetter: #attrContents 
+			textSetter: nil
+			selectionGetter: nil.
+
+	attrsLayoutMorph := LayoutMorph newRow.
+	attrsLayoutMorph
+		addMorph: attrsListMorph proportionalWidth: 0.3;
+		addAdjusterAndMorph: attrContentsMorph proportionalWidth: 0.7.
+
 	ast := LayoutMorph newColumn.
 	
 	ast addMorph: astMorph proportionalHeight: 0.6; 
-	     addMorph: attrsMorph proportionalHeight: 0.4.
+	     addAdjusterAndMorph: attrsLayoutMorph proportionalHeight: 0.4.
 	
 	row := LayoutMorph newRow.
 	
@@ -10215,12 +10226,22 @@ ast
 	^{ ASTExplorerWrapper with: (stack at:selectedStackSymbol) }
 	! !
 
-!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 10:20:45'!
+!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2023 22:27:17'!
+attrContents
+	
+	selectedASTSymbol ifNil:[^''].
+	selectedAttrIndex ifNil:[^''].
+	
+	^ (selectedASTSymbol attributes at: selectedAttrIndex) value asString.! !
+
+!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2023 22:00:42'!
 attrs
 
 	selectedASTSymbol ifNil:[^{}].
 	
-	^selectedASTSymbol attributes collect:[:each | each key , ' = ' , each value asString ]! !
+	"^selectedASTSymbol attributes collect:[:each | each key , ' = ' , each value asString ]"
+	
+	^selectedASTSymbol attributes collect:[:each | each key]! !
 
 !XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/18/2023 21:50:57'!
 editorClassFor: aMessage
@@ -10244,11 +10265,13 @@ endPositionOf: aSymbol
 getASTSelection
 	^ selectedASTSymbol! !
 
-!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/11/2020 22:59:49'!
+!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2023 22:38:22'!
 getAttrSelection
 
 	selectedASTSymbol ifNil:[^0].
-	^0
+	selectedAttrIndex ifNil:[^0].
+	
+	^selectedAttrIndex 
 	
 	! !
 
@@ -10277,30 +10300,35 @@ languageName
 languageName: aString
 	languageName := aString! !
 
-!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 1/1/2022 19:05:46'!
+!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2023 22:29:09'!
 noteASTSelection: anASTExplorerWrapper
 
 	selectedASTSymbol 
 		ifNotNil:[ 
 			text removeAttributes: { TextBackgroundColor yellow } from: selectedASTSymbol item start + 1 to: (self endPositionOf: selectedASTSymbol item) ].
 
-	selectedASTSymbol _ anASTExplorerWrapper.
+	selectedASTSymbol := anASTExplorerWrapper.
 
 	selectedASTSymbol 
 		ifNotNil:[ 
 			text addAttribute:TextBackgroundColor yellow from: selectedASTSymbol item start + 1 to: (self endPositionOf: selectedASTSymbol item) .
-			selectedTextInterval _ selectedASTSymbol item start + 1 to: (self endPositionOf: selectedASTSymbol item) 	].
+			selectedTextInterval := selectedASTSymbol item start + 1 to: (self endPositionOf: selectedASTSymbol item) 	].
 		
-	self changed:#acceptedText; changed: #getASTSelection; changed: #attrs.
+	selectedAttrIndex := nil.
+	
+	self changed:#acceptedText; changed: #getASTSelection; changed: #attrs; changed: #attrContents.
 	
 	selectedASTSymbol ifNil: [^self].
 	selectedASTSymbol sendSettingMessageTo: self.
 
 	! !
 
-!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/11/2020 20:17:11'!
-noteNewAttrSelection: anInteger
-	! !
+!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2023 22:25:40'!
+noteAttrSelection: anInteger
+	
+	selectedAttrIndex := anInteger.
+	
+	self changed: #getAttrSelection ; changed: #acceptedContents.! !
 
 !XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/11/2020 20:28:41'!
 parser: anXrayParser
@@ -10313,12 +10341,12 @@ refreshParser
 	
 	self acceptText: text.! !
 
-!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/11/2020 22:29:32'!
+!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2023 22:23:14'!
 selectSymbol: anInteger
 
 	selectedStackSymbol := anInteger.
 	
-	self changed:#ast
+	self changed:#ast ; changed: #attrs; changed: #attrContents
 	
 	
 ! !
