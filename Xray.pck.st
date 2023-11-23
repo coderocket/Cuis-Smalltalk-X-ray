@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #6053] on 21 November 2023 at 10:41:47 pm'!
+'From Cuis 6.0 [latest update: #6053] on 23 November 2023 at 9:51:39 pm'!
 'Description '!
-!provides: 'Xray' 1 3!
+!provides: 'Xray' 1 4!
 !requires: 'Erudite' 1 240 nil!
 !requires: 'Regex-Core' 1 10 nil!
 !requires: 'Automata' 1 20 nil!
@@ -10226,11 +10226,13 @@ ast
 	^{ ASTExplorerWrapper with: (stack at:selectedStackSymbol) }
 	! !
 
-!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2023 22:27:17'!
+!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/22/2023 23:10:17'!
 attrContents
 	
 	selectedASTSymbol ifNil:[^''].
 	selectedAttrIndex ifNil:[^''].
+	
+	selectedAttrIndex = 0 ifTrue:[^''].
 	
 	^ (selectedASTSymbol attributes at: selectedAttrIndex) value asString.! !
 
@@ -10265,12 +10267,12 @@ endPositionOf: aSymbol
 getASTSelection
 	^ selectedASTSymbol! !
 
-!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2023 22:38:22'!
+!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/22/2023 23:05:46'!
 getAttrSelection
 
 	selectedASTSymbol ifNil:[^0].
 	selectedAttrIndex ifNil:[^0].
-	
+
 	^selectedAttrIndex 
 	
 	! !
