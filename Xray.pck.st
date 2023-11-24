@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #6053] on 23 November 2023 at 9:51:39 pm'!
+'From Cuis 6.0 [latest update: #6053] on 24 November 2023 at 6:16:46 pm'!
 'Description '!
-!provides: 'Xray' 1 4!
+!provides: 'Xray' 1 7!
 !requires: 'Erudite' 1 240 nil!
 !requires: 'Regex-Core' 1 10 nil!
 !requires: 'Automata' 1 20 nil!
@@ -7108,7 +7108,7 @@ actions: anOrderedCollection
 	anOrderedCollection do:[:each |
 		self addSemanticRuleNewVersion: each ]. "(each fold:[:head :tail | head value, ' ', tail value]) ]."! !
 
-!Rule methodsFor: 'semantic rules' stamp: 'DF 11/7/2020 20:58:57'!
+!Rule methodsFor: 'semantic rules' stamp: 'DF 11/24/2023 16:55:22'!
 addSemanticRule: aString 
 
 	| i aSemanticRule |
@@ -7130,13 +7130,13 @@ addSemanticRule: aString
 		]
 ! !
 
-!Rule methodsFor: 'semantic rules' stamp: 'DF 12/28/2021 23:57:24'!
+!Rule methodsFor: 'semantic rules' stamp: 'DF 11/24/2023 18:15:52'!
 addSemanticRuleNewVersion: tokens
 
-	| i aSemanticRule aString builder nt |
+	| i aSemanticRule aString builder nt  |
 
-	aString _ tokens inject:'' into:[:acc :each | acc ,' ', each value ].
- 
+	aString := tokens inject:'' into:[:acc :each | acc ,' ', each value ].
+
 	aSemanticRule := SemanticRule newFrame: aliases keys code: aString.
 
 	(semantics anySatisfy:[:each | each left  = aSemanticRule left ]) ifTrue:[XraySyntaxError new errorMessage: 'Multiple actions for the same attribute ->' ; position: tokens first start; signal ].
@@ -7145,9 +7145,9 @@ addSemanticRuleNewVersion: tokens
 	
 	i := aliases at:aSemanticRule left index ifAbsent:[ XraySyntaxError new errorMessage: 'Undefined variable ', aSemanticRule left index, ' ->' ; position: tokens first start; signal ].
 
-	builder _ (i = 1) ifTrue:[SynthesizedAttribute ] ifFalse:[InheritedAttribute].
+	builder := (i = 1) ifTrue:[SynthesizedAttribute ] ifFalse:[InheritedAttribute].
 	
-	nt _ (i=1) ifTrue:[left] ifFalse:[right at:i  - 1].
+	nt := (i=1) ifTrue:[left] ifFalse:[right at:i  - 1].
 	
 	nt attributeAt: aSemanticRule left name 
 		ifPresent:[:a | a class = builder ifFalse:[XraySyntaxError new errorMessage:'Attribute ',aSemanticRule left name ,' cannot be both inherited and synthesized ->'; position: tokens first start; signal ] ] ifAbsent:[].
@@ -7293,7 +7293,7 @@ handDownInheritedAttributes
 	^result		
 ! !
 
-!Rule methodsFor: 'attribute dependencies' stamp: 'DF 12/28/2021 23:58:46'!
+!Rule methodsFor: 'attribute dependencies' stamp: 'DF 11/24/2023 18:08:18'!
 handUpSynthesizedAttributes
 	
 	" for each synthesized variable that has no semantic rule, add a semantic rule that concatenates all the  values of these attributes in the right part of the rule.
@@ -7321,7 +7321,7 @@ handUpSynthesizedAttributes
 	undefined := left synthesizedAttributes select:[:eachAttribute | (semantics detect:[:eachAction | (aliases at: eachAction left index) = 1 and:[eachAction left name = eachAttribute name ] ] ifNone:[nil] ) = nil ].
 
 	"create aliases to each symbol on the right "
-	
+
 	(1 to: right size) select:[:each | (right at:each) isKindOf:NonTerminal] thenDo:[:each | self alias: (right at: each) name asXrayAttributeName, '007', each asString to: each + 1 ].
 	
 	undefined do:[:eachAttribute | | indices fragments action index |
@@ -7331,7 +7331,10 @@ handUpSynthesizedAttributes
 		" we don't want to include the same symbol more than once "
 		
 		indices := aliases invert invert associations select:[:each | each value > 1 and:[ (right at: each value - 1) hasAttribute: eachAttribute name ] ].
-			
+		" sort the indices by their order so that the concatenation of lists follows the order of the rule's right hand side	"
+		
+		indices := indices sort: [:x :y | x value <= y value ].
+		
 		fragments := indices collect:[:each | '(', eachAttribute name, ' @ ', each key, ')' ].
 
 		action := fragments inject:'{}' into:[:acc :each | acc, ',' , '(', each, 'promoteTo: Array)' ].
@@ -7434,7 +7437,7 @@ list: aNonTerminal children: symbols
 	^ rules
 ! !
 
-!Rule class methodsFor: 'instance creation' stamp: 'DF 1/12/2022 20:44:41'!
+!Rule class methodsFor: 'instance creation' stamp: 'DF 11/24/2023 17:06:52'!
 notEmptyList: aNonTerminal children: symbols
 
 	| rules aRule |
@@ -7503,11 +7506,11 @@ addImplicitInheritedAttributes: alias to: head
 	missing do:[:each | head addAttribute: (InheritedAttribute new generated: true; name: each name; owner: head; yourself)].
 	! !
 
-!SemanticRule methodsFor: 'as yet unclassified' stamp: 'DF 12/27/2021 00:01:10'!
+!SemanticRule methodsFor: 'as yet unclassified' stamp: 'DF 11/24/2023 17:51:23'!
 addImplicitSynthesizedAttributes: alias to: symbols
 
 	| missing |
-	
+		
 	"for any attribute in right that references a symbol that is not the head of the rule, if it is not already defined for that symbol, add a synthesized attribute to the symbol.
 	
 	X 'x' : A 'a' B 'b' { 	v@x = v@a + v@b } ;
@@ -7521,7 +7524,7 @@ addImplicitSynthesizedAttributes: alias to: symbols
 
 	missing := right reject:[:each | (each isKindOf:Terminal) or:[(alias at: each 	index) = 1] or:[ (symbols at:(alias at:each index) - 1 ) hasAttribute: each name] ].
 	
-	missing do:[:each | | aSymbol attr | aSymbol := symbols at: (alias at:each index) - 1.  attr _ (SynthesizedAttribute new generated: true; name: each name; owner: aSymbol; yourself). aSymbol addAttribute: attr. ]. 
+	missing do:[:each | | aSymbol attr | aSymbol := symbols at: (alias at:each index) - 1.  attr := (SynthesizedAttribute new generated: true; name: each name; owner: aSymbol; yourself). aSymbol addAttribute: attr. ]. 
 	! !
 
 !SemanticRule methodsFor: 'as yet unclassified' stamp: 'DF 10/6/2020 16:44:54'!
@@ -8408,7 +8411,7 @@ newParserFor: aString
 xraySmalltalkParser 
 	^XraySmallTalkParser ! !
 
-!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 12/31/2021 20:16:43'!
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/24/2023 11:31:15'!
 action: aBlock forPattern: aTerminal
 
 	[ actions add: aTerminal value asRegex -> aBlock ]
@@ -9675,13 +9678,14 @@ location: anInteger
 source
 	^source! !
 
-!SemanticSource methodsFor: 'as yet unclassified' stamp: 'DF 12/28/2021 16:24:23'!
+!SemanticSource methodsFor: 'as yet unclassified' stamp: 'DF 11/24/2023 11:33:33'!
 source: aString
 
 	source := aString.
 	
 	[ Parser new parse:aString class: UndefinedObject noPattern: true ]
 	on: SyntaxErrorNotification do:[ :aSyntaxErrorNotification |
+		
 		XraySyntaxError new errorMessage: ((aSyntaxErrorNotification errorMessage, ' ->') asText color: Color red ; yourself) ; 
 							position: self location + aSyntaxErrorNotification location - 1; signal		]
 	
@@ -10189,7 +10193,7 @@ testLanguage
 
 ! !
 
-!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2023 19:52:19'!
+!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/24/2023 15:45:39'!
 acceptText: aText
 	
 	text := aText.
@@ -10208,7 +10212,7 @@ acceptText: aText
 	on: XraySyntaxError do:[:anXraySyntaxError | 
 		text addAttribute: TextColor red from: anXraySyntaxError position + 1 to: text size ].
 	
-	self changed:#stack ; changed:#ast ; changed: #attrs.
+	self changed:#stack ; changed:#ast ; changed: #attrs ; changed: #attrContents .
 	
 	^true
 	
