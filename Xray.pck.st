@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #6053] on 24 November 2023 at 6:16:46 pm'!
+'From Cuis 6.0 [latest update: #6053] on 28 November 2023 at 9:02:22 pm'!
 'Description '!
-!provides: 'Xray' 1 7!
+!provides: 'Xray' 1 8!
 !requires: 'Erudite' 1 240 nil!
 !requires: 'Regex-Core' 1 10 nil!
 !requires: 'Automata' 1 20 nil!
@@ -436,16 +436,6 @@ Terminal subclass: #EOF
 	category: 'Xray'!
 !classDefinition: 'EOF class' category: #Xray!
 EOF class
-	instanceVariableNames: ''!
-
-!classDefinition: #Epsilon category: #Xray!
-Terminal subclass: #Epsilon
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Xray'!
-!classDefinition: 'Epsilon class' category: #Xray!
-Epsilon class
 	instanceVariableNames: ''!
 
 !classDefinition: #ErrorAction category: #Xray!
@@ -3978,11 +3968,6 @@ initialize
 
 	name := '$'! !
 
-!Epsilon methodsFor: 'as yet unclassified' stamp: 'DF 9/24/2020 14:59:00'!
-initialize
-
-	name := ''! !
-
 !ErrorAction methodsFor: 'nil' stamp: 'DF 9/28/2020 12:13:49'!
 performOn: anXrayParser
 
@@ -4070,14 +4055,14 @@ computePrefixes
 	
 	rules do:[:each | each computePrefixes 	]! !
 
-!Grammar methodsFor: 'parser generation' stamp: 'DF 10/28/2020 12:32:12'!
+!Grammar methodsFor: 'parser generation' stamp: 'DF 11/28/2023 20:59:18'!
 growNFA: anNFA fromItem: anItem
 
 	| items todo next |
 		
 	items := (rules select:[:each | each left = anItem symbol ] thenCollect:[:each | each item ]).
 
-	items do:[:each | anNFA addTransitionFrom: anItem onSymbol: Epsilon new to: each ].
+	items do:[:each | anNFA addTransitionFrom: anItem onSymbol: Epsilon to: each ].
 	 
 	todo := items reject: [:each | anNFA isState: each ].
 		
