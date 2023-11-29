@@ -1,6 +1,6 @@
-'From Cuis 6.0 [latest update: #6053] on 28 November 2023 at 9:02:22 pm'!
+'From Cuis 6.0 [latest update: #6053] on 28 November 2023 at 9:37:22 pm'!
 'Description '!
-!provides: 'Xray' 1 8!
+!provides: 'Xray' 1 9!
 !requires: 'Erudite' 1 240 nil!
 !requires: 'Regex-Core' 1 10 nil!
 !requires: 'Automata' 1 20 nil!
@@ -2792,19 +2792,495 @@ The non terminal can be stored in an object. Later, when all the required inform
 For a complete example that shows how all of this is put together look at [[[ Language browse: ''Lisp'' ]]] doItWithButton:''Lisp''..
 ') images: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
-!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/24/2020 20:26:08'!
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/28/2023 21:36:30'!
 initialize
     super initialize.
     title _ 'X-ray Manual'.
-        self addSection: self Introduction.
-        self addSection: self TheXrayLanguage.
-        self addSection: self LexicalAnalysis.
-        self addSection: self WritingSemanticActions.
-        self addSection: self DebuggingConflicts.
-        self addSection: self TestingTheParser.
-        self addSection: self UsingTheParser.
-        self addSection: self ManagingLargeGrammars.
+        self addSection: self section_Introduction.
+        self addSection: self section_TheXrayLanguage.
+        self addSection: self section_LexicalAnalysis.
+        self addSection: self section_WritingSemanticActions.
+        self addSection: self section_DebuggingConflicts.
+        self addSection: self section_TestingTheParser.
+        self addSection: self section_UsingTheParser.
+        self addSection: self section_ManagingLargeGrammars.
 ! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/28/2023 21:36:30'!
+section_DebuggingConflicts
+^(EruditeBookSection basicNew title: 'Debugging Conflicts'; document: ((EruditeDocument contents: '
+!!!!Debugging Conflicts
+
+In some cases a grammar may be ambigous (or just not LR). In such cases the parser generator will report the problem as either a shift-reduce or a reduce-reduce conflict. 
+
+Here is a typical example:
+
+E : E "+" E ;
+
+E : integer ;
+
+This grammar is ambigous because it can generate two distinct parse trees for the string E + E + E: 
+
+	(E + E) + E 			  or 		E + (E + E)
+
+The conflicting symbol is the second ''+'' because the parser may either shift it to create the first version, or reduce the expression preceding it to create the second version.
+
+When such a problem occurs X-ray displays 
+[[[ [Language parserFor:''ShiftReduceConflict''] on: ConflictExplorer do:[: aConflictExplorer | aConflictExplorer open] ]]] doItWithButton:''a conflict explorer window''..
+
+The window shows the rules involving the conflict at the bottom, and two examples of ambigous parsing at the top. 
+
+In case of a shift-reduce conflict the left side is an example of shifting the conflicting symbol, and the right side is an example of reducing right before the conflicting symbol. 
+
+
+') data: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/28/2023 21:36:30'!
+section_Introduction
+^(EruditeBookSection basicNew title: 'Introduction'; document: ((EruditeDocument contents: '
+!!!!X-ray Manual
+
+by **David Faitelson** (//davidf@afeka.ac.il//)
+
+This is the manual for the X-ray parser generator system.
+
+X-ray is an LR(1) parser generator and a collection of tools for writing, editing, testing and debugging grammars. 
+
+X-ray has the following major features:
+
+1. It is an LR(1) parser, thus avoiding the mysterious Reduce-Reduce conflicts that plague LALR parsers.
+
+2. It uses examples to report conflicts. 
+
+3. It provides a powerful attribute grammar that is free of the limitations of L-attributed grammars.
+
+4. Its development environment makes it easier to develop large large grammars by breaking them into //topics// and //aspects//. 
+
+
+
+
+ ') data: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/28/2023 21:36:30'!
+section_LexicalAnalysis
+^(EruditeBookSection basicNew title: 'Lexical Analysis'; document: ((EruditeDocument contents: '
+!!!!Lexical Analysis
+
+Lexical analysis converts character strings into terminal tokens for the parser. 
+
+The lexical analysis part in an Xray grammar consists of two sections: tokens and patterns.
+
+!!!!!! Tokens
+
+The tokens section consists of a list of literal strings that the system recognizes as atomic (valueless) terminals. Such tokens are often keywords and operator symbols. 
+
+For example, the section
+
+tokens
+
+program begin end + *
+
+defines five terminal symbols. These symbols appear in grammar rules exactly as they are written in the defition, except for symbols such as * and + that have a special meaning in grammar rules. These must be protected by double quotes. For example, 
+
+  E : E "+" T ;
+
+is a rule with three symbols E, +, and T, whereas the rule 
+
+  E : E + T ;
+
+is a rule with two symbols the first of which (E +) is a non empty list of Es.
+
+!!!!!! Patterns
+
+The patterns section consists of regular expressions with actions for generating value carrying terminals. The regular expression language is that of {RxParser::class}. 
+
+For example, the section 
+
+patterns
+
+[[:alpha:]][[:alnum:]]*					identifier
+[[:space:]]+					```{ nextTerminal }```
+
+defines two rules. The first rule defines an identifier token, and the second rule recognizes whitespace but instead of returning a token name it sends a nextTerminal message to the scanner causing it to ignore the space and scan the next terminal. 
+
+It is also possible to define both a terminal name and an action to perform on the content of the terminal. For example, 
+
+patterns
+
+```":isDoubleQuote:(:^isDoubleQuote:)+:isDoubleQuote:"											string { strip: }```
+
+recognizes a string of characters surrounded by double quotes, and defines an action that strips the double quotes from the content of the terminal.
+
+!!!!!!!! Patterns with special characters
+
+The following characters are X-ray operators and therefore require care when used in patterns and rules:
+
+```( ) { } + * '' : ;```
+
+when we need to include one of these characters literally in a pattern or a rule we must protect the pattern with double quotes. For example,
+
+patterns
+
+"''[^'']*''"			string 
+
+recognizes a Pascal string. Without the double quotes the pattern will cause a syntax error.
+
+!!!!!! Extending the scanner
+
+It is possible to direct the X-ray system to use a different scanner than the default {XrayScanner::class}. This provides enough flexibility to implement case insensitive scanning, indentation sensitive grammars and so on. A simple example is {PascalScanner::class}.
+
+
+
+
+
+') data: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/28/2023 21:36:30'!
+section_ManagingLargeGrammars
+^(EruditeBookSection basicNew title: 'Managing Large Grammars'; document: ((EruditeDocument contents: '!!!! Managing Large Grammars
+
+When a grammar becomes large, maintaining it in a single sequential scroll of text is no longer effective, as more and more time is spent navigating around to find and edit the relevant parts of the grammar. 
+
+The X-ray language Browser organizes grammars into categories, topics and aspects. 
+
+A category is a coherent functional part of the grammar. Currently an X-ray grammar has four categories:
+
+Directives			Customization instructions
+Tokens			Literal terminal symbols
+Patterns			Regular expressions for terminals 
+Rules			Grammar rules
+
+These categories are predefined parts of each grammar. In addition, you may divide the grammar rules into separate topics and aspects. 
+
+!!!!!! Topics
+
+A topic is a collection of rules related to a particular subject. 
+
+A topic is a classification of rules into common grammatical parts. For example, all the rules for producing types may be collected in a types topic. 
+
+For example, grammar for a language such as C consists of rules that define the structure of expressions and for rules that define the structure of statements. We may define each collection of rules as a separate topic to help us quickly navigate and focus on each topic separately from the rest.
+
+!!!!!! Aspects
+
+An aspect is a collection of semantic rules that compute a cohesive set of semantic values. 
+
+For example, when developing a compiler for a statically typed programming language we need a collection of rules to compute the expression''s type. Another collection of rules could generate the intermediate code. We may define each collection as a separate aspect to make it easier to develop each one separately from the others.
+
+An aspect is a classification of semantic actions into common semantic concerns. For example, the semantic actions for type checking could be placed in a ''type checking aspect'', and the semantic actions for code generation could be placed into a separate ''code generation'' aspect.
+
+Topics and aspects are different ways to organize a grammar. A topic may have semantic actions from several aspects and an aspect may include semantic actions of rules that belong to separate topics. 
+
+!!!!!! The structure of the X-ray langauge Browser
+
+The X-ray language Browser lets you select which topics and aspects of the grammar you want to see and edit. 
+
+It has four lists in the top row, and a text area in the bottom row. The top row lists are (from left to right): languages, categories, topics, and aspects. 
+
+After you select a langauge in the left most list, you can select which categories you wish to see. There are four categories, one for each major section of the grammar: directives, tokens, patterns, and rules. 
+ 
+We often finish developing the lexical analysis part quickly and then spend most of the time developing the grammar rules. By selecting only the grammar rules category we can put aside the distracting information. 
+
+The browser parses the grammar and identifies any topics and aspects that are defined in the grammar. These topics and aspects are presented in the two rightmost panels of the top row. 
+
+The browser updates the text area to show just the selected topics and aspects. You can then edit these parts of the grammar. The browser will never lose your information. Any topics or aspcets that are not visible will be preserved. If you want to remove an aspect you must first select all the topics in which it appears. If you want to remove a topic you must select all the aspects that appear in this topic. 
+
+
+
+
+') data: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/28/2023 21:36:30'!
+section_TestingTheParser
+^(EruditeBookSection basicNew title: 'Testing the Parser'; document: ((EruditeDocument contents: '
+!!!!Testing the Parser
+
+To test the parser select the ''test'' menu option for the language. This would generate the LR parser and (if no conflicts are found) open a grammar test explorer window. 
+
+You may find it useful to read these notes while looking at the [[[ aLanguage := Language at: ''Bit'' . aLanguage test ]]] doItWithButton:'' test explorer for the Bit language''..
+
+The window has three areas (from left to right): a text area for writing text, a list that shows the symbols on the parser''s stack, and a heirarchical list that shows the AST of the selected stack symbol. The lower part of the heirarchical list shows the attributes of the selected symbol.
+
+If the scanner cannot identify some of your text it will color red the area it cannot identify. 
+
+If the parser cannot fully parse the text, the stack will contain the symbols that it did manage to parse. When the parser succeeds in parsing the entire text there will be just two symbols on the stack: the top will hold the special EOF terminal and right below it there will be the grammar''s start symbol. 
+
+When you select a symbol in the AST the test explorer will highlight in yellow the text that corresponds to this symbol. In addition, you will see the attributes of this symbol below the AST tree. However, the attributes will have values only if the parser manages to parse the entire text. This is because the parser computes the semantic attributes only if it successfully parses the entire text. 
+
+
+
+
+
+') data: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/28/2023 21:36:30'!
+section_TheXrayLanguage
+^(EruditeBookSection basicNew title: 'The X-ray Language'; document: ((EruditeDocument contents: '
+!!!! The X-ray Language
+
+You may find it useful to read the following notes while also examining the X-ray grammar for the [[[ Language browse: ''RPCalc'' ]]] doItWithButton:''Reverse Polish Notation calculator''..
+
+!!!!!! Overall structure
+
+An X-ray grammar has three mandatory sections and one optional section:
+
+<optional directives>
+
+tokens
+
+<zero or more token symbols>
+
+patterns
+
+<zero or more pattern rules>
+
+rules
+
+<one or more grammar rules>
+
+The first rule determines the grammar''s starting symbol.
+
+!!!!!! Pattern rules
+
+There are three kinds of pattern rules. 
+
+<regular expression> 				<name>
+
+Creates a terminal <name> when it matches the regular expression. The value of the terminal is the matched string.
+
+<regular expression> 				{ <message> }
+
+Creates whatever terminal is returned when sending <message> to the scanner.
+
+<regular expression> 				{ <message1> }			{ <message2> }
+
+Creates whatever terminal is returned when sending <message1> to the scanner but passes the terminal''s value through <message2>.
+
+To match the next token, the scanner selects the rule that matches the longest prefix. When more than one rule matches the longest prefix the scanner selects the rule that appears earlier in the grammar.
+
+!!!!!! Grammar rules
+
+Each grammar rule has the following structure:
+
+<symbol> ''<name>'' ? : (<symbol> ''<name>'' ?) * <action> * ;
+
+The names that optionally accompany each symbol are used to refer to these symbols in the semantic actions.
+
+A semantic action has the following form:
+
+  { <name> @ <name> = <Smalltalk expression> }
+
+Inside the Smalltalk part, the meaning of  
+
+v @ x 
+
+is to fetch the attribute v from the symbol x.
+
+!!!!!! List operators
+
+The X-ray grammar language provides three operators to simplify common rule patterns: * + and ?.
+
+If X is a symbol in the grammar then 
+
+X * is a list of zero or more Xs
+
+X + is a list of one or more Xs 
+
+X ? is a list of zero or one Xs
+
+In addition, we can create lists of more than one symbol by enclosing them in parenthesis. For example:
+
+Parameters : Parameter ( , Parameter ) *
+
+ 
+
+') data: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/28/2023 21:36:30'!
+section_UsingTheParser
+^(EruditeBookSection basicNew title: 'Using the Parser '; document: ((EruditeDocument contents: '!!!! Using the Parser
+
+In this section we will see how to use the generated parser in your own code.
+
+The easiest way to access the parser is to send the message {parserFor: ::selector} to the {Language ::class} class, passing it the name of the language:
+
+[[[ aParser := Language parserFor: ''RPCalc'' ]]].
+
+Once you obtain a parser you send it the message {parse: ::selector}
+
+[[[ outcome := aParser parse:''3 5 8 + +
+'' ]]].
+
+The parser returns a pair of arrays. The first member contains the symbol stack and the second the unparsed tokens. 
+
+If the parser has succeeded in parsing the entire input, the second array will be empty, and the first array will contain exactly two symbols. The first one will be the EOF terminal and the second one will be the grammar''s start symbol. This symbol will be the root of the parsed AST. 
+
+The following code fragment demonstrates how it all works:
+
+[[[ | aParser outcome | 
+aParser := Language parserFor: ''RPCalc''.
+outcome := aParser parse:''3 5 8 + +
+''.
+outcome inspect.
+outcome first second xray]]] doIt.
+
+The message {xray ::selector} opens an Xray AST explorer window on the root symbol. This explorer makes it easier to navigate X-ray ASTs. It displays the tree of symbols on the right and on the left the selected symbol''s attributes (if it has any). 
+
+!!!!!! Error handling
+
+If the parser''s scanner cannot tokenize the input string it will throw an {XraySyntaxError ::class} exception. Instances of this class answer the {position ::selector} message that reports the character position in the input string. 
+
+To assist in reporting parse errors each symbol answers two messages {start ::selector} and {end ::selector} which define the interval in the input string that this symbol derives. 
+
+!!!!!! Injecting inherited attributes to the root symbol
+
+It is often useful to pass initial inherited attributes to the AST root. This is done by sending the message {parse:inherit: ::selector} to the parser, passing it in addition to the string, a collection of symbol-value associations. Each symbol will become an inherited attribute of the AST''s root, bound to its corresponding value. 
+
+
+
+') data: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/28/2023 21:36:30'!
+section_WritingSemanticActions
+^(EruditeBookSection basicNew title: 'Writing Semantic Actions'; document: ((EruditeDocument contents: '
+!!!!Writing Semantic Actions
+
+You may find it useful to read this section while examining the [[[ Language browse: ''Bit'' ]]] doItWithButton:''Bit grammar''.. 
+
+The X-ray parser always creates an abstract syntax tree (AST) of {XraySymbol::class} objects. We may use X-ray''s attribute grammar to calculate the tree''s semantics. 
+
+We can accompany each grammar rule with a collection of semantic equations of the form
+
+	```{ attribute @ symbol = Smalltalk expression }```
+
+Here is a fragment that demonstrates how this works
+
+Expr ''expr'' : Expr ''left'' "+" Expr ''right''
+
+	```{ value@expr = (value@left) + (value@right) } ;```
+
+Each symbol in the rule has its own unique name to identify it in the semantic action. 
+
+Each AST symbol may have attributes. Attributes are classified according to how they are calculated. 
+
+!!!!!!Synthesized attributes
+
+The synthesized attributes of a symbol are calculated from its child symbols in the AST. They can be recognized by the fact that the left side of the semantic equation is an attribute of the left part of the rule (as in the example above).
+
+!!!!!!Inherited attributes
+
+The inherited attributes of a symbol are calculated by the parent of the symbol in the AST. They can be recognized by the fact that the left side of the semantic equation is an attribute of one of the symbols in the right part of the rule.
+
+!!!!!! Rule operators and semantic actions
+
+Whenever we use one of the list operators, the parser generator automatically propagates the attributes of each symbol in the list according to the following rules:
+
+1. The synthesized attributes of each list member are collected in a list and made accessible as attributes of the list''s non terminal.
+
+2. Any inherited attribute of the list''s non terminal is passed on to the members of the list.
+
+For example:
+
+```
+A ''left'' : X * ''list'' 
+	{ v@left = v@list  }
+	{ a@list = 5 } ;
+
+X ''x'' : identifier 
+	{ v@x = a@x } ;
+```
+
+The list in the first rule inherits the attribute a with a value of 5 and passes it to each occurence of X. The second rule creates a synthesized attribute x for X and sets its value to the attribute a that X inherited. These values are collected into a list and put in the synthesized attribute v of the list. The result is that the synthesized attribute v of A will hold a list of 5''s.  
+
+To summarize, the list operators pass on their inherited attributes to the list compoments, and assemble the synthesized attributes of their components into a list which they store in a synthesized attribute of the same name. If this is not the behavior you require for your semantics you should implement the list rules yourself. 
+
+!!!!!! Attribute calculation
+
+The attribute equations are calculated only after the complete parse tree is constructed. At this point the system computes the dependency relation between the attributes. It then sorts the semantic actions according to their dependencies. If there is a cyclic dependency between some attributes the system throws an exception to report the problem. Otherwise the system executes the semantic actions according to their dependency order. 
+
+!!!!!! Indirect Inheritance 
+
+Many times we need to pass an attribute down the AST. For example, we may want to provide the entire source code of the program so that each rule could use it to produce meaningful error messages. In such cases it becomes tedious and error prone to manually write semantic rules just to pass the attribute to each element in the tree. 
+
+X-ray makes this easier by supporting a form of indirect inheritance where any reference to an attribute of the left non terminal that is not defined explicitly is inherited from the rules where this non terminal appears in the right hand side.
+
+For example,
+
+```
+X ''x'' : A { s@x = 1 } ;
+
+A : B ;
+
+B ''b'' : c { v@b = (s@b) + 1  } ;
+```
+
+Here the attribute s is not explicitly defined for B, but it is inherited indirectly from A and then from X.
+
+The benefit of indirect inheritance is not only that it saves us the trouble of manually writing many rote rules, but it is also much more modular because we don''t need to rewrite these rules whenever we change the grammar.
+
+!!!!!! Indirect Synthesis
+
+Similarly, in many cases we create rules that collect information from the bottom of the AST and transfer it to the top parts of the tree. For example, we may collect all the symbol names that we use in the program. 
+
+Just like the case of inherited attributes this requires writing a lot of rules to copy and aggregate the attributes from the children of each rule to their parent. 
+
+To avoid writing all these rules explicitly X-ray provides indirect synthesis of attributes. Whenever the right hand side of a semantic action refrences an attribute of one of the symbols on the right of the grammar rule that is not already defined, the system implicitly adds a synthesized attribute to that symbol and a rule that aggregates the attribute to the parent. For example,
+
+```
+X ''x'' : A ''a'' { v@x = v@a } ;
+
+A : B C ;
+
+B ''b'' : { v@b = { 1 } } ;
+
+C ''c'' : { v@c = { 2 } } ;
+```
+
+Here, even though v is not an attribute of A, it is indirectly synthesized by concatenating the attributes of B and C. The result is that v@a will hold the collection [[[{ 1 . 2 }]]].
+
+To see an example that demonstrates the power of indircet inheritance and synthesis take a look at the [[[ Language browse: ''Turingol'' ]]] doItWithButton:''Turingol language''..
+
+!!!!!! Lazy semantics
+
+In some cases we cannot calculate the semantics of a non terminal because we dot not have all the required information. A typical example is the semantics of procedures. We cannot calculate the semantics of the procedure''s body because we are missing the values of its formal parameters. 
+
+In such a case we can use X-ray''s delayed operator. For example,
+
+E ''e'' : "(" proc "(" identifier ''param'' ")" E [[ body ]] ")" 
+
+Here the body of the procedure is surrounded with double brackets to indicate that X-ray should not calculate the semantics of this occurrence of the non terminal. 
+
+The non terminal can be stored in an object. Later, when all the required information is ready we can it send {semantics ::selector} to calculate its semantics.
+
+For a complete example that shows how all of this is put together look at [[[ Language browse: ''Lisp'' ]]] doItWithButton:''Lisp''..
+
+!!!!!! Using literal strings in actions
+
+While most Smalltalk expressions are supported in their original form, literal strings currently require a workaround to appear correctly. For example, 
+
+S ''lhs'' : done
+	
+	```{ sentence @ lhs = ''Hello  world'' } ;``` 
+
+This will bind the attribute sentence to the literal string 
+
+```'' Hello world ''```
+
+Note that there is one space before the first word, one space after the last word, and exactly one space between the words. 
+
+To ensure that the string is not modified we must protect it from X-ray''s parser with double quotes. However, just wriring 
+
+S ''lhs'' : done
+	
+	```{ sentence @ lhs = "''Hello  world''" } ;``` 
+
+will raise an ''Argument expected'' error, because the Smalltalk parser considers this as a comment. To solve this problem we can write
+
+S ''lhs'' : done
+	
+	```{ sentence @ lhs = "''Hello  world''" yourself } ;``` 
+
+This syntax passes the Smalltalk compiler and prevents X-ray''s parser from breaking the string into tokens.
+') data: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
 
 !ReduceAction methodsFor: 'as yet unclassified' stamp: 'DF 10/4/2020 20:43:50'!
 performOn: anXrayParser
