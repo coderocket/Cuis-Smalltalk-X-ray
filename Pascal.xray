@@ -20,10 +20,10 @@ patterns
 [+-]?[[:digit:]]+E[+-]?[[:digit:]]+									real
 [+-]?[[:digit:]]+									integer
 <>									relop
-<=|>=									relop
-<|>|IN									relop
-\+|-|OR									addop
-\*|/|DIV|MOD|AND									mulop
+"<=|>="									relop
+"<|>|IN"									relop
+"\+|-|OR"									addop
+"\*|/|DIV|MOD|AND"									mulop
 [[:alpha:]][[:alnum:]]*									identifier
 
 rules
