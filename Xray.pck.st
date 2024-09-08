@@ -1,31 +1,51 @@
-'From Cuis 6.0 [latest update: #6053] on 12 December 2023 at 9:16:14 pm'!
+'From Cuis7.1 [latest update: #6676] on 7 September 2024 at 3:40:52 pm'!
 'Description '!
-!provides: 'Xray' 1 10!
+!provides: 'Xray' 1 21!
 !requires: 'Erudite' 1 240 nil!
-!requires: 'Regex-Core' 1 10 nil!
+!requires: 'Regex-Core' 1 6 nil!
 !requires: 'Automata' 1 20 nil!
 SystemOrganization addCategory: #Xray!
 SystemOrganization addCategory: #'Xray-Browser'!
 
 
-!classDefinition: #XrayPluggableTextModel category: #'Xray-Browser'!
-PluggableTextModel subclass: #XrayPluggableTextModel
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Xray-Browser'!
-!classDefinition: 'XrayPluggableTextModel class' category: #'Xray-Browser'!
-XrayPluggableTextModel class
-	instanceVariableNames: ''!
-
-!classDefinition: #ASTExplorer category: #Xray!
-AbstractHierarchicalList subclass: #ASTExplorer
-	instanceVariableNames: 'root attrsListSelection selectionAttrs'
+!classDefinition: #ParserDFA category: #Xray!
+DFA subclass: #ParserDFA
+	instanceVariableNames: 'nonTerminalTransitions'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Xray'!
-!classDefinition: 'ASTExplorer class' category: #Xray!
-ASTExplorer class
+!classDefinition: 'ParserDFA class' category: #Xray!
+ParserDFA class
+	instanceVariableNames: ''!
+
+!classDefinition: #ParserState category: #Xray!
+CompositeState subclass: #ParserState
+	instanceVariableNames: 'cloneId identifier adj jda'
+	classVariableNames: 'ErrorState'
+	poolDictionaries: ''
+	category: 'Xray'!
+!classDefinition: 'ParserState class' category: #Xray!
+ParserState class
+	instanceVariableNames: ''!
+
+!classDefinition: #CanonicTransition category: #Xray!
+Transition subclass: #CanonicTransition
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Xray'!
+!classDefinition: 'CanonicTransition class' category: #Xray!
+CanonicTransition class
+	instanceVariableNames: ''!
+
+!classDefinition: #ParserTransition category: #Xray!
+Transition subclass: #ParserTransition
+	instanceVariableNames: 'reads included follows'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Xray'!
+!classDefinition: 'ParserTransition class' category: #Xray!
+ParserTransition class
 	instanceVariableNames: ''!
 
 !classDefinition: #BinaryFunction category: #Xray!
@@ -46,6 +66,36 @@ Set subclass: #BinaryRelation
 	category: 'Xray'!
 !classDefinition: 'BinaryRelation class' category: #Xray!
 BinaryRelation class
+	instanceVariableNames: ''!
+
+!classDefinition: #AttributeLocator category: #Xray!
+ParseNodeVisitor subclass: #AttributeLocator
+	instanceVariableNames: 'frame vars'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Xray'!
+!classDefinition: 'AttributeLocator class' category: #Xray!
+AttributeLocator class
+	instanceVariableNames: ''!
+
+!classDefinition: #AttributeLocatorNew category: #Xray!
+ParseNodeVisitor subclass: #AttributeLocatorNew
+	instanceVariableNames: 'frame vars'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Xray'!
+!classDefinition: 'AttributeLocatorNew class' category: #Xray!
+AttributeLocatorNew class
+	instanceVariableNames: ''!
+
+!classDefinition: #XrayManual category: #'Xray-Browser'!
+EruditeBook subclass: #XrayManual
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Xray-Browser'!
+!classDefinition: 'XrayManual class' category: #'Xray-Browser'!
+XrayManual class
 	instanceVariableNames: ''!
 
 !classDefinition: #ConflictException category: #Xray!
@@ -158,44 +208,24 @@ Exception subclass: #DuplicateRulesError
 DuplicateRulesError class
 	instanceVariableNames: ''!
 
-!classDefinition: #AttributeLocator category: #Xray!
-ParseNodeVisitor subclass: #AttributeLocator
-	instanceVariableNames: 'frame vars'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Xray'!
-!classDefinition: 'AttributeLocator class' category: #Xray!
-AttributeLocator class
-	instanceVariableNames: ''!
-
-!classDefinition: #AttributeLocatorNew category: #Xray!
-ParseNodeVisitor subclass: #AttributeLocatorNew
-	instanceVariableNames: 'frame vars'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Xray'!
-!classDefinition: 'AttributeLocatorNew class' category: #Xray!
-AttributeLocatorNew class
-	instanceVariableNames: ''!
-
-!classDefinition: #XrayEditor category: #'Xray-Browser'!
-TextEditor subclass: #XrayEditor
+!classDefinition: #XrayPluggableTextModel category: #'Xray-Browser'!
+PluggableTextModel subclass: #XrayPluggableTextModel
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Xray-Browser'!
-!classDefinition: 'XrayEditor class' category: #'Xray-Browser'!
-XrayEditor class
+!classDefinition: 'XrayPluggableTextModel class' category: #'Xray-Browser'!
+XrayPluggableTextModel class
 	instanceVariableNames: ''!
 
-!classDefinition: #XrayTestEditor category: #'Xray-Browser'!
-TextEditor subclass: #XrayTestEditor
-	instanceVariableNames: ''
+!classDefinition: #ASTExplorer category: #Xray!
+AbstractHierarchicalList subclass: #ASTExplorer
+	instanceVariableNames: 'root attrsListSelection selectionAttrs'
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'Xray-Browser'!
-!classDefinition: 'XrayTestEditor class' category: #'Xray-Browser'!
-XrayTestEditor class
+	category: 'Xray'!
+!classDefinition: 'ASTExplorer class' category: #Xray!
+ASTExplorer class
 	instanceVariableNames: ''!
 
 !classDefinition: #ASTExplorerWindow category: #Xray!
@@ -238,6 +268,26 @@ SystemWindow subclass: #XrayParserTestWindow
 XrayParserTestWindow class
 	instanceVariableNames: ''!
 
+!classDefinition: #XrayEditor category: #'Xray-Browser'!
+TextEditor subclass: #XrayEditor
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Xray-Browser'!
+!classDefinition: 'XrayEditor class' category: #'Xray-Browser'!
+XrayEditor class
+	instanceVariableNames: ''!
+
+!classDefinition: #XrayTestEditor category: #'Xray-Browser'!
+TextEditor subclass: #XrayTestEditor
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Xray-Browser'!
+!classDefinition: 'XrayTestEditor class' category: #'Xray-Browser'!
+XrayTestEditor class
+	instanceVariableNames: ''!
+
 !classDefinition: #ASTExplorerWrapper category: #Xray!
 ListItemWrapper subclass: #ASTExplorerWrapper
 	instanceVariableNames: 'root'
@@ -246,56 +296,6 @@ ListItemWrapper subclass: #ASTExplorerWrapper
 	category: 'Xray'!
 !classDefinition: 'ASTExplorerWrapper class' category: #Xray!
 ASTExplorerWrapper class
-	instanceVariableNames: ''!
-
-!classDefinition: #ParserDFA category: #Xray!
-DFA subclass: #ParserDFA
-	instanceVariableNames: 'nonTerminalTransitions'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Xray'!
-!classDefinition: 'ParserDFA class' category: #Xray!
-ParserDFA class
-	instanceVariableNames: ''!
-
-!classDefinition: #ParserState category: #Xray!
-CompositeState subclass: #ParserState
-	instanceVariableNames: 'cloneId identifier adj jda'
-	classVariableNames: 'ErrorState'
-	poolDictionaries: ''
-	category: 'Xray'!
-!classDefinition: 'ParserState class' category: #Xray!
-ParserState class
-	instanceVariableNames: ''!
-
-!classDefinition: #CanonicTransition category: #Xray!
-Transition subclass: #CanonicTransition
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Xray'!
-!classDefinition: 'CanonicTransition class' category: #Xray!
-CanonicTransition class
-	instanceVariableNames: ''!
-
-!classDefinition: #ParserTransition category: #Xray!
-Transition subclass: #ParserTransition
-	instanceVariableNames: 'reads included follows'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Xray'!
-!classDefinition: 'ParserTransition class' category: #Xray!
-ParserTransition class
-	instanceVariableNames: ''!
-
-!classDefinition: #XrayManual category: #'Xray-Browser'!
-EruditeBook subclass: #XrayManual
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Xray-Browser'!
-!classDefinition: 'XrayManual class' category: #'Xray-Browser'!
-XrayManual class
 	instanceVariableNames: ''!
 
 !classDefinition: #Action category: #Xray!
@@ -691,970 +691,6 @@ XrayParserTestModel class
 
 !SemanticRule commentStamp: '<historical>' prior: 0!
 A semantic rule consists of three parts: a left attribute whose value is to be determined by the effect block, and a set of attributes (right) that the effect may read. When a semantic rule is activated, the effect block is called with the bindings of values to the right attributes and its result is used to update the value of the left attribute.!
-
-!XrayPluggableTextModel methodsFor: 'as yet unclassified' stamp: 'DF 11/18/2023 22:46:04'!
-refreshParser
-
-	textProvider refreshParser ! !
-
-!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:26:57'!
-astList
-	
-	^{ ASTExplorerWrapper with:root  }
-	! !
-
-!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 11/16/2020 11:11:18'!
-attrsList
-
-	selectionAttrs ifNil:[^{}].
-	
-	^selectionAttrs collect:[:each | each key , ' = ' , (each value ifNil:[''] ifNotNil:[each value asString]) ]
-! !
-
-!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:56:58'!
-currentAttribute
-
-	attrsListSelection ifNil:[^nil].
-
-	(attrsListSelection = 0) ifTrue:[^nil].
-	
-	^ selectionAttrs at: attrsListSelection ! !
-
-!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:45:29'!
-getListSelection
-
-	attrsListSelection ifNil:[^0].
-	
-	^attrsListSelection! !
-
-!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:41:01'!
-noteNewListSelection: x
-
-	attrsListSelection := x.
-	! !
-
-!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 11/11/2020 22:56:44'!
-noteNewSelection: x
-
-	currentSelection _ x.
-	
-	selectionAttrs := 
-		currentSelection 
-			ifNil:[{}] 
-			ifNotNil:[currentSelection attributes ].
-
-	self changed: #attrsList.
-	
-	currentSelection ifNil: [^self].
-	currentSelection sendSettingMessageTo: self.
-! !
-
-!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/8/2020 13:24:27'!
-root
-	^root! !
-
-!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/8/2020 13:24:23'!
-root: aNonTerminal
-	root := aNonTerminal! !
-
-!BinaryFunction methodsFor: 'as yet unclassified' stamp: 'DF 10/18/2020 18:39:51'!
-path: anObject
-
-	| path p |
-	
-	path := OrderedCollection new.
-	
-	p := anObject.
-	
-	[p isNil] whileFalse:[
-		path add: p.
-		p := self at:p ifAbsent:[nil].
-	].
-
-	^path! !
-
-!BinaryRelation methodsFor: 'printing' stamp: 'DF 12/18/2021 18:31:20'!
-printDot
-
-	| aWriteStream |
-	
-	aWriteStream := WriteStream on: String new.
-	self printDotOn: aWriteStream.
-	^aWriteStream contents
-! !
-
-!BinaryRelation methodsFor: 'printing' stamp: 'DF 12/21/2021 21:47:02'!
-printDotOn: aStream
-
-	self do:[:each | each key printDotOn: aStream. aStream nextPutAll:' -> '.  each value printDotOn: aStream . aStream nextPutAll: '[color=blue];'; nextPut: Character cr. ].
-	! !
-
-!BinaryRelation methodsFor: 'as yet unclassified' stamp: 'DF 10/27/2020 17:37:31'!
-image: anObject
-	
-	| aSet |
-	
-	aSet := Set new.
-	
-	self do:[:each | (each key = anObject) ifTrue:[aSet add: each value ] ].
-		
-	^ aSet.
-	
-	! !
-
-!BinaryRelation methodsFor: 'as yet unclassified' stamp: 'DF 2/1/2021 18:05:50'!
-invert
-
-	| aBinaryRelation |
-	
-	aBinaryRelation _ self class new.
-	
-	self do:[:each | aBinaryRelation add: each value -> each key].
-	
-	^aBinaryRelation! !
-
-!BinaryRelation methodsFor: 'as yet unclassified' stamp: 'DF 10/18/2020 12:25:46'!
-toFunction
-
-	| aDictionary |
-	
-	aDictionary := Dictionary new.
-	
-	(self collect:[:each | each key]) do:[:each | aDictionary at: each put: Set new ].
-	
-	self do:[:each | (aDictionary at: each key) add: each value ].
-	
-	^ aDictionary
-! !
-
-!ConflictException methodsFor: 'accessing' stamp: 'DF 10/13/2020 12:26:31'!
-items
-	^items! !
-
-!ConflictException methodsFor: 'accessing' stamp: 'DF 10/13/2020 12:26:41'!
-items: aCollection
-
-	items := aCollection! !
-
-!ConflictException methodsFor: 'accessing' stamp: 'DF 10/12/2020 23:59:00'!
-state
-	^state! !
-
-!ConflictException methodsFor: 'accessing' stamp: 'DF 10/12/2020 23:58:56'!
-state: aState
-	state := aState! !
-
-!ConflictException methodsFor: 'accessing' stamp: 'DF 10/13/2020 12:27:28'!
-symbol
-	^ symbol! !
-
-!ConflictException methodsFor: 'accessing' stamp: 'DF 10/13/2020 12:27:20'!
-symbol: anXraySymbol
-
-	symbol := anXraySymbol ! !
-
-!ConflictException methodsFor: 'as yet unclassified' stamp: 'DF 10/13/2020 18:48:36'!
-defaultAction
-
-	UnhandledError signalForException: self! !
-
-!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 12/31/2021 22:01:51'!
-defaultAction
-
-	self open.! !
-
-!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 09:47:58'!
-label
-	^label! !
-
-!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 09:45:23'!
-label: aString
-	label := aString! !
-
-!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:46:26'!
-left
-	^left! !
-
-!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:46:13'!
-left: aNonTerminal
-	left := aNonTerminal! !
-
-!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:47:10'!
-leftList
-
-	^{ ASTExplorerWrapper with:left  }
-! !
-
-!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 10:01:48'!
-open
-
-	ConflictExplorerWindow open: self label: 'X-ray Conflict Explorer: ', self label.! !
-
-!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:46:30'!
-right
-	^right! !
-
-!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:46:21'!
-right: aNonTerminal
-	right := aNonTerminal! !
-
-!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:47:17'!
-rightList
-
-	^{ ASTExplorerWrapper with:right  }
-! !
-
-!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:48:32'!
-state: aState
-	state := aState! !
-
-!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 12/31/2021 22:13:33'!
-stateDescription
-
-	^ state printDescription! !
-
-!CycleException methodsFor: 'as yet unclassified' stamp: 'DF 1/7/2022 19:53:45'!
-callChain
-
-	^callChain! !
-
-!CycleException methodsFor: 'as yet unclassified' stamp: 'DF 1/7/2022 19:52:47'!
-computeCallChain
-
-	| aContext |
-	
-	callChain _ OrderedCollection new.
-	
-	aContext _ thisContext.
-	
-	[aContext receiver == vertices second ] whileFalse:[
-		(aContext receiver isKindOf: GraphVertex) ifTrue:[
-			callChain add: aContext receiver key].
-		aContext _ aContext sender].
-	
-	callChain add: aContext receiver key.
-! !
-
-!CycleException methodsFor: 'as yet unclassified' stamp: 'DF 12/26/2021 15:07:00'!
-defaultAction
-
-	UnhandledError signalForException: self! !
-
-!CycleException methodsFor: 'as yet unclassified' stamp: 'DF 12/26/2021 14:50:30'!
-vertices
-	^vertices! !
-
-!CycleException methodsFor: 'as yet unclassified' stamp: 'DF 12/26/2021 14:50:26'!
-vertices: aCollection
-	vertices _ aCollection
-
-	! !
-
-!CycleException class methodsFor: 'as yet unclassified' stamp: 'DF 12/26/2021 14:50:05'!
-between: aGraphVertex and: anotherGraphVertex
-
-	| aCycleException |
-	
-	aCycleException _ self new.
-	
-	aCycleException vertices: { aGraphVertex . anotherGraphVertex }.
-	
-	^aCycleException! !
-
-!MissingAttribute methodsFor: 'as yet unclassified' stamp: 'DF 10/25/2020 08:55:43'!
-attribute: anAttribute
-	attribute := anAttribute! !
-
-!MissingAttribute methodsFor: 'as yet unclassified' stamp: 'DF 10/25/2020 08:56:00'!
-defaultAction
-
-	UnhandledError signalForException: self! !
-
-!MissingAttributeReference methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2020 11:23:58'!
-attributeName: aSymbol
-	attributeName := aSymbol! !
-
-!MissingAttributeReference methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2020 11:24:21'!
-defaultAction
-
-	UnhandledError signalForException: self! !
-
-!MissingAttributeReference methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2020 11:23:48'!
-nonTerminal: aNonTerminal
-	nonTerminal := aNonTerminal ! !
-
-!UndefinedSymbols methodsFor: 'as yet unclassified' stamp: 'DF 10/25/2020 16:23:00'!
-defaultAction
-
-	UnhandledError signalForException: self! !
-
-!UndefinedSymbols methodsFor: 'as yet unclassified' stamp: 'DF 10/25/2020 16:22:27'!
-symbols
-	^symbols! !
-
-!UndefinedSymbols methodsFor: 'as yet unclassified' stamp: 'DF 10/25/2020 16:22:15'!
-symbols: aCollection
-
-	symbols := aCollection
-	! !
-
-!XraySyntaxError methodsFor: 'as yet unclassified' stamp: 'DF 12/28/2021 15:08:02'!
-defaultAction
-
-	UnhandledError signalForException: self! !
-
-!XraySyntaxError methodsFor: 'as yet unclassified' stamp: 'DF 12/28/2021 16:03:38'!
-errorMessage
-	^errorMessage asText color:Color red; yourself! !
-
-!XraySyntaxError methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 21:29:49'!
-errorMessage: aText
-	errorMessage := aText
-	! !
-
-!XraySyntaxError methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 22:07:25'!
-initialize
-
-	super initialize.
-	
-	errorMessage := 'Syntax error ->' asText color:Color red; yourself! !
-
-!XraySyntaxError methodsFor: 'as yet unclassified' stamp: 'DF 11/1/2020 17:57:53'!
-position
-	^position! !
-
-!XraySyntaxError methodsFor: 'as yet unclassified' stamp: 'DF 11/1/2020 16:57:06'!
-position: anInteger
-	position := anInteger! !
-
-!XrayParseError methodsFor: 'as yet unclassified' stamp: 'DF 11/6/2020 17:14:27'!
-errorMessage
-
-	^ ('Syntax error, expecting:', 
-	
-	((expectedSymbols collect:[:each | ' ' , each name ]) fold:[:x :y | x,y ] ifEmpty:['']) , 
-	
-	' ->') asText color:Color red; yourself! !
-
-!XrayParseError methodsFor: 'as yet unclassified' stamp: 'DF 11/6/2020 17:04:17'!
-expectedSymbols: aCollection
-	expectedSymbols := aCollection! !
-
-!DuplicateRulesError methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 21:32:23'!
-errorMessage
-	^'A rule like that exists but is not currently visible ->' asText color: Color red; yourself! !
-
-!DuplicateRulesError methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 21:33:17'!
-position
-	^rules anyOne headerStart! !
-
-!DuplicateRulesError methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 15:12:29'!
-rules
-	^rules! !
-
-!DuplicateRulesError methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 15:04:47'!
-rules: aCollection
-
-	rules := aCollection! !
-
-!AttributeLocator methodsFor: 'as yet unclassified' stamp: 'DF 10/5/2020 19:12:32'!
-frame: aSet
-	frame := aSet! !
-
-!AttributeLocator methodsFor: 'as yet unclassified' stamp: 'DF 10/5/2020 19:18:52'!
-initialize
-	vars := Set new! !
-
-!AttributeLocator methodsFor: 'as yet unclassified' stamp: 'DF 10/5/2020 19:19:14'!
-vars
-	^vars! !
-
-!AttributeLocator methodsFor: 'as yet unclassified' stamp: 'DF 10/7/2020 21:30:24'!
-visitMessageNode: aMessageNode
-
-	super visitMessageNode: aMessageNode.
-	
-	((aMessageNode receiver isKindOf: VariableNode) and:[frame includes: aMessageNode receiver name] and:[aMessageNode selector key = #at:]) 
-		ifTrue:[
-			vars add: (AttributeVariable new index: aMessageNode receiver name; name: (aMessageNode arguments at:1) key).
-			].
-		! !
-
-!AttributeLocatorNew methodsFor: 'as yet unclassified' stamp: 'DF 11/10/2020 16:00:39'!
-frame: aSet
-	frame := aSet! !
-
-!AttributeLocatorNew methodsFor: 'as yet unclassified' stamp: 'DF 11/10/2020 16:00:46'!
-initialize
-	vars := Set new! !
-
-!AttributeLocatorNew methodsFor: 'as yet unclassified' stamp: 'DF 11/10/2020 16:00:53'!
-vars
-	^vars! !
-
-!AttributeLocatorNew methodsFor: 'as yet unclassified' stamp: 'DF 11/10/2020 16:13:11'!
-visitMessageNode: aMessageNode
-
-	| argument |
-	
-	super visitMessageNode: aMessageNode.
-	
-	(aMessageNode selector key = #@) ifFalse:[^self].
-
-	(aMessageNode receiver isKindOf: VariableNode) ifFalse:[^self].
-	
-	(aMessageNode arguments size = 1) ifFalse:[^self].
-		
-	argument := aMessageNode arguments first.
-	
-	(argument isKindOf:VariableNode) ifFalse:[^self].
-		
-	(frame includes: argument name)	 ifFalse:[^self].
-	
-	vars add: (AttributeVariable new index: argument name ; name: aMessageNode receiver name; yourself).
-	
-! !
-
-!XrayEditor methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 15:28:45'!
-notify: aString at: anInteger in: aStream 
-
-	"The compilation of text failed. The syntax error is noted as the argument, 
-	aString. Insert it in the text at starting character position anInteger."
-	"This is a user command, and generates undo"
-	model startNewUndoRedoCommand.
-	self insertAndSelect: aString at: (anInteger max: 1).
-	
-! !
-
-!XrayTestEditor methodsFor: 'as yet unclassified' stamp: 'DF 11/18/2023 22:18:54'!
-getMenu
-
-	| aMenu |
-	
-	aMenu := super getMenu.
-	
-	aMenu addLine.
-	
-	aMenu addItemsFromDictionaries: {
-			{
-				#label 			-> 	'Refresh parser'.
-				#object 			-> 	model.
-				#selector 		-> 		#refreshParser.
-				#balloonText 	-> 		'use this to refresh the parser after changes to the grammar'.
-			} asDictionary } . 
-			
-	^aMenu! !
-
-!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 20:03:29'!
-astMenu
-	"Borrow a menu from my inspector"
-	
-	| aMenu |
-	aMenu _ MenuMorph new defaultTarget: self.
-	model getCurrentSelection
-		ifNil: [
-			aMenu
-				add: '*nothing selected*'
-				target: self
-				action: #yourself]
-		ifNotNil: [
-			aMenu
-				addItemsFromDictionaries: `{
-					{
-						#label 			-> 		'inspect (i)'.
-						#selector 		-> 		#inspectSelection.
-						#icon 			-> 		#inspectIcon
-					} asDictionary.
-					{
-						#label 			-> 		'explore (I)'.
-						#selector 		-> 		#exploreSelection.
-						#icon 			-> 		#exploreIcon
-					} asDictionary.
-					{
-						#label 			-> 		'basic inspect'.
-						#selector 		-> 		#inspectBasic.
-						#icon 			-> 		#inspectIcon
-					} asDictionary.
-				}`.
-		].
-	
-	^ aMenu! !
-
-!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:27:11'!
-buildMorphicWindow
-
-	| treeMorph attrsMorph row |
-	
-	treeMorph _ HierarchicalListMorph
-			model: model
-			listGetter: #astList
-			indexGetter: #getCurrentSelection
-			indexSetter:  #noteNewSelection:
-			mainView: self
-			menuGetter: #astMenu
-			keystrokeAction: nil.
-	
-	attrsMorph _ PluggableListMorph
-			model: model 
-			listGetter: #attrsList
-			indexGetter: #getListSelection
-			indexSetter: #noteNewListSelection:
-			mainView: self
-			menuGetter: #listMenu
-			keystrokeAction: nil.
-
-	row _ LayoutMorph newRow.
-	
-	row
-		addMorph: treeMorph proportionalWidth: 0.4 ;
-		addMorph: attrsMorph proportionalWidth: 0.6.
-	
-	self layoutMorph
-		addMorph: row.
-		
-	self setLabel: 'X-ray AST Explorer: ', model root name.! !
-
-!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/9/2020 13:01:27'!
-exploreSelection
-	"Create and schedule an Explorer on the receiver's model's currently selected object."
-
-	^ model getCurrentSelection item explore! !
-
-!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/8/2020 14:38:26'!
-initialExtent
-
-	^`600@325` * Preferences standardCodeFont lineSpacing // 14! !
-
-!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:58:49'!
-inspectAttributeSelection
-
-	"Create and schedule an Inspector on the receiver's model's currently selected attribute."
-
-	model currentAttribute ifNil:[^self].
-	
-	^model currentAttribute value inspect! !
-
-!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 20:01:41'!
-inspectBasic
-	"Create and schedule a basic Inspector on the receiver's model's currently selected object."
-
-	^ model getCurrentSelection item basicInspect! !
-
-!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 20:01:32'!
-inspectSelection
-	"Create and schedule an Inspector on the receiver's model's currently selected object."
-
-	^ model getCurrentSelection item inspect! !
-
-!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:36:23'!
-listMenu
-	"Borrow a menu from my inspector"
-	
-	| aMenu |
-	aMenu _ MenuMorph new defaultTarget: self.
-	model getCurrentSelection
-		ifNil: [
-			aMenu
-				add: '*nothing selected*'
-				target: self
-				action: #yourself]
-		ifNotNil: [
-			aMenu
-				addItemsFromDictionaries: `{
-					{
-						#label 			-> 		'inspect (i)'.
-						#selector 		-> 		#inspectAttributeSelection.
-						#icon 			-> 		#inspectIcon
-					} asDictionary
-				}`.
-		].
-	
-	^ aMenu! !
-
-!ConflictExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 09:52:34'!
-buildMorphicWindow
-
-	| leftMorph rightMorph trees state  |
-	
-	leftMorph _ HierarchicalListMorph
-			model: model
-			listGetter: #leftList
-			indexGetter: nil
-			indexSetter:  nil
-			mainView: self
-			menuGetter: nil
-			keystrokeAction: nil.
-
-	rightMorph _ HierarchicalListMorph
-			model: model
-			listGetter: #rightList
-			indexGetter: nil
-			indexSetter:  nil
-			mainView: self
-			menuGetter: nil
-			keystrokeAction: nil.
-
-	state _ TextModelMorph
-			textProvider: model
-			textGetter: #stateDescription 
-			textSetter: nil
-			selectionGetter: nil.
-	
-	trees _ LayoutMorph newRow.
-
-	trees 	addMorph: leftMorph proportionalWidth: 0.5 ;
-		addMorph: rightMorph proportionalWidth: 0.5.
-		
-	self layoutMorph
-		addMorph: trees proportionalHeight: 0.7 ;
-		addMorph: state proportionalHeight: 0.3.
-			! !
-
-!ConflictExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:58:29'!
-initialExtent
-
-	^`600@325` * Preferences standardCodeFont lineSpacing // 14! !
-
-!ConflictExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 10:09:52'!
-windowColor
-	^ Color r: 0.700 g: 0.280 b: 0.280! !
-
-!XrayLanguageExplorerWindow methodsFor: 'menu' stamp: 'DF 11/17/2020 14:05:50'!
-languagesMenu
-
-	| aMenu |
-	
-	aMenu _ MenuMorph new defaultTarget: self.
-	aMenu addTitle: 'Languages'.
-	"aMenu addStayUpIcons."
-	aMenu
-		addItemsFromDictionaries: `{
-			{
-				#label 			-> 		'add language...'.
-				#object 			-> 		#model.
-				#selector 		-> 		#addLanguage.
-				#balloonText 	-> 		'add a new language'.
-			} asDictionary. 
-
-			{
-				#label 			-> 		'rename ...'.
-				#object 			-> 		#model.
-				#selector 		-> 		#renameLanguage.
-				#balloonText 	-> 		'rename the selected language'.
-			} asDictionary. 
-			
-			{
-				#label 			-> 		'remove'.
-				#object 			-> 		#model.
-				#selector 		-> 		#removeLanguage.
-				#balloonText 	-> 		'remove the selected language'.
-			} asDictionary. 
-			nil.
-			{
-				#label 			-> 		'file out'.
-				#object 			-> 		#model.
-				#selector 		-> 		#fileOutLanguage.
-				#balloonText 	-> 		'write the language to an external file'.
-			} asDictionary. 
-			nil.
-			{
-				#label 			-> 		'inspect'.
-				#object 			-> 		#model.
-				#selector 		-> 		#inspectLanguage.
-				#balloonText 	-> 		'open an inspector on the selected language'.
-			} asDictionary. 
-			{
-				#label 			-> 		'test'.
-				#object 			-> 		#model.
-				#selector 		-> 		#testLanguage.
-				#balloonText 	-> 		'open an X-ray test window on the selected language'.
-			} asDictionary. 
-		}`.
-
-
-	^aMenu! !
-
-!XrayLanguageExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 15:22:53'!
-buildMorphicWindow
-
-	| categoriesMorph contentMorph languagesMorph upperRow topicsMorph aspectsMorph |
-	
-	languagesMorph _ PluggableListMorph 
-		model: model
-		listGetter: #languages
-		indexGetter: #selectedLanguageIndex
-		indexSetter: #selectLanguage:
-		mainView: self
-		menuGetter: #languagesMenu
-		keystrokeAction: nil.
-		
-	categoriesMorph _ PluggableListMorphOfMany
-			model: model 
-			listGetter: #categories
-			primarySelectionGetter: nil
-			primarySelectionSetter: nil
-			listSelectionGetter: #isCategorySelected:
-			listSelectionSetter: #selectCategory:if:
-			mainView: self 
-			menuGetter: nil
-			keystrokeAction: nil.
-
-	topicsMorph _ PluggableListMorphOfMany
-			model: model 
-			listGetter: #topics
-			primarySelectionGetter: nil
-			primarySelectionSetter: nil
-			listSelectionGetter: #isTopicSelected:
-			listSelectionSetter: #selectTopic:if:
-			mainView: self 
-			menuGetter: nil
-			keystrokeAction: nil.
-
-	aspectsMorph _ PluggableListMorphOfMany
-			model: model 
-			listGetter: #aspects
-			primarySelectionGetter: nil
-			primarySelectionSetter: nil
-			listSelectionGetter: #isAspectSelected:
-			listSelectionSetter: #selectAspect:if:
-			mainView: self 
-			menuGetter: nil
-			keystrokeAction: nil.
-	
-	contentMorph _ TextModelMorph 
-					textProvider: model
-					textGetter: #acceptedContents 
-					textSetter: #acceptContents:
-					selectionGetter: #selectedText.
-	
-	model errorPresentor: contentMorph.
-	
-	upperRow _ LayoutMorph newRow.
-	
-	upperRow
-		addMorph: languagesMorph proportionalWidth: 0.25; 
-		addAdjusterAndMorph: categoriesMorph proportionalWidth: 0.25;
-		addAdjusterAndMorph: topicsMorph proportionalWidth: 0.25;
-		addAdjusterAndMorph: aspectsMorph proportionalWidth: 0.25.
-
-	self layoutMorph
-		addMorph: upperRow proportionalHeight: 0.3; 
-		addAdjusterAndMorph: contentMorph proportionalHeight: 0.7.
-		
-	self setLabel: 'X-ray Language Browser'! !
-
-!XrayLanguageExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/4/2020 10:25:19'!
-windowColor
-	^ Color r:65.0/100 g:68.2/100 b:38.4/100! !
-
-!XrayLanguageExplorerWindow class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 13:53:55'!
-openBrowser
-	
-	| anXrayLanguageExplorerModel |
-	
-	anXrayLanguageExplorerModel := XrayLanguageExplorerModel new.
-	
-	self open: anXrayLanguageExplorerModel ! !
-
-!XrayLanguageExplorerWindow class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2023 20:21:12'!
-worldMenuOptions
-
-	^ `{{
-			#itemGroup 		-> 		10.
-			#itemOrder 		-> 		35.
-			#label 			->	'X-ray Browser'.
-			#object 			->	XrayLanguageExplorerWindow.
-			#selector 		-> 		#openBrowser.
-			#icon 			-> 	#editFindReplaceIcon.
-			#balloonText 	-> 		'An X-ray grammar browser for editing and generating LR parsers'.
-		} asDictionary}`! !
-
-!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 3/11/2021 21:40:01'!
-astMenu
-	"Borrow a menu from my inspector"
-	
-	| aMenu |
-	aMenu _ MenuMorph new defaultTarget: self.
-	model getASTSelection
-		ifNil: [
-			aMenu
-				add: '*nothing selected*'
-				target: self
-				action: #yourself]
-		ifNotNil: [
-			aMenu
-				addItemsFromDictionaries: `{
-					{
-						#label 			-> 		'xray (x)'.
-						#selector 		-> 		#xrayASTSelection.
-						#icon 			-> 		#inspectIcon
-					} asDictionary.
-					{
-						#label 			-> 		'inspect (i)'.
-						#selector 		-> 		#inspectASTSelection.
-						#icon 			-> 		#inspectIcon
-					} asDictionary.
-					{
-						#label 			-> 		'explore (I)'.
-						#selector 		-> 		#exploreASTSelection.
-						#icon 			-> 		#exploreIcon
-					} asDictionary.
-				}`.
-		].
-	
-	^ aMenu! !
-
-!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 12/12/2023 20:51:42'!
-attrMenu
-	"Borrow a menu from my inspector"
-	
-	| aMenu |
-	aMenu := MenuMorph new defaultTarget: self.
-	model getASTSelection
-		ifNil: [
-			aMenu
-				add: '*nothing selected*'
-				target: self
-				action: #yourself]
-		ifNotNil: [
-			aMenu
-				addItemsFromDictionaries: `{
-					{
-						#label 			-> 		'inspect (i)'.
-						#selector 		-> 		#inspectAttrSelection.
-						#icon 			-> 		#inspectIcon
-					} asDictionary.
-					{
-						#label 			-> 		'explore (I)'.
-						#selector 		-> 		#exploreAttrSelection.
-						#icon 			-> 		#exploreIcon
-					} asDictionary.
-				}`.
-		].
-	
-	^ aMenu! !
-
-!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 12/12/2023 20:50:29'!
-buildMorphicWindow
-
-	| textModel textMorph stackMorph astMorph attrsListMorph attrContentsMorph attrsLayoutMorph row ast |
-			
-	textModel := XrayPluggableTextModel on: model.
-	textModel textGetter: #acceptedText textSetter: #acceptText: selectionGetter: #selectedText.
-	
-	model addDependent: textModel.	
-	
-	textMorph := TextModelMorph withModel: textModel.
-					
-	stackMorph := PluggableListMorph 
-		model: model
-		listGetter: #stack
-		indexGetter: #selectedSymbol
-		indexSetter: #selectSymbol:
-		mainView: self
-		menuGetter: nil
-		keystrokeAction: nil.
-
-	astMorph := HierarchicalListMorph
-			model: model
-			listGetter: #ast
-			indexGetter: #getASTSelection
-			indexSetter:  #noteASTSelection:
-			mainView: self
-			menuGetter: #astMenu
-			keystrokeAction: nil.
-
-	attrsListMorph := PluggableListMorph
-			model: model 
-			listGetter: #attrs
-			indexGetter: #getAttrSelection
-			indexSetter: #noteAttrSelection:
-			mainView: self
-			menuGetter: #attrMenu
-			keystrokeAction: nil.
-
-	attrContentsMorph := TextModelMorph
-			textProvider: model
-			textGetter: #attrContents 
-			textSetter: nil
-			selectionGetter: nil.
-
-	attrsLayoutMorph := LayoutMorph newRow.
-	attrsLayoutMorph
-		addMorph: attrsListMorph proportionalWidth: 0.3;
-		addAdjusterAndMorph: attrContentsMorph proportionalWidth: 0.7.
-
-	ast := LayoutMorph newColumn.
-	
-	ast addMorph: astMorph proportionalHeight: 0.6; 
-	     addAdjusterAndMorph: attrsLayoutMorph proportionalHeight: 0.4.
-	
-	row := LayoutMorph newRow.
-	
-	row
-		addMorph: textMorph proportionalWidth: 0.5; 
-		addAdjusterAndMorph: stackMorph proportionalWidth: 0.2;
-		addAdjusterAndMorph: ast proportionalWidth: 0.3.
-
-	self layoutMorph
-		addMorph: row proportionalHeight: 1.
-		
-	self setLabel: 'X-ray Parser Tester: ' , model languageName.! !
-
-!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 3/11/2021 21:38:45'!
-exploreASTSelection
-	"Create and schedule an Explorer on the receiver's model's currently selected object."
-
-	^ model getASTSelection item explore! !
-
-!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 12/12/2023 20:59:06'!
-exploreAttrSelection
-	"Create and schedule an Explorer on the receiver's model's currently selected object."
-
-	^ model attrObject explore! !
-
-!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 3/11/2021 21:39:02'!
-inspectASTSelection
-	"Create and schedule an Inspector on the receiver's model's currently selected object."
-
-	^ model getASTSelection item inspect! !
-
-!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 12/12/2023 20:58:56'!
-inspectAttrSelection
-	"Create and schedule an Inspector on the receiver's model's currently selected object."
-
-	^ model attrObject inspect! !
-
-!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 10:22:28'!
-windowColor
-	^ Color r:65.0/100 g:68.2/100 b:38.4/100! !
-
-!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 3/11/2021 21:40:22'!
-xrayASTSelection
-	"Create and schedule an Xray Explorer on the receiver's model's currently selected object."
-
-	^ model getASTSelection item xray! !
-
-!ASTExplorerWrapper methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 15:03:15'!
-asString
-	^item name! !
-
-!ASTExplorerWrapper methodsFor: 'as yet unclassified' stamp: 'DF 1/3/2022 18:57:12'!
-attributes
-
-	item attributes ifNil:[^{}].
-	
-	^item attributes associations collect:[:each | each key -> each value value ]! !
-
-!ASTExplorerWrapper methodsFor: 'as yet unclassified' stamp: 'DF 10/8/2020 14:08:58'!
-contents
-
-	^ item children collect:[:each | self class with:each ]
-	! !
-
-!ASTExplorerWrapper methodsFor: 'as yet unclassified' stamp: 'DF 10/8/2020 14:08:33'!
-hasContents
-	^item children notEmpty! !
 
 !ParserDFA methodsFor: 'parser generation' stamp: 'DF 1/21/2022 22:02:41'!
 actionTable
@@ -2359,6 +1395,134 @@ to: aParserState
 	aParserState addIncomingTransition: self.
 	
 		! !
+
+!BinaryFunction methodsFor: 'as yet unclassified' stamp: 'DF 10/18/2020 18:39:51'!
+path: anObject
+
+	| path p |
+	
+	path := OrderedCollection new.
+	
+	p := anObject.
+	
+	[p isNil] whileFalse:[
+		path add: p.
+		p := self at:p ifAbsent:[nil].
+	].
+
+	^path! !
+
+!BinaryRelation methodsFor: 'printing' stamp: 'DF 12/18/2021 18:31:20'!
+printDot
+
+	| aWriteStream |
+	
+	aWriteStream := WriteStream on: String new.
+	self printDotOn: aWriteStream.
+	^aWriteStream contents
+! !
+
+!BinaryRelation methodsFor: 'printing' stamp: 'DF 12/21/2021 21:47:02'!
+printDotOn: aStream
+
+	self do:[:each | each key printDotOn: aStream. aStream nextPutAll:' -> '.  each value printDotOn: aStream . aStream nextPutAll: '[color=blue];'; nextPut: Character cr. ].
+	! !
+
+!BinaryRelation methodsFor: 'as yet unclassified' stamp: 'DF 10/27/2020 17:37:31'!
+image: anObject
+	
+	| aSet |
+	
+	aSet := Set new.
+	
+	self do:[:each | (each key = anObject) ifTrue:[aSet add: each value ] ].
+		
+	^ aSet.
+	
+	! !
+
+!BinaryRelation methodsFor: 'as yet unclassified' stamp: 'DF 2/1/2021 18:05:50'!
+invert
+
+	| aBinaryRelation |
+	
+	aBinaryRelation _ self class new.
+	
+	self do:[:each | aBinaryRelation add: each value -> each key].
+	
+	^aBinaryRelation! !
+
+!BinaryRelation methodsFor: 'as yet unclassified' stamp: 'DF 10/18/2020 12:25:46'!
+toFunction
+
+	| aDictionary |
+	
+	aDictionary := Dictionary new.
+	
+	(self collect:[:each | each key]) do:[:each | aDictionary at: each put: Set new ].
+	
+	self do:[:each | (aDictionary at: each key) add: each value ].
+	
+	^ aDictionary
+! !
+
+!AttributeLocator methodsFor: 'as yet unclassified' stamp: 'DF 10/5/2020 19:12:32'!
+frame: aSet
+	frame := aSet! !
+
+!AttributeLocator methodsFor: 'as yet unclassified' stamp: 'DF 10/5/2020 19:18:52'!
+initialize
+	vars := Set new! !
+
+!AttributeLocator methodsFor: 'as yet unclassified' stamp: 'DF 10/5/2020 19:19:14'!
+vars
+	^vars! !
+
+!AttributeLocator methodsFor: 'as yet unclassified' stamp: 'DF 10/7/2020 21:30:24'!
+visitMessageNode: aMessageNode
+
+	super visitMessageNode: aMessageNode.
+	
+	((aMessageNode receiver isKindOf: VariableNode) and:[frame includes: aMessageNode receiver name] and:[aMessageNode selector key = #at:]) 
+		ifTrue:[
+			vars add: (AttributeVariable new index: aMessageNode receiver name; name: (aMessageNode arguments at:1) key).
+			].
+		! !
+
+!AttributeLocatorNew methodsFor: 'as yet unclassified' stamp: 'DF 11/10/2020 16:00:39'!
+frame: aSet
+	frame := aSet! !
+
+!AttributeLocatorNew methodsFor: 'as yet unclassified' stamp: 'DF 11/10/2020 16:00:46'!
+initialize
+	vars := Set new! !
+
+!AttributeLocatorNew methodsFor: 'as yet unclassified' stamp: 'DF 11/10/2020 16:00:53'!
+vars
+	^vars! !
+
+!AttributeLocatorNew methodsFor: 'as yet unclassified' stamp: 'DF 11/10/2020 16:13:11'!
+visitMessageNode: aMessageNode
+
+	| argument |
+	
+	super visitMessageNode: aMessageNode.
+	
+	(aMessageNode selector key = #@) ifFalse:[^self].
+
+	(aMessageNode receiver isKindOf: VariableNode) ifFalse:[^self].
+	
+	(aMessageNode arguments size = 1) ifFalse:[^self].
+		
+	argument := aMessageNode arguments first.
+	
+	(argument isKindOf:VariableNode) ifFalse:[^self].
+		
+	(frame includes: argument name)	 ifFalse:[^self].
+	
+	vars add: (AttributeVariable new index: argument name ; name: aMessageNode receiver name; yourself).
+	
+! !
 
 !XrayManual methodsFor: 'as yet unclassified' stamp: 'DF 11/15/2020 15:02:37'!
 Aspects
@@ -3323,6 +2487,719 @@ S ''lhs'' : done
 
 This syntax passes the Smalltalk compiler and prevents X-ray''s parser from breaking the string into tokens.
 ') data: ((Dictionary new)); yourself); subsections: (OrderedCollection new yourself); yourself)! !
+
+!ConflictException methodsFor: 'accessing' stamp: 'DF 10/13/2020 12:26:31'!
+items
+	^items! !
+
+!ConflictException methodsFor: 'accessing' stamp: 'DF 10/13/2020 12:26:41'!
+items: aCollection
+
+	items := aCollection! !
+
+!ConflictException methodsFor: 'accessing' stamp: 'DF 10/12/2020 23:59:00'!
+state
+	^state! !
+
+!ConflictException methodsFor: 'accessing' stamp: 'DF 10/12/2020 23:58:56'!
+state: aState
+	state := aState! !
+
+!ConflictException methodsFor: 'accessing' stamp: 'DF 10/13/2020 12:27:28'!
+symbol
+	^ symbol! !
+
+!ConflictException methodsFor: 'accessing' stamp: 'DF 10/13/2020 12:27:20'!
+symbol: anXraySymbol
+
+	symbol := anXraySymbol ! !
+
+!ConflictException methodsFor: 'as yet unclassified' stamp: 'DF 10/13/2020 18:48:36'!
+defaultAction
+
+	UnhandledError signalForException: self! !
+
+!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 12/31/2021 22:01:51'!
+defaultAction
+
+	self open.! !
+
+!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 09:47:58'!
+label
+	^label! !
+
+!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 09:45:23'!
+label: aString
+	label := aString! !
+
+!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:46:26'!
+left
+	^left! !
+
+!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:46:13'!
+left: aNonTerminal
+	left := aNonTerminal! !
+
+!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:47:10'!
+leftList
+
+	^{ ASTExplorerWrapper with:left  }
+! !
+
+!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 10:01:48'!
+open
+
+	ConflictExplorerWindow open: self label: 'X-ray Conflict Explorer: ', self label.! !
+
+!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:46:30'!
+right
+	^right! !
+
+!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:46:21'!
+right: aNonTerminal
+	right := aNonTerminal! !
+
+!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:47:17'!
+rightList
+
+	^{ ASTExplorerWrapper with:right  }
+! !
+
+!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:48:32'!
+state: aState
+	state := aState! !
+
+!ConflictExplorer methodsFor: 'as yet unclassified' stamp: 'DF 12/31/2021 22:13:33'!
+stateDescription
+
+	^ state printDescription! !
+
+!CycleException methodsFor: 'as yet unclassified' stamp: 'DF 1/7/2022 19:53:45'!
+callChain
+
+	^callChain! !
+
+!CycleException methodsFor: 'as yet unclassified' stamp: 'DF 1/7/2022 19:52:47'!
+computeCallChain
+
+	| aContext |
+	
+	callChain _ OrderedCollection new.
+	
+	aContext _ thisContext.
+	
+	[aContext receiver == vertices second ] whileFalse:[
+		(aContext receiver isKindOf: GraphVertex) ifTrue:[
+			callChain add: aContext receiver key].
+		aContext _ aContext sender].
+	
+	callChain add: aContext receiver key.
+! !
+
+!CycleException methodsFor: 'as yet unclassified' stamp: 'DF 12/26/2021 15:07:00'!
+defaultAction
+
+	UnhandledError signalForException: self! !
+
+!CycleException methodsFor: 'as yet unclassified' stamp: 'DF 12/26/2021 14:50:30'!
+vertices
+	^vertices! !
+
+!CycleException methodsFor: 'as yet unclassified' stamp: 'DF 12/26/2021 14:50:26'!
+vertices: aCollection
+	vertices _ aCollection
+
+	! !
+
+!CycleException class methodsFor: 'as yet unclassified' stamp: 'DF 12/26/2021 14:50:05'!
+between: aGraphVertex and: anotherGraphVertex
+
+	| aCycleException |
+	
+	aCycleException _ self new.
+	
+	aCycleException vertices: { aGraphVertex . anotherGraphVertex }.
+	
+	^aCycleException! !
+
+!MissingAttribute methodsFor: 'as yet unclassified' stamp: 'DF 10/25/2020 08:55:43'!
+attribute: anAttribute
+	attribute := anAttribute! !
+
+!MissingAttribute methodsFor: 'as yet unclassified' stamp: 'DF 10/25/2020 08:56:00'!
+defaultAction
+
+	UnhandledError signalForException: self! !
+
+!MissingAttributeReference methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2020 11:23:58'!
+attributeName: aSymbol
+	attributeName := aSymbol! !
+
+!MissingAttributeReference methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2020 11:24:21'!
+defaultAction
+
+	UnhandledError signalForException: self! !
+
+!MissingAttributeReference methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2020 11:23:48'!
+nonTerminal: aNonTerminal
+	nonTerminal := aNonTerminal ! !
+
+!UndefinedSymbols methodsFor: 'as yet unclassified' stamp: 'DF 10/25/2020 16:23:00'!
+defaultAction
+
+	UnhandledError signalForException: self! !
+
+!UndefinedSymbols methodsFor: 'as yet unclassified' stamp: 'DF 10/25/2020 16:22:27'!
+symbols
+	^symbols! !
+
+!UndefinedSymbols methodsFor: 'as yet unclassified' stamp: 'DF 10/25/2020 16:22:15'!
+symbols: aCollection
+
+	symbols := aCollection
+	! !
+
+!XraySyntaxError methodsFor: 'as yet unclassified' stamp: 'DF 12/28/2021 15:08:02'!
+defaultAction
+
+	UnhandledError signalForException: self! !
+
+!XraySyntaxError methodsFor: 'as yet unclassified' stamp: 'DF 12/28/2021 16:03:38'!
+errorMessage
+	^errorMessage asText color:Color red; yourself! !
+
+!XraySyntaxError methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 21:29:49'!
+errorMessage: aText
+	errorMessage := aText
+	! !
+
+!XraySyntaxError methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 22:07:25'!
+initialize
+
+	super initialize.
+	
+	errorMessage := 'Syntax error ->' asText color:Color red; yourself! !
+
+!XraySyntaxError methodsFor: 'as yet unclassified' stamp: 'DF 11/1/2020 17:57:53'!
+position
+	^position! !
+
+!XraySyntaxError methodsFor: 'as yet unclassified' stamp: 'DF 11/1/2020 16:57:06'!
+position: anInteger
+	position := anInteger! !
+
+!XrayParseError methodsFor: 'as yet unclassified' stamp: 'DF 11/6/2020 17:14:27'!
+errorMessage
+
+	^ ('Syntax error, expecting:', 
+	
+	((expectedSymbols collect:[:each | ' ' , each name ]) fold:[:x :y | x,y ] ifEmpty:['']) , 
+	
+	' ->') asText color:Color red; yourself! !
+
+!XrayParseError methodsFor: 'as yet unclassified' stamp: 'DF 11/6/2020 17:04:17'!
+expectedSymbols: aCollection
+	expectedSymbols := aCollection! !
+
+!DuplicateRulesError methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 21:32:23'!
+errorMessage
+	^'A rule like that exists but is not currently visible ->' asText color: Color red; yourself! !
+
+!DuplicateRulesError methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 21:33:17'!
+position
+	^rules anyOne headerStart! !
+
+!DuplicateRulesError methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 15:12:29'!
+rules
+	^rules! !
+
+!DuplicateRulesError methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 15:04:47'!
+rules: aCollection
+
+	rules := aCollection! !
+
+!XrayPluggableTextModel methodsFor: 'as yet unclassified' stamp: 'DF 11/18/2023 22:46:04'!
+refreshParser
+
+	textProvider refreshParser ! !
+
+!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:26:57'!
+astList
+	
+	^{ ASTExplorerWrapper with:root  }
+	! !
+
+!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 11/16/2020 11:11:18'!
+attrsList
+
+	selectionAttrs ifNil:[^{}].
+	
+	^selectionAttrs collect:[:each | each key , ' = ' , (each value ifNil:[''] ifNotNil:[each value asString]) ]
+! !
+
+!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:56:58'!
+currentAttribute
+
+	attrsListSelection ifNil:[^nil].
+
+	(attrsListSelection = 0) ifTrue:[^nil].
+	
+	^ selectionAttrs at: attrsListSelection ! !
+
+!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:45:29'!
+getListSelection
+
+	attrsListSelection ifNil:[^0].
+	
+	^attrsListSelection! !
+
+!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:41:01'!
+noteNewListSelection: x
+
+	attrsListSelection := x.
+	! !
+
+!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 11/11/2020 22:56:44'!
+noteNewSelection: x
+
+	currentSelection _ x.
+	
+	selectionAttrs := 
+		currentSelection 
+			ifNil:[{}] 
+			ifNotNil:[currentSelection attributes ].
+
+	self changed: #attrsList.
+	
+	currentSelection ifNil: [^self].
+	currentSelection sendSettingMessageTo: self.
+! !
+
+!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/8/2020 13:24:27'!
+root
+	^root! !
+
+!ASTExplorer methodsFor: 'as yet unclassified' stamp: 'DF 10/8/2020 13:24:23'!
+root: aNonTerminal
+	root := aNonTerminal! !
+
+!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 20:03:29'!
+astMenu
+	"Borrow a menu from my inspector"
+	
+	| aMenu |
+	aMenu _ MenuMorph new defaultTarget: self.
+	model getCurrentSelection
+		ifNil: [
+			aMenu
+				add: '*nothing selected*'
+				target: self
+				action: #yourself]
+		ifNotNil: [
+			aMenu
+				addItemsFromDictionaries: `{
+					{
+						#label 			-> 		'inspect (i)'.
+						#selector 		-> 		#inspectSelection.
+						#icon 			-> 		#inspectIcon
+					} asDictionary.
+					{
+						#label 			-> 		'explore (I)'.
+						#selector 		-> 		#exploreSelection.
+						#icon 			-> 		#exploreIcon
+					} asDictionary.
+					{
+						#label 			-> 		'basic inspect'.
+						#selector 		-> 		#inspectBasic.
+						#icon 			-> 		#inspectIcon
+					} asDictionary.
+				}`.
+		].
+	
+	^ aMenu! !
+
+!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 9/7/2024 14:43:20'!
+buildMorphicWindow
+
+	| treeMorph attrsMorph row |
+	
+	treeMorph := HierarchicalListMorph new
+			model: model
+			listGetter: #astList
+			indexGetter: #getCurrentSelection
+			indexSetter:  #noteNewSelection:
+			:: menuNshortcutsKey:  #astMenu.
+			
+	
+	attrsMorph := PluggableListMorph new
+			model: model 
+			listGetter: #attrsList
+			indexGetter: #getListSelection
+			indexSetter: #noteNewListSelection:
+			:: menuNshortcutsKey:  #listMenu.
+
+	row := LayoutMorph newRow.
+	
+	row
+		addMorph: treeMorph proportionalWidth: 0.4 ;
+		addMorph: attrsMorph proportionalWidth: 0.6.
+	
+	self layoutMorph
+		addMorph: row.
+		
+	self setLabel: 'X-ray AST Explorer: ', model root name.! !
+
+!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/9/2020 13:01:27'!
+exploreSelection
+	"Create and schedule an Explorer on the receiver's model's currently selected object."
+
+	^ model getCurrentSelection item explore! !
+
+!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/8/2020 14:38:26'!
+initialExtent
+
+	^`600@325` * Preferences standardCodeFont lineSpacing // 14! !
+
+!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:58:49'!
+inspectAttributeSelection
+
+	"Create and schedule an Inspector on the receiver's model's currently selected attribute."
+
+	model currentAttribute ifNil:[^self].
+	
+	^model currentAttribute value inspect! !
+
+!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 20:01:41'!
+inspectBasic
+	"Create and schedule a basic Inspector on the receiver's model's currently selected object."
+
+	^ model getCurrentSelection item basicInspect! !
+
+!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 20:01:32'!
+inspectSelection
+	"Create and schedule an Inspector on the receiver's model's currently selected object."
+
+	^ model getCurrentSelection item inspect! !
+
+!ASTExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/11/2020 21:36:23'!
+listMenu
+	"Borrow a menu from my inspector"
+	
+	| aMenu |
+	aMenu _ MenuMorph new defaultTarget: self.
+	model getCurrentSelection
+		ifNil: [
+			aMenu
+				add: '*nothing selected*'
+				target: self
+				action: #yourself]
+		ifNotNil: [
+			aMenu
+				addItemsFromDictionaries: `{
+					{
+						#label 			-> 		'inspect (i)'.
+						#selector 		-> 		#inspectAttributeSelection.
+						#icon 			-> 		#inspectIcon
+					} asDictionary
+				}`.
+		].
+	
+	^ aMenu! !
+
+!ConflictExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 09:52:34'!
+buildMorphicWindow
+
+	| leftMorph rightMorph trees state  |
+	
+	leftMorph _ HierarchicalListMorph
+			model: model
+			listGetter: #leftList
+			indexGetter: nil
+			indexSetter:  nil
+			mainView: self
+			menuGetter: nil
+			keystrokeAction: nil.
+
+	rightMorph _ HierarchicalListMorph
+			model: model
+			listGetter: #rightList
+			indexGetter: nil
+			indexSetter:  nil
+			mainView: self
+			menuGetter: nil
+			keystrokeAction: nil.
+
+	state _ TextModelMorph
+			textProvider: model
+			textGetter: #stateDescription 
+			textSetter: nil
+			selectionGetter: nil.
+	
+	trees _ LayoutMorph newRow.
+
+	trees 	addMorph: leftMorph proportionalWidth: 0.5 ;
+		addMorph: rightMorph proportionalWidth: 0.5.
+		
+	self layoutMorph
+		addMorph: trees proportionalHeight: 0.7 ;
+		addMorph: state proportionalHeight: 0.3.
+			! !
+
+!ConflictExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 14:58:29'!
+initialExtent
+
+	^`600@325` * Preferences standardCodeFont lineSpacing // 14! !
+
+!ConflictExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 10:09:52'!
+windowColor
+	^ Color r: 0.700 g: 0.280 b: 0.280! !
+
+!XrayLanguageExplorerWindow methodsFor: 'menu' stamp: 'DF 9/6/2024 22:14:19'!
+languageMenuSpec
+
+	^# (
+		#(0 		'Languages' 					false)
+		
+		#(10 		'add language... (a)'			 $a model addLanguage nil 'add a new language')
+		#(20 		'rename ... (r)' $r model renameLanguage nil 'rename the selected language')
+		#(30 'remove'  nil model removeLanguage nil 'remove the selected language')
+		#(40 		'-----')
+		#(50 'file out (f)' $f model fileOutLanguage nil 'write the language to an external file')
+		#(60 		'-----')
+		#(70 'inspect (i)' $i model inspectLanguage nil 		'open an inspector on the selected language')
+		#(80 'test (t)'$t model testLanguage nil 'open an X-ray test window on the selected language')
+	)! !
+
+!XrayLanguageExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 9/6/2024 21:48:28'!
+buildMorphicWindow
+
+	| categoriesMorph contentMorph languagesMorph upperRow topicsMorph aspectsMorph |
+	
+	languagesMorph := PluggableListMorph new
+		model: model
+		listGetter: #languages
+		indexGetter: #selectedLanguageIndex
+		indexSetter: #selectLanguage: 
+		
+		:: menuNshortcutsKey: #languageMenuSpec.
+		
+	categoriesMorph := PluggableListMorphOfMany new
+			model: model 
+			listGetter: #categories
+			primarySelectionGetter: nil
+			primarySelectionSetter: nil
+			listSelectionGetter: #isCategorySelected:
+			listSelectionSetter: #selectCategory:if:.
+
+	topicsMorph := PluggableListMorphOfMany new
+			model: model 
+			listGetter: #topics
+			primarySelectionGetter: nil
+			primarySelectionSetter: nil
+			listSelectionGetter: #isTopicSelected:
+			listSelectionSetter: #selectTopic:if:.
+
+	aspectsMorph := PluggableListMorphOfMany new
+			model: model 
+			listGetter: #aspects
+			primarySelectionGetter: nil
+			primarySelectionSetter: nil
+			listSelectionGetter: #isAspectSelected:
+			listSelectionSetter: #selectAspect:if:.
+	
+	contentMorph := TextModelMorph 
+					textProvider: model
+					textGetter: #acceptedContents 
+					textSetter: #acceptContents:
+					selectionGetter: #selectedText.
+	
+	model errorPresentor: contentMorph.
+	
+	upperRow := LayoutMorph newRow.
+	
+	upperRow
+		addMorph: languagesMorph proportionalWidth: 0.25; 
+		addAdjusterAndMorph: categoriesMorph proportionalWidth: 0.25;
+		addAdjusterAndMorph: topicsMorph proportionalWidth: 0.25;
+		addAdjusterAndMorph: aspectsMorph proportionalWidth: 0.25.
+
+	self layoutMorph
+		addMorph: upperRow proportionalHeight: 0.3; 
+		addAdjusterAndMorph: contentMorph proportionalHeight: 0.7.
+		
+	self setLabel: 'X-ray Language Browser'! !
+
+!XrayLanguageExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/4/2020 10:25:19'!
+windowColor
+	^ Color r:65.0/100 g:68.2/100 b:38.4/100! !
+
+!XrayLanguageExplorerWindow class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2020 13:53:55'!
+openBrowser
+	
+	| anXrayLanguageExplorerModel |
+	
+	anXrayLanguageExplorerModel := XrayLanguageExplorerModel new.
+	
+	self open: anXrayLanguageExplorerModel ! !
+
+!XrayLanguageExplorerWindow class methodsFor: 'as yet unclassified' stamp: 'DF 11/17/2023 20:21:12'!
+worldMenuOptions
+
+	^ `{{
+			#itemGroup 		-> 		10.
+			#itemOrder 		-> 		35.
+			#label 			->	'X-ray Browser'.
+			#object 			->	XrayLanguageExplorerWindow.
+			#selector 		-> 		#openBrowser.
+			#icon 			-> 	#editFindReplaceIcon.
+			#balloonText 	-> 		'An X-ray grammar browser for editing and generating LR parsers'.
+		} asDictionary}`! !
+
+!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 9/7/2024 14:41:06'!
+astMenu
+	"Borrow a menu from my inspector"
+	
+	^model getASTSelection
+		ifNil: [
+			#( #(0 '*nothing selected*' nil self yourself))
+		]
+		ifNotNil: [
+			#(
+				#(10 'xray (x)' $x model xrayASTSelection inspectIcon)
+				#(20 'inspect (i)' $i model inspectASTSelection inspectIcon)
+				#(30 'explore (e)' $e model exploreASTSelection exploreIcon)
+			)
+		]
+! !
+
+!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 9/7/2024 14:45:31'!
+attrMenu
+	"Borrow a menu from my inspector"
+	
+	^model getASTSelection
+		ifNil: [
+			#( #(0 '*nothing selected*' nil self yourself))
+		]
+		ifNotNil: [
+			#(
+				#(10 'inspect (i)' $i model inspectAttrSelection inspectIcon)
+				#(20 'explore (e)' $e model exploreAttrSelection exploreIcon)
+			)
+		].
+! !
+
+!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 9/6/2024 22:10:18'!
+buildMorphicWindow
+
+	| textModel textMorph stackMorph astMorph attrsListMorph attrContentsMorph attrsLayoutMorph row ast |
+			
+	textModel := XrayPluggableTextModel on: model.
+	textModel textGetter: #acceptedText textSetter: #acceptText: selectionGetter: #selectedText.
+	
+	model addDependent: textModel.	
+	
+	textMorph := TextModelMorph withModel: textModel.
+					
+	stackMorph := PluggableListMorph new
+		model: model
+		listGetter: #stack
+		indexGetter: #selectedSymbol
+		indexSetter: #selectSymbol:.
+
+	astMorph := HierarchicalListMorph new
+			model: model
+			listGetter: #ast
+			indexGetter: #getASTSelection
+			indexSetter:  #noteASTSelection:
+			:: menuNshortcutsKey: #astMenu.
+
+	attrsListMorph := PluggableListMorph new
+			model: model 
+			listGetter: #attrs
+			indexGetter: #getAttrSelection
+			indexSetter: #noteAttrSelection:
+			:: menuNshortcutsKey: #attrMenu.
+			
+	attrContentsMorph := TextModelMorph
+			textProvider: model
+			textGetter: #attrContents 
+			textSetter: nil
+			selectionGetter: nil.
+
+	attrsLayoutMorph := LayoutMorph newRow.
+	attrsLayoutMorph
+		addMorph: attrsListMorph proportionalWidth: 0.3;
+		addAdjusterAndMorph: attrContentsMorph proportionalWidth: 0.7.
+
+	ast := LayoutMorph newColumn.
+	
+	ast addMorph: astMorph proportionalHeight: 0.6; 
+	     addAdjusterAndMorph: attrsLayoutMorph proportionalHeight: 0.4.
+	
+	row := LayoutMorph newRow.
+	
+	row
+		addMorph: textMorph proportionalWidth: 0.5; 
+		addAdjusterAndMorph: stackMorph proportionalWidth: 0.2;
+		addAdjusterAndMorph: ast proportionalWidth: 0.3.
+
+	self layoutMorph
+		addMorph: row proportionalHeight: 1.
+		
+	self setLabel: 'X-ray Parser Tester: ' , model languageName.! !
+
+!XrayParserTestWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 10:22:28'!
+windowColor
+	^ Color r:65.0/100 g:68.2/100 b:38.4/100! !
+
+!XrayEditor methodsFor: 'as yet unclassified' stamp: 'DF 11/3/2020 15:28:45'!
+notify: aString at: anInteger in: aStream 
+
+	"The compilation of text failed. The syntax error is noted as the argument, 
+	aString. Insert it in the text at starting character position anInteger."
+	"This is a user command, and generates undo"
+	model startNewUndoRedoCommand.
+	self insertAndSelect: aString at: (anInteger max: 1).
+	
+! !
+
+!XrayTestEditor methodsFor: 'as yet unclassified' stamp: 'DF 9/7/2024 15:00:04'!
+defaultMenuSpec
+
+	| menuSpec |
+	
+	menuSpec :=  super defaultMenuSpec.
+	
+	^ menuSpec , #(
+	
+		#(700 '-----' )
+		(710 	'Refresh parser' nil 	editor refreshParser nil 		'use this to refresh the parser after changes to the grammar') 	) 
+! !
+
+!XrayTestEditor methodsFor: 'as yet unclassified' stamp: 'DF 9/7/2024 15:01:03'!
+refreshParser
+	model refreshParser ! !
+
+!ASTExplorerWrapper methodsFor: 'as yet unclassified' stamp: 'DF 10/15/2020 15:03:15'!
+asString
+	^item name! !
+
+!ASTExplorerWrapper methodsFor: 'as yet unclassified' stamp: 'DF 1/3/2022 18:57:12'!
+attributes
+
+	item attributes ifNil:[^{}].
+	
+	^item attributes associations collect:[:each | each key -> each value value ]! !
+
+!ASTExplorerWrapper methodsFor: 'as yet unclassified' stamp: 'DF 10/8/2020 14:08:58'!
+contents
+
+	^ item children collect:[:each | self class with:each ]
+	! !
+
+!ASTExplorerWrapper methodsFor: 'as yet unclassified' stamp: 'DF 10/8/2020 14:08:33'!
+hasContents
+	^item children notEmpty! !
 
 !ReduceAction methodsFor: 'as yet unclassified' stamp: 'DF 10/4/2020 20:43:50'!
 performOn: anXrayParser
@@ -8927,7 +8804,7 @@ action: aBlock forPattern: aTerminal
 initialize
 	actions := OrderedCollection new! !
 
-!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/15/2020 18:22:53'!
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 9/7/2024 14:08:51'!
 nextTerminal
 
 	| current longest matches s |
@@ -10381,7 +10258,7 @@ selectTopics: aCollection
 	selectedTopics := aCollection collect:[:each | allTopicNames indexOf: each].
 	! !
 
-!XrayLanguageExplorerModel methodsFor: 'updating' stamp: 'DF 11/17/2023 21:59:11'!
+!XrayLanguageExplorerModel methodsFor: 'updating' stamp: 'DF 9/7/2024 13:52:02'!
 updateContents
 
 	| aWriteStream cs |
@@ -10394,9 +10271,7 @@ updateContents
 	
 	(Language at: selectedLanguageName) writeCategories: cs topics: (self visibleTopicNames) aspects: (self visibleAspectNames) on: aWriteStream.
 	
-	aWriteStream contents string isAscii ifFalse:[self error: 'Unicode Grammars are currently not supported'].
-	
-	contents := aWriteStream contents string asByteString.
+	contents := aWriteStream contents string.
 	
 	self changed: #acceptedContents
 	! !
@@ -10428,16 +10303,12 @@ visibleTopicNames
 	
 	^ selectedTopics collect:[:eachIndex | eachIndex > 0 and: [allTopicNames at: eachIndex ] ]! !
 
-!XrayLanguageExplorerModel methodsFor: 'view interface' stamp: 'DF 11/17/2023 22:05:40'!
+!XrayLanguageExplorerModel methodsFor: 'view interface' stamp: 'DF 9/7/2024 13:45:40'!
 acceptContents: aText
 
 	| language  aString |
 
 	aString := aText string.
-
-	aString isAscii ifFalse:[self error: 'Unicode grammars are currently not supported.'].
-	
-	aString := aString asByteString.
 	
 	language := Language at: selectedLanguageName.
 	
@@ -10885,38 +10756,41 @@ stack
 	^stack collect:[:each | each name ]
 	! !
 
+!XrayParserTestModel methodsFor: 'menu' stamp: 'DF 9/7/2024 14:39:33'!
+exploreASTSelection
+	"Create and schedule an Explorer on the receiver's model's currently selected object."
+
+	^ self getASTSelection item explore! !
+
+!XrayParserTestModel methodsFor: 'menu' stamp: 'DF 9/7/2024 14:39:43'!
+exploreAttrSelection
+	"Create and schedule an Explorer on the receiver's model's currently selected object."
+
+	^ self attrObject explore! !
+
+!XrayParserTestModel methodsFor: 'menu' stamp: 'DF 9/7/2024 14:39:55'!
+inspectASTSelection
+	"Create and schedule an Inspector on the receiver's model's currently selected object."
+
+	^ self getASTSelection item inspect! !
+
+!XrayParserTestModel methodsFor: 'menu' stamp: 'DF 9/7/2024 14:40:06'!
+inspectAttrSelection
+	"Create and schedule an Inspector on the receiver's model's currently selected object."
+
+	^ self attrObject inspect! !
+
+!XrayParserTestModel methodsFor: 'menu' stamp: 'DF 9/7/2024 14:40:42'!
+xrayASTSelection
+	"Create and schedule an Xray Explorer on the receiver's model's currently selected object."
+
+	^ self getASTSelection item xray! !
+
 !Object methodsFor: '*Xray' stamp: 'DF 5/13/2021 11:13:10'!
 promoteTo: aCollectionClass
 	"wrap an object in a collection if it is not already a collection"
 
 	^ self class == aCollectionClass ifTrue: [self] ifFalse: [{ self } as: aCollectionClass ]! !
-
-!Character methodsFor: '*Xray' stamp: 'DF 10/10/2020 14:00:29'!
-isDoubleQuote
-	^ self = $".! !
-
-!Character class methodsFor: '*Xray' stamp: 'DF 10/10/2020 20:21:04'!
-star
-	^$*! !
-
-!BlockClosure methodsFor: '*Xray' stamp: 'DF 10/27/2020 14:18:34'!
-fixedPoint: fi
-
-	| f fn |
-	
-	f := fi.
-	fn := f copy.
-	
-	self value: f value: fn.
-	
-	[fn = f] whileFalse:[
-		f := fn.
-		fn := f copy.
-		self value: f value:fn
-	].
-
-	^f
-	! !
 
 !Collection methodsFor: '*Xray' stamp: 'DF 10/5/2020 12:25:27'!
 maxMember: aBlock
@@ -10988,7 +10862,7 @@ reversePairsCollect: aBlock
 	[:a :b | b, ' is number ', a printString]
 "! !
 
-!String methodsFor: '*Xray' stamp: 'DF 11/18/2023 13:42:22'!
+!CharacterSequence methodsFor: '*Xray' stamp: 'DF 9/7/2024 13:55:20'!
 asXrayAttributeName
 
 	"ensure that this string represents a valid Smalltalk variable name"
@@ -11008,7 +10882,7 @@ asXrayAttributeName
 
 	! !
 
-!String methodsFor: '*Xray' stamp: 'DF 11/18/2023 13:42:15'!
+!CharacterSequence methodsFor: '*Xray' stamp: 'DF 9/7/2024 13:54:57'!
 escape: aString with: anEscapeString
 
 	"escape each character in the receiver that is a member of aString with anEscapeString.
@@ -11027,7 +10901,7 @@ escape: aString with: anEscapeString
 	^ aWriteStream contents
 	! !
 
-!String methodsFor: '*Xray' stamp: 'DF 11/18/2023 13:42:30'!
+!CharacterSequence methodsFor: '*Xray' stamp: 'DF 9/7/2024 13:55:26'!
 replaceSpecialCharacters: aChar into: aWriteStream
 
 		aChar = $+ 
@@ -11044,6 +10918,15 @@ replaceSpecialCharacters: aChar into: aWriteStream
 @ aNonTerminal
 
 	^ aNonTerminal at: self! !
+
+!Set methodsFor: '*Xray' stamp: 'DF 9/7/2024 15:32:07'!
+difference: aSet
+
+	"answer a set that contains all the elements that appear in self but not in aSet"
+	
+	^ self reject:[:each | aSet includes: each ].
+	
+	! !
 
 !Set methodsFor: '*Xray' stamp: 'DF 10/28/2020 12:46:46'!
 flatten
@@ -11081,6 +10964,33 @@ invert
 	self associations do:[:each | aDictionary at: each value put: each key ].
 	
 	^aDictionary! !
+
+!BlockClosure methodsFor: '*Xray' stamp: 'DF 10/27/2020 14:18:34'!
+fixedPoint: fi
+
+	| f fn |
+	
+	f := fi.
+	fn := f copy.
+	
+	self value: f value: fn.
+	
+	[fn = f] whileFalse:[
+		f := fn.
+		fn := f copy.
+		self value: f value:fn
+	].
+
+	^f
+	! !
+
+!Character methodsFor: '*Xray' stamp: 'DF 10/10/2020 14:00:29'!
+isDoubleQuote
+	^ self = $".! !
+
+!Character class methodsFor: '*Xray' stamp: 'DF 10/10/2020 20:21:04'!
+star
+	^$*! !
 ParserState initialize!
 Terminal initialize!
 SemanticRule initialize!
