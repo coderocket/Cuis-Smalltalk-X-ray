@@ -1,6 +1,6 @@
-'From Cuis7.1 [latest update: #6676] on 7 September 2024 at 3:40:52 pm'!
+'From Cuis7.1 [latest update: #6676] on 9 September 2024 at 6:16:58 pm'!
 'Description '!
-!provides: 'Xray' 1 21!
+!provides: 'Xray' 1 22!
 !requires: 'Erudite' 1 240 nil!
 !requires: 'Regex-Core' 1 6 nil!
 !requires: 'Automata' 1 20 nil!
@@ -10987,6 +10987,10 @@ fixedPoint: fi
 !Character methodsFor: '*Xray' stamp: 'DF 10/10/2020 14:00:29'!
 isDoubleQuote
 	^ self = $".! !
+
+!Character methodsFor: '*Xray' stamp: 'DF 9/9/2024 18:16:25'!
+isNewLine
+	^ self = Character lf.! !
 
 !Character class methodsFor: '*Xray' stamp: 'DF 10/10/2020 20:21:04'!
 star
