@@ -1,6 +1,6 @@
-'From Cuis7.1 [latest update: #6676] on 9 September 2024 at 6:16:58 pm'!
+'From Cuis7.1 [latest update: #6676] on 6 October 2024 at 6:22:07 pm'!
 'Description '!
-!provides: 'Xray' 1 22!
+!provides: 'Xray' 1 26!
 !requires: 'Erudite' 1 240 nil!
 !requires: 'Regex-Core' 1 6 nil!
 !requires: 'Automata' 1 20 nil!
@@ -670,7 +670,7 @@ SemanticAspect class
 
 !classDefinition: #XrayLanguageExplorerModel category: #'Xray-Browser'!
 Object subclass: #XrayLanguageExplorerModel
-	instanceVariableNames: 'categories selectedLanguageIndex selectedCategories selectedTopics selectedAspects contents selectedTextInterval errorPresentor selectedLanguageName'
+	instanceVariableNames: 'categories selectedLanguageIndex selectedCategories selectedTopics selectedAspects contents selectedTextInterval errorPresentor selectedLanguageName workingDirectory'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Xray-Browser'!
@@ -2906,36 +2906,30 @@ listMenu
 	
 	^ aMenu! !
 
-!ConflictExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 11/12/2020 09:52:34'!
+!ConflictExplorerWindow methodsFor: 'as yet unclassified' stamp: 'DF 9/15/2024 22:36:26'!
 buildMorphicWindow
 
 	| leftMorph rightMorph trees state  |
 	
-	leftMorph _ HierarchicalListMorph
-			model: model
+	leftMorph := HierarchicalListMorph
+			withModel: model
 			listGetter: #leftList
 			indexGetter: nil
-			indexSetter:  nil
-			mainView: self
-			menuGetter: nil
-			keystrokeAction: nil.
-
-	rightMorph _ HierarchicalListMorph
-			model: model
+			indexSetter:  nil.
+			
+	rightMorph := HierarchicalListMorph
+			withModel: model
 			listGetter: #rightList
 			indexGetter: nil
-			indexSetter:  nil
-			mainView: self
-			menuGetter: nil
-			keystrokeAction: nil.
+			indexSetter:  nil.
 
-	state _ TextModelMorph
+	state := TextModelMorph
 			textProvider: model
 			textGetter: #stateDescription 
 			textSetter: nil
 			selectionGetter: nil.
 	
-	trees _ LayoutMorph newRow.
+	trees := LayoutMorph newRow.
 
 	trees 	addMorph: leftMorph proportionalWidth: 0.5 ;
 		addMorph: rightMorph proportionalWidth: 0.5.
@@ -2954,7 +2948,7 @@ initialExtent
 windowColor
 	^ Color r: 0.700 g: 0.280 b: 0.280! !
 
-!XrayLanguageExplorerWindow methodsFor: 'menu' stamp: 'DF 9/6/2024 22:14:19'!
+!XrayLanguageExplorerWindow methodsFor: 'menu' stamp: 'DF 10/6/2024 18:04:59'!
 languageMenuSpec
 
 	^# (
@@ -2965,6 +2959,7 @@ languageMenuSpec
 		#(30 'remove'  nil model removeLanguage nil 'remove the selected language')
 		#(40 		'-----')
 		#(50 'file out (f)' $f model fileOutLanguage nil 'write the language to an external file')
+		#(55 'set working directory ... (w)' $f model setWorkingDirectory nil 'set the directory into which languages will file out')
 		#(60 		'-----')
 		#(70 'inspect (i)' $i model inspectLanguage nil 		'open an inspector on the selected language')
 		#(80 'test (t)'$t model testLanguage nil 'open an X-ray test window on the selected language')
@@ -9201,8 +9196,8 @@ test: aString
 	on: ConflictExplorer do:[: aConflictExplorer | aConflictExplorer open].
 ! !
 
-!Language methodsFor: 'file out' stamp: 'DF 11/17/2020 15:57:25'!
-fileOut
+!Language methodsFor: 'file out' stamp: 'DF 10/6/2024 18:13:57'!
+fileOutTo: aDirectory
 
 	| aFileEntry aWriteStream aString |
 	
@@ -9224,7 +9219,7 @@ fileOut
 
 	aString := self name, '.xray'.
 	
-	aFileEntry := FileEntry withPathName: aString.
+	aFileEntry := aDirectory // aString.
 
 	aFileEntry fileContents: aWriteStream contents.
 		
@@ -10157,7 +10152,7 @@ isCategorySelected: anInteger
 isTopicSelected: anInteger
 	^selectedTopics includes: anInteger! !
 
-!XrayLanguageExplorerModel methodsFor: 'initialization' stamp: 'DF 11/17/2020 15:22:16'!
+!XrayLanguageExplorerModel methodsFor: 'initialization' stamp: 'DF 10/6/2024 18:11:51'!
 initialize
 
 	contents := ''.
@@ -10172,7 +10167,9 @@ initialize
 	
 	selectedAspects := Set new.
 
-	selectedTextInterval := 1 to:0.! !
+	selectedTextInterval := 1 to:0.
+	
+	workingDirectory := DirectoryEntry currentDirectory.! !
 
 !XrayLanguageExplorerModel methodsFor: 'updating' stamp: 'DF 4/28/2022 18:05:59'!
 merge: aLanguage with: aNewLanguage
@@ -10488,7 +10485,7 @@ addLanguage
 				Language add: (Language new name: aString; yourself).
 				self changed: #languages ]! !
 
-!XrayLanguageExplorerModel methodsFor: 'menu operations' stamp: 'DF 11/17/2020 15:56:48'!
+!XrayLanguageExplorerModel methodsFor: 'menu operations' stamp: 'DF 10/6/2024 18:07:52'!
 fileOutLanguage
 	
 	| aLanguage |
@@ -10497,7 +10494,7 @@ fileOutLanguage
 	
 	aLanguage := Language at: selectedLanguageName.
 	
-	aLanguage fileOut! !
+	aLanguage fileOutTo: workingDirectory ! !
 
 !XrayLanguageExplorerModel methodsFor: 'menu operations' stamp: 'DF 11/20/2020 19:36:46'!
 inspectLanguage
@@ -10554,6 +10551,17 @@ renameLanguage
 				selectedLanguageName _ aString.
 				self changed: #languages ]! !
 
+!XrayLanguageExplorerModel methodsFor: 'menu operations' stamp: 'DF 10/6/2024 18:21:52'!
+setWorkingDirectory
+
+	StringRequestMorph 
+		request: 'Working directory'
+		initialAnswer: workingDirectory asString
+		verifying: [:aString |
+			aString notEmpty and:[ aString asDirectoryEntry isDirectory] ] 
+		do: [ :aString | 
+			workingDirectory := aString asDirectoryEntry ]! !
+
 !XrayLanguageExplorerModel methodsFor: 'menu operations' stamp: 'DF 11/18/2023 21:22:51'!
 testLanguage
 	
@@ -10567,7 +10575,7 @@ testLanguage
 
 ! !
 
-!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/24/2023 15:45:39'!
+!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 9/26/2024 17:31:21'!
 acceptText: aText
 	
 	text := aText.
@@ -10584,6 +10592,7 @@ acceptText: aText
 			ifNotEmpty:[text addAttribute: TextColor red from: outcome second first start + 1 to: text size ].
 		 ]
 	on: XraySyntaxError do:[:anXraySyntaxError | 
+		
 		text addAttribute: TextColor red from: anXraySyntaxError position + 1 to: text size ].
 	
 	self changed:#stack ; changed:#ast ; changed: #attrs ; changed: #attrContents .
@@ -10691,18 +10700,18 @@ languageName
 languageName: aString
 	languageName := aString! !
 
-!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 11/21/2023 22:29:09'!
+!XrayParserTestModel methodsFor: 'as yet unclassified' stamp: 'DF 9/17/2024 21:49:46'!
 noteASTSelection: anASTExplorerWrapper
 
 	selectedASTSymbol 
 		ifNotNil:[ 
-			text removeAttributes: { TextBackgroundColor yellow } from: selectedASTSymbol item start + 1 to: (self endPositionOf: selectedASTSymbol item) ].
+			text removeAttributes: { TextBackgroundColor color: (Color fromHexString:'#FFFF83') } from: selectedASTSymbol item start + 1 to: (self endPositionOf: selectedASTSymbol item) ].
 
 	selectedASTSymbol := anASTExplorerWrapper.
 
 	selectedASTSymbol 
 		ifNotNil:[ 
-			text addAttribute:TextBackgroundColor yellow from: selectedASTSymbol item start + 1 to: (self endPositionOf: selectedASTSymbol item) .
+			text addAttribute: (TextBackgroundColor color: (Color fromHexString:'#FFFF83')) from: selectedASTSymbol item start + 1 to: (self endPositionOf: selectedASTSymbol item) .
 			selectedTextInterval := selectedASTSymbol item start + 1 to: (self endPositionOf: selectedASTSymbol item) 	].
 		
 	selectedAttrIndex := nil.
