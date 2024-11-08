@@ -1,6 +1,6 @@
-'From Cuis7.1 [latest update: #6676] on 6 October 2024 at 6:22:07 pm'!
+'From Cuis7.1 [latest update: #6676] on 8 November 2024 at 1:35:29 pm'!
 'Description '!
-!provides: 'Xray' 1 26!
+!provides: 'Xray' 1 36!
 !requires: 'Erudite' 1 240 nil!
 !requires: 'Regex-Core' 1 6 nil!
 !requires: 'Automata' 1 20 nil!
@@ -560,7 +560,7 @@ XrayParserGenerator class
 
 !classDefinition: #XrayScanner category: #Xray!
 Object subclass: #XrayScanner
-	instanceVariableNames: 'actions stream'
+	instanceVariableNames: 'actions streams'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Xray'!
@@ -4341,10 +4341,12 @@ initialize
 	
 	Annotations _ { $* . $+ . $? } asSet.! !
 
-!Terminal class methodsFor: 'as yet unclassified' stamp: 'DF 10/8/2020 20:36:29'!
+!Terminal class methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 12:17:49'!
 messageAction: aSymbol
 
-	^[:s :scanner | scanner perform: aSymbol ] 
+	^aSymbol isValidKeywordSelector 
+		ifTrue:[ [:s :scanner | scanner perform: aSymbol with:s ]  ]
+		ifFalse:[ [:s :scanner | scanner perform: aSymbol ] ]
 	! !
 
 !Terminal class methodsFor: 'as yet unclassified' stamp: 'DF 10/30/2020 14:44:55'!
@@ -8337,13 +8339,15 @@ reduce: aRule
 	self push: p.
 	self push: (goto at:{current . aRule left}).! !
 
-!XrayParser methodsFor: 'private' stamp: 'DF 12/31/2021 15:50:21'!
+!XrayParser methodsFor: 'private' stamp: 'DF 11/8/2024 13:24:40'!
 scan: aString
 	
 	| aReadStream t |
 	
 	aReadStream := ReadStream on: aString.
-
+	
+	scanner reset.
+	
 	scanner stream: aReadStream.
 
 	input := OrderedCollection new.
@@ -8782,6 +8786,29 @@ newParserFor: aString
 
 ! !
 
+!XrayParserGenerator class methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 12:56:40'!
+newParserFor: aString withScanner: aScanner
+
+	| result ast aGrammar aParser |
+
+	result := XrayLanguageParser parse: aString.
+	
+	(result at:2) ifNotEmpty:[^ result ].
+	
+	ast := result first second.
+	
+	aGrammar := Grammar symbolTable: (ast at:#symtab) rules: (ast at:#rules).
+	
+	aScanner patterns:(ast at:#patterns).
+
+	aParser := aGrammar parser. 
+
+	aParser scanner: aScanner.
+	
+	^aParser
+
+! !
+
 !XrayParserGenerator class methodsFor: 'as yet unclassified' stamp: 'DF 1/5/2022 15:31:05'!
 xraySmalltalkParser 
 	^XraySmallTalkParser ! !
@@ -8795,39 +8822,68 @@ action: aBlock forPattern: aTerminal
 
 	! !
 
-!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 10/7/2020 16:29:12'!
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 11:06:06'!
 initialize
-	actions := OrderedCollection new! !
 
-!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 9/7/2024 14:08:51'!
+	actions := OrderedCollection new.
+	
+	streams := OrderedCollection new.! !
+
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 12:52:47'!
+load: aString
+
+	"loading a stream into the stream stack is language specific"
+	
+	self subclassResponsibility ! !
+
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 13:32:32'!
 nextTerminal
 
-	| current longest matches s |
+	| top current longest matches s |
 	
-	stream atEnd ifTrue:[^EOF new start: stream position; end: stream position; yourself].
+	top := streams first.
 	
-	"select all the regexs that match a prefix of stream and create a terminal from the longest match".
+	top atEnd ifTrue:[
+		streams size = 1 
+			ifTrue:[	 ^EOF new start: top position; end: top position; yourself]
+			ifFalse:[ top close. streams removeFirst. ^self nextTerminal ] ].
 	
-	current := stream position.
+	"select all the regexps that match a prefix of the top stream and create a terminal from the longest match".
 	
-	matches := actions collect:[:each | | len | each key matchesStreamPrefix: stream. len := stream position - current. stream position: current. len -> each value ].
+	current := top position.
+	
+	matches := actions collect:[:each | | len | each key matchesStreamPrefix: top. len := top position - current. top position: current. len -> each value ].
 	
 	longest := matches maxMember:[:each | each key].
 	
-	s := stream next: longest key.
+	s := top next: longest key.
 	
 	(longest key = 0) ifTrue:[XraySyntaxError new position: current ; signal ].
 	
 	^longest value value: s value: self
 	! !
 
-!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 10/10/2020 12:30:55'!
-position
-	^ stream position! !
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 12:57:31'!
+patterns: aCollection
 
-!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 10/5/2020 12:53:25'!
+	aCollection do:[:each |
+		self action: each value forPattern: each key ].
+! !
+
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 11:09:21'!
+position
+	^ streams first position! !
+
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 13:24:33'!
+reset
+	streams removeAll! !
+
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 13:26:55'!
 stream: aReadStream
-	stream := aReadStream! !
+	
+	streams addFirst: aReadStream.
+	
+	self assert: streams size <= 2.! !
 
 !XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 10/10/2020 13:59:11'!
 strip: aString
@@ -8946,23 +9002,23 @@ action: aBlock forPattern: aTerminal
 	actions add: aRegex -> aBlock
 ! !
 
-!PascalScanner methodsFor: 'as yet unclassified' stamp: 'DF 10/27/2020 21:28:29'!
+!PascalScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 11:10:32'!
 consumeComment
 
 	| lookahead1 lookahead2 |
 		
-	stream atEnd ifTrue:[^EOF new].
+	streams first atEnd ifTrue:[^EOF new].
 	
-	lookahead1 := stream next.
+	lookahead1 := streams first next.
 	
-	stream atEnd ifTrue:[^EOF new].
+	streams first atEnd ifTrue:[^EOF new].
 
-	lookahead2 := stream next.
+	lookahead2 := streams first next.
 
-	[stream atEnd or: [lookahead1 = $* and:[lookahead2 = $)] ] ] 
+	[streams first atEnd or: [lookahead1 = $* and:[lookahead2 = $)] ] ] 
 		whileFalse:[
 			lookahead1 := lookahead2.
-			lookahead2 := stream next.
+			lookahead2 := streams first next.
 		].
 	
 	^self nextTerminal
@@ -9167,8 +9223,14 @@ effectivePosition: anInteger categories: aCategoryCollection topics: aTopicColle
 	^pos
 ! !
 
-!Language methodsFor: 'as yet unclassified' stamp: 'DF 1/12/2022 20:32:31'!
+!Language methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 12:59:05'!
 parser
+
+	^self parser: XrayScanner new
+! !
+
+!Language methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 12:58:11'!
+parser: aScanner
 
 	| aWriteStream grammarSource |
 	
@@ -9178,7 +9240,7 @@ parser
 	
 	grammarSource := aWriteStream contents.
 	
-	^ XrayParserGenerator newParserFor: grammarSource ! !
+	^ XrayParserGenerator newParserFor: grammarSource withScanner: aScanner! !
 
 !Language methodsFor: 'as yet unclassified' stamp: 'DF 11/18/2023 21:22:21'!
 test: aString
@@ -9265,6 +9327,16 @@ parserFor: aLanguageName
 	aLanguage := LanguageCatalog at:aLanguageName.
 	
 	^aLanguage parser
+	! !
+
+!Language class methodsFor: 'langauge catalog access' stamp: 'DF 11/8/2024 13:04:49'!
+parserFor: aLanguageName withScanner: aScanner
+
+	| aLanguage |
+	
+	aLanguage := LanguageCatalog at:aLanguageName.
+	
+	^aLanguage parser: aScanner
 	! !
 
 !Language class methodsFor: 'langauge catalog access' stamp: 'DF 11/17/2020 15:30:32'!
