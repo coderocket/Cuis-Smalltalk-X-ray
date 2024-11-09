@@ -1,6 +1,6 @@
-'From Cuis7.1 [latest update: #6676] on 8 November 2024 at 1:35:29 pm'!
+'From Cuis7.1 [latest update: #6676] on 9 November 2024 at 7:50:47 pm'!
 'Description '!
-!provides: 'Xray' 1 36!
+!provides: 'Xray' 1 40!
 !requires: 'Erudite' 1 240 nil!
 !requires: 'Regex-Core' 1 6 nil!
 !requires: 'Automata' 1 20 nil!
@@ -540,7 +540,7 @@ Trace class
 
 !classDefinition: #XrayParser category: #Xray!
 Object subclass: #XrayParser
-	instanceVariableNames: 'input stack start actions goto syntaxError nextMark scanner statistics'
+	instanceVariableNames: 'input stack start actions goto syntaxError nextMark scanner statistics terminalIndex'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Xray'!
@@ -560,7 +560,7 @@ XrayParserGenerator class
 
 !classDefinition: #XrayScanner category: #Xray!
 Object subclass: #XrayScanner
-	instanceVariableNames: 'actions streams'
+	instanceVariableNames: 'actions streams tokenCount files'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Xray'!
@@ -8211,10 +8211,10 @@ prefix
 	
 	^post first left allButLast, ((pre collect:[:each | each left ]) concatenation)! !
 
-!XrayParser methodsFor: 'parsing' stamp: 'DF 11/12/2020 10:13:55'!
+!XrayParser methodsFor: 'parsing' stamp: 'DF 11/8/2024 16:34:27'!
 justParse: aString
 	
-	self scan: aString.
+	[self scan: aString] ensure:[scanner closeStreams].
 	
 	^ self parse.
 	
@@ -8277,7 +8277,7 @@ parse: aString inherit: associations
 actions: aDictionary
 	actions := aDictionary! !
 
-!XrayParser methodsFor: 'private' stamp: 'DF 10/11/2020 16:36:37'!
+!XrayParser methodsFor: 'private' stamp: 'DF 11/9/2024 18:53:06'!
 clear
 
 	stack removeAll.
@@ -8286,6 +8286,7 @@ clear
 	
 	syntaxError := nil.
 	
+	terminalIndex := 0.
 ! !
 
 !XrayParser methodsFor: 'private' stamp: 'DF 9/25/2020 22:11:47'!
@@ -8296,10 +8297,6 @@ goto: aDictionary
 input: aSequence
 	input := aSequence
 	! !
-
-!XrayParser methodsFor: 'private' stamp: 'DF 12/31/2021 15:41:06'!
-nextToken
-	^ input nextTerminal ! !
 
 !XrayParser methodsFor: 'private' stamp: 'DF 11/30/2020 19:33:22'!
 parse
@@ -8339,7 +8336,7 @@ reduce: aRule
 	self push: p.
 	self push: (goto at:{current . aRule left}).! !
 
-!XrayParser methodsFor: 'private' stamp: 'DF 11/8/2024 13:24:40'!
+!XrayParser methodsFor: 'private' stamp: 'DF 11/9/2024 18:59:05'!
 scan: aString
 	
 	| aReadStream t |
@@ -8352,20 +8349,22 @@ scan: aString
 
 	input := OrderedCollection new.
 
-	t := scanner nextTerminal.
+	t := nil.
 
 	[t = EOF new] whileFalse:[
-		input add:t. t := scanner nextTerminal
+		t := scanner nextTerminal.
+		input add:t. 
+		scanner incrementTokenCount 
 	].
-
-	input add: t.
 	! !
 
-!XrayParser methodsFor: 'private' stamp: 'DF 9/25/2020 22:24:04'!
+!XrayParser methodsFor: 'private' stamp: 'DF 11/9/2024 18:26:48'!
 shift: aState
 
 	self push: input removeFirst.
-	self push: aState.! !
+	self push: aState.
+	
+	terminalIndex := terminalIndex + 1.! !
 
 !XrayParser methodsFor: 'private' stamp: 'DF 9/25/2020 21:40:54'!
 start: aState
@@ -8387,14 +8386,20 @@ top
 scanner: aScanner
 	scanner := aScanner! !
 
-!XrayParser methodsFor: 'initialization' stamp: 'DF 10/4/2020 17:12:11'!
+!XrayParser methodsFor: 'accessing' stamp: 'DF 11/9/2024 19:30:03'!
+terminalIndex
+	^terminalIndex ! !
+
+!XrayParser methodsFor: 'initialization' stamp: 'DF 11/9/2024 18:26:59'!
 initialize
 
 	stack := OrderedCollection new.
 	
 	syntaxError := nil.
 	
-	nextMark := 0! !
+	nextMark := 0.
+	
+	terminalIndex := 0.! !
 
 !XrayParser methodsFor: 'statistics' stamp: 'DF 12/25/2021 15:06:20'!
 statistics
@@ -8822,12 +8827,49 @@ action: aBlock forPattern: aTerminal
 
 	! !
 
-!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 11:06:06'!
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 16:46:03'!
+closeStreams
+
+	streams do:[:each | each close ]! !
+
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/9/2024 19:45:30'!
+fileEntryFor: tokenIndex
+
+	" ii should mark the largest index that is smaller than tokenIndex 
+	
+	a[ii] <= tokenIndex and all jj : ii+1 .. n | a[jj] > tokenIndex
+	
+	we assume that tokenIndex >= 1
+	
+	files is ordered by increasing index 
+		
+	"
+	| ii |
+	
+	ii := files size.
+	
+	[ii >= 1 and: [ (files at: ii) first > tokenIndex] ] whileTrue:[ii := ii - 1].
+	
+	self assert: ii > 0. "because the first index in files is 0 and tokenIndex >= 1"
+	
+	^ files at:ii :: second.
+	
+	! !
+
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/9/2024 13:10:41'!
+incrementTokenCount
+	tokenCount := tokenCount + 1! !
+
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/9/2024 13:15:30'!
 initialize
 
 	actions := OrderedCollection new.
 	
-	streams := OrderedCollection new.! !
+	streams := OrderedCollection new.
+
+	tokenCount := 0.
+	
+	files := OrderedCollection new.! !
 
 !XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 12:52:47'!
 load: aString
@@ -8836,7 +8878,7 @@ load: aString
 	
 	self subclassResponsibility ! !
 
-!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 13:32:32'!
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/9/2024 13:17:53'!
 nextTerminal
 
 	| top current longest matches s |
@@ -8846,7 +8888,7 @@ nextTerminal
 	top atEnd ifTrue:[
 		streams size = 1 
 			ifTrue:[	 ^EOF new start: top position; end: top position; yourself]
-			ifFalse:[ top close. streams removeFirst. ^self nextTerminal ] ].
+			ifFalse:[ top close. streams removeFirst. self registerStreamChange . ^self nextTerminal ] ].
 	
 	"select all the regexps that match a prefix of the top stream and create a terminal from the longest match".
 	
@@ -8874,16 +8916,31 @@ patterns: aCollection
 position
 	^ streams first position! !
 
-!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 13:24:33'!
-reset
-	streams removeAll! !
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/9/2024 13:38:39'!
+registerStreamChange
 
-!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/8/2024 13:26:55'!
+	| top |
+	
+	top := streams first.
+	
+	files add: { tokenCount . top isFileStream ifTrue:[ top fullName ] ifFalse:[ nil ] }.! !
+
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/9/2024 13:15:35'!
+reset
+
+	streams removeAll.
+	
+	tokenCount := 0.
+	
+	files := OrderedCollection new.! !
+
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/9/2024 13:17:46'!
 stream: aReadStream
 	
 	streams addFirst: aReadStream.
 	
-	self assert: streams size <= 2.! !
+	self registerStreamChange 
+	! !
 
 !XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 10/10/2020 13:59:11'!
 strip: aString
