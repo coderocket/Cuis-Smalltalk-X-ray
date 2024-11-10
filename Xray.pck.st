@@ -1,6 +1,6 @@
-'From Cuis7.1 [latest update: #6676] on 9 November 2024 at 7:50:47 pm'!
+'From Cuis7.1 [latest update: #6676] on 10 November 2024 at 8:36:44 am'!
 'Description '!
-!provides: 'Xray' 1 40!
+!provides: 'Xray' 1 42!
 !requires: 'Erudite' 1 240 nil!
 !requires: 'Regex-Core' 1 6 nil!
 !requires: 'Automata' 1 20 nil!
@@ -420,7 +420,7 @@ Goal class
 
 !classDefinition: #Terminal category: #Xray!
 XraySymbol subclass: #Terminal
-	instanceVariableNames: 'value start end'
+	instanceVariableNames: 'value start end index'
 	classVariableNames: 'Annotations'
 	poolDictionaries: ''
 	category: 'Xray'!
@@ -4327,6 +4327,14 @@ asString
 !Terminal methodsFor: 'converting' stamp: 'DF 4/16/2022 15:33:17'!
 asSymbol
 	^value asSymbol! !
+
+!Terminal methodsFor: 'as yet unclassified' stamp: 'DF 11/10/2024 08:32:35'!
+index
+	^index! !
+
+!Terminal methodsFor: 'as yet unclassified' stamp: 'DF 11/10/2024 08:31:11'!
+index: anInteger
+	index := anInteger! !
 
 !Terminal class methodsFor: 'as yet unclassified' stamp: 'DF 10/30/2020 14:45:12'!
 function: aSymbol action: aString
@@ -8336,7 +8344,7 @@ reduce: aRule
 	self push: p.
 	self push: (goto at:{current . aRule left}).! !
 
-!XrayParser methodsFor: 'private' stamp: 'DF 11/9/2024 18:59:05'!
+!XrayParser methodsFor: 'private' stamp: 'DF 11/10/2024 08:31:21'!
 scan: aString
 	
 	| aReadStream t |
@@ -8354,7 +8362,8 @@ scan: aString
 	[t = EOF new] whileFalse:[
 		t := scanner nextTerminal.
 		input add:t. 
-		scanner incrementTokenCount 
+		scanner incrementTokenCount.
+		t index: scanner tokenCount. 
 	].
 	! !
 
@@ -8951,6 +8960,10 @@ strip: aString
 stripLeft: aString
 
 	^ aString allButFirst ! !
+
+!XrayScanner methodsFor: 'as yet unclassified' stamp: 'DF 11/10/2024 08:30:13'!
+tokenCount
+	^tokenCount ! !
 
 !XrayScanner class methodsFor: 'as yet unclassified' stamp: 'DF 12/25/2021 19:46:22'!
 new: aCollection
